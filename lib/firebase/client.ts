@@ -14,6 +14,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+export const isLocalDemo = process.env.NODE_ENV === 'development';
 export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
 export const firebaseApp = isFirebaseConfigured ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
 export const auth = firebaseApp ? getAuth(firebaseApp) : null;

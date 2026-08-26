@@ -10,7 +10,7 @@ import {
   signOut,
   type User,
 } from 'firebase/auth';
-import { auth, isFirebaseConfigured } from '@/lib/firebase/client';
+import { auth, isFirebaseConfigured, isLocalDemo } from '@/lib/firebase/client';
 
 interface AuthContextValue {
   user: User | null;
@@ -25,7 +25,8 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const demoUser=useMemo(()=>isLocalDemo&&!auth?({uid:'local-demo-admin',email:'demo@localhost',displayName:'Demo Administrator'} as User):null,[]);
+  const [user, setUser] = useState<User | null>(demoUser);
   const [loading, setLoading] = useState(isFirebaseConfigured);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(() => ({
     user,
     loading,
-    configured: isFirebaseConfigured,
+    configured: isFirebaseConfigured || isLocalDemo,
     signInEmail: async (email, password) => {
       if (!auth) throw new Error('Firebase is not configured.');
       await signInWithEmailAndPassword(auth, email, password);
@@ -60,4 +61,3 @@ export function useAuth() {
   if (!value) throw new Error('useAuth must be used inside AuthProvider.');
   return value;
 }
-
