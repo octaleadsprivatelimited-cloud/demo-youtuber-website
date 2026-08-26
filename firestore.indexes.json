@@ -1,0 +1,32 @@
+{
+  "indexes": [
+    { "collectionGroup": "tractors", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "popularityScore", "order": "DESCENDING" },
+      { "fieldPath": "__name__", "order": "ASCENDING" }
+    ]},
+    { "collectionGroup": "tractors", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "brandId", "order": "ASCENDING" },
+      { "fieldPath": "popularityScore", "order": "DESCENDING" },
+      { "fieldPath": "__name__", "order": "ASCENDING" }
+    ]},
+    { "collectionGroup": "tractors", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "brandSlug", "order": "ASCENDING" },
+      { "fieldPath": "slug", "order": "ASCENDING" },
+      { "fieldPath": "status", "order": "ASCENDING" }
+    ]},
+    { "collectionGroup": "tractors", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "searchTerms", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "popularityScore", "order": "DESCENDING" },
+      { "fieldPath": "__name__", "order": "ASCENDING" }
+    ]},
+    { "collectionGroup": "tractors", "queryScope": "COLLECTION", "fields": [
+      { "fieldPath": "status", "order": "ASCENDING" },
+      { "fieldPath": "searchPrefixes", "arrayConfig": "CONTAINS" },
+      { "fieldPath": "popularityScore", "order": "DESCENDING" }
+    ]}
+  ],
+  "fieldOverrides": []
+}
