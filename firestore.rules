@@ -3,7 +3,12 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
     function owns(userId) { return signedIn() && request.auth.uid == userId; }
-    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+    function isAdmin() {
+      return signedIn() && (request.auth.token.admin == true || (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true
+      ));
+    }
 
     match /tractors/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /brands/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
@@ -13,6 +18,17 @@ service cloud.firestore {
     match /equipment/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /equipmentCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /dealers/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /admins/{userId} { allow read: if owns(userId); allow write: if signedIn() && request.auth.token.superAdmin == true; }
+    match /leads/{id} {
+      allow create: if request.resource.data.status == 'New'
+        && request.resource.data.assignedTo == null
+        && request.resource.data.notes == ''
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() >= 8;
+      allow read, update, delete: if isAdmin();
+    }
     match /reviews/{id} {
       allow read: if resource.data.status == 'approved' || isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
       allow create: if signedIn()

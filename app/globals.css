@@ -355,6 +355,82 @@ footer { padding:68px 7vw 22px; background:#0e1b13; color:#dce5df; }
 .dealer-profile { padding:70px 7vw 50px; display:flex; gap:28px; align-items:center; }.dealer-profile .dealer-logo { width:100px; height:100px; font-size:25px; }.dealer-profile article>span,.dealer-profile article>small { display:block; color:#657169; }.dealer-profile article>small { margin-top:9px; color:var(--green); }
 .dealer-contact { margin:0 7vw 90px; display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:16px; overflow:hidden; }.dealer-contact>div { padding:28px; border-right:1px solid var(--line); }.dealer-contact>div:last-child { border:0; }.dealer-contact h2 { font:750 18px var(--font-display); }.dealer-contact a,.dealer-contact span { padding:8px 0; display:block; color:var(--green); font-size:10px; }
 
+.lead-form { margin-top:45px; padding:28px; border:1px solid var(--line); border-radius:16px; background:var(--cream); }
+.lead-form>p { margin:0 0 7px; color:var(--green); font-size:8px; font-weight:900; letter-spacing:.13em; }
+.lead-form h3 { margin:0 0 20px; font:750 24px var(--font-display); }
+.lead-form>div { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+.lead-form label { color:#657269; font-size:9px; font-weight:800; }
+.lead-form label.full { grid-column:1/-1; }
+.lead-form input,.lead-form textarea { width:100%; margin-top:6px; padding:12px; border:1px solid var(--line); border-radius:8px; background:#fff; }
+.lead-form textarea { min-height:110px; resize:vertical; }
+.lead-form>span { margin-top:13px; display:block; color:var(--green); font-size:10px; font-weight:800; }
+.lead-form>button { margin-top:16px; padding:13px 17px; border:0; border-radius:8px; background:var(--green); color:#fff; font-weight:800; cursor:pointer; }
+.emi-workspace { padding:60px 7vw; display:grid; grid-template-columns:1.2fr 1fr; gap:30px; align-items:start; }
+.emi-inputs,.emi-results { padding:32px; border:1px solid var(--line); border-radius:18px; }
+.emi-inputs h2 { margin:0 0 25px; font:750 26px var(--font-display); }
+.emi-inputs label { margin:21px 0; display:grid; grid-template-columns:1fr auto; gap:9px; color:#647168; font-size:10px; font-weight:800; }
+.emi-inputs label strong { color:var(--ink); }
+.emi-inputs input[type=range] { grid-column:1/-1; width:100%; accent-color:var(--green); }
+.emi-inputs input[type=number] { grid-column:1/-1; padding:10px; border:1px solid var(--line); border-radius:8px; }
+.emi-results { position:sticky; top:105px; background:var(--ink); color:#fff; }
+.emi-results>p { color:var(--lime); font-size:9px; font-weight:900; letter-spacing:.14em; }
+.emi-results>h2 { margin:8px 0 25px; font:750 clamp(40px,5vw,65px) var(--font-display); letter-spacing:-.05em; }
+.emi-results>div { display:grid; grid-template-columns:repeat(3,1fr); border-block:1px solid rgba(255,255,255,.15); }
+.emi-results span { padding:18px 10px; color:#93a298; font-size:8px; }
+.emi-results strong { margin-top:6px; display:block; color:#fff; font:750 13px var(--font-display); }
+.emi-results>small { margin-top:18px; display:block; color:#8b9a90; font-size:9px; line-height:1.6; }
+.emi-enquiry { max-width:900px; padding:0 7vw 90px; }
+.emi-enquiry .lead-form { margin:0; }
+.crm-page { min-height:100vh; padding-left:240px; background:#f5f6f3; color:#17231b; }
+.crm-sidebar { width:240px; padding:25px 20px; position:fixed; inset:0 auto 0 0; display:flex; flex-direction:column; background:#101c14; color:#fff; }
+.crm-sidebar .brand-mark { background:var(--lime); color:var(--ink); }
+.crm-sidebar nav { margin-top:40px; }
+.crm-sidebar nav a { padding:12px; display:block; border-radius:8px; color:#98a69d; font-size:11px; font-weight:700; }
+.crm-sidebar nav a.active { background:#23362a; color:var(--lime); }
+.crm-sidebar>div { margin-top:auto; padding-top:17px; border-top:1px solid rgba(255,255,255,.1); }
+.crm-sidebar>div span,.crm-sidebar>div strong,.crm-sidebar>div small { display:block; }
+.crm-sidebar>div span { color:#718077; font-size:8px; text-transform:uppercase; }
+.crm-sidebar>div strong { margin:5px 0; font-size:10px; word-break:break-all; }
+.crm-sidebar>div small { color:var(--lime); font-size:9px; }
+.crm-main { padding:40px; }
+.crm-main>header { display:flex; align-items:center; justify-content:space-between; }
+.crm-main header p { margin:0; color:var(--green); font-size:8px; font-weight:900; letter-spacing:.13em; }
+.crm-main header h1 { margin:3px 0 0; font:750 38px var(--font-display); }
+.crm-main header button { padding:11px 14px; border:1px solid var(--line); border-radius:8px; background:#fff; cursor:pointer; font-size:10px; font-weight:800; }
+.crm-metrics { margin:28px 0; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.crm-metrics article { padding:20px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+.crm-metrics span,.crm-metrics strong { display:block; }
+.crm-metrics span { color:#738078; font-size:9px; text-transform:uppercase; }
+.crm-metrics strong { margin-top:8px; font:750 28px var(--font-display); }
+.crm-toolbar { padding:14px; display:flex; align-items:end; justify-content:space-between; border:1px solid var(--line); border-radius:11px 11px 0 0; background:#fff; }
+.crm-toolbar label { color:#68756c; font-size:8px; font-weight:800; text-transform:uppercase; }
+.crm-toolbar select { margin-left:9px; padding:8px; border:1px solid var(--line); border-radius:7px; }
+.crm-toolbar>span { color:#89948c; font-size:8px; }
+.crm-table-wrap { overflow:auto; border:1px solid var(--line); border-top:0; border-radius:0 0 11px 11px; background:#fff; }
+.crm-table { width:100%; min-width:900px; border-collapse:collapse; }
+.crm-table th,.crm-table td { padding:14px; border-bottom:1px solid var(--line); text-align:left; font-size:9px; }
+.crm-table th { color:#758178; font-size:8px; text-transform:uppercase; letter-spacing:.08em; }
+.crm-table tr { cursor:pointer; }
+.crm-table tbody tr:hover { background:#f7faf7; }
+.crm-table td small { margin-top:3px; display:block; color:#849087; }
+.lead-status { padding:6px 8px; border-radius:999px; background:#edf1ed; font-size:8px; font-weight:900; }
+.lead-status.new { background:#e4f0ff; color:#1761a0; }
+.lead-status.converted { background:#e6f5e9; color:#176c2e; }
+.lead-status.follow-up { background:#fff2d7; color:#8e5b00; }
+.lead-status.spam,.lead-status.closed { background:#f2e9e8; color:#8c3931; }
+.lead-drawer { width:min(390px,100%); padding:30px; position:fixed; z-index:80; inset:0 0 0 auto; overflow:auto; background:#fff; box-shadow:-18px 0 45px rgba(0,0,0,.14); }
+.lead-drawer>button { float:right; width:35px; height:35px; border:0; border-radius:50%; cursor:pointer; }
+.lead-drawer>p { color:var(--green); font-size:8px; font-weight:900; letter-spacing:.12em; }
+.lead-drawer h2 { font:750 31px var(--font-display); }
+.lead-drawer>a,.lead-drawer>span { margin:8px 0; display:block; color:var(--green); font-size:11px; }
+.lead-drawer>div { margin:20px 0; padding:17px; border-radius:10px; background:var(--cream); }
+.lead-drawer small,.lead-drawer strong { display:block; }
+.lead-drawer label { display:block; font-size:9px; font-weight:800; }
+.lead-drawer select { width:100%; margin-top:7px; padding:11px; border:1px solid var(--line); border-radius:8px; }
+.admin-gate { min-height:100vh; display:grid; place-content:center; text-align:center; }
+.admin-gate h1 { font:750 42px var(--font-display); }
+.admin-gate a { color:var(--green); font-weight:900; }
+
 @media (max-width:1100px) { .desktop-nav { display:none; } .header-actions { margin-left:auto; } .hero-content { width:75vw; } .hero-note { display:none; } }
 @media (max-width:950px) { .brand-grid { grid-template-columns:repeat(3,1fr); } .brand-grid a { border-bottom:1px solid var(--line); } .compare-banner { grid-template-columns:1fr; } .editorial-grid { grid-template-columns:1fr; } .editorial-grid .feature-story { grid-row:auto; } .footer-main { grid-template-columns:2fr 1fr 1fr; } .footer-main>div:last-child { display:none; } }
 @media (max-width:1050px) { .catalog-grid { grid-template-columns:repeat(2,1fr); } .brand-directory,.loading-grid { grid-template-columns:repeat(3,1fr); } }
@@ -398,5 +474,7 @@ footer { padding:68px 7vw 22px; background:#0e1b13; color:#dce5df; }
   .video-hero { padding:55px 20px; grid-template-columns:1fr; }.video-play { display:none; }.video-detail { padding:35px 20px 70px; }.video-summary,.subscribe-band { align-items:stretch; flex-direction:column; }
   .equipment-detail-hero { padding:45px 20px; grid-template-columns:1fr; }.equipment-detail-hero>div { min-height:300px; }.equipment-specs { padding:0 20px 70px; }
   .dealer-filters { grid-template-columns:1fr 1fr; }.dealer-profile { padding:50px 20px 35px; align-items:flex-start; }.dealer-contact { margin:0 20px 70px; grid-template-columns:1fr; }.dealer-contact>div { border-right:0; border-bottom:1px solid var(--line); }
+  .lead-form>div { grid-template-columns:1fr; }.lead-form label.full { grid-column:auto; }.emi-workspace { padding:40px 20px; grid-template-columns:1fr; }.emi-results { position:static; }.emi-enquiry { padding:0 20px 70px; }
+  .crm-page { padding-left:0; }.crm-sidebar { width:auto; height:auto; padding:13px 20px; position:static; flex-direction:row; align-items:center; }.crm-sidebar nav { margin:0 0 0 auto; }.crm-sidebar nav a { display:inline-block; }.crm-sidebar>div { display:none; }.crm-main { padding:25px 20px; }.crm-metrics { grid-template-columns:1fr 1fr; }.crm-toolbar { align-items:flex-start; flex-direction:column; gap:10px; }
 }
 @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
