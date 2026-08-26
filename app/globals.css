@@ -427,6 +427,12 @@ footer { padding:68px 7vw 22px; background:#0e1b13; color:#dce5df; }
 .lead-drawer small,.lead-drawer strong { display:block; }
 .lead-drawer label { display:block; font-size:9px; font-weight:800; }
 .lead-drawer select { width:100%; margin-top:7px; padding:11px; border:1px solid var(--line); border-radius:8px; }
+.lead-notes { margin-top:20px!important; }
+.lead-notes textarea { width:100%; min-height:120px; margin-top:7px; padding:11px; border:1px solid var(--line); border-radius:8px; resize:vertical; font:inherit; }
+.lead-notes button { width:100%; margin-top:8px; padding:11px; border:0; border-radius:7px; cursor:pointer; background:var(--green); color:#fff; font-weight:800; }
+.lead-drawer>.lead-danger { border:1px solid #efc5bf; background:#fff3f1; }
+.lead-danger small { margin:5px 0 12px; color:#82534d; }
+.lead-danger button { width:100%; padding:10px; border:1px solid #b53d31; border-radius:7px; cursor:pointer; background:#fff; color:#a62d24; font-weight:800; }
 .admin-gate { min-height:100vh; display:grid; place-content:center; text-align:center; }
 .admin-gate h1 { font:750 42px var(--font-display); }
 .admin-gate a { color:var(--green); font-weight:900; }
