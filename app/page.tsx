@@ -1,8 +1,10 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Newsletter } from '@/components/Newsletter';
 import { CmsHomepageModules } from '@/components/CmsHomepageModules';
+import { listBrands } from '@/services/tractors';
+import type { Brand } from '@/types/content';
 
 const nav = ['Home', 'Tractors', 'Brands', 'Reviews', 'Compare', 'Prices', 'Equipment', 'Agriculture', 'Videos', 'Dealers'];
 const searches = ['Mahindra 575 DI', 'John Deere 5310', 'Swaraj 744 FE', 'Sonalika 745', 'New Holland 3630'];
@@ -11,7 +13,7 @@ const tractors = [
   { name: 'John Deere 5310', hp: '57 HP', price: '₹11.15–12.00 Lakh', image: 'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=900&q=80' },
   { name: 'Swaraj 744 FE', hp: '48 HP', price: '₹7.31–7.84 Lakh', image: 'https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=900&q=80' },
 ];
-const brands = ['Mahindra', 'Swaraj', 'John Deere', 'Sonalika', 'New Holland', 'Massey Ferguson'];
+const defaultBrands: Brand[] = ['Mahindra', 'Swaraj', 'John Deere', 'Sonalika', 'New Holland', 'Massey Ferguson'].map((name, index) => ({ id:`featured-${index}`, name, slug:name.toLowerCase().replaceAll(' ', '-'), modelCount:index + 5, status:'published' }));
 const editorial = [
   { tag: 'BUYING GUIDE', title: 'How to choose the right tractor horsepower for your farm', image: 'https://images.unsplash.com/photo-1628352081506-83c43123ed6d?auto=format&fit=crop&w=1000&q=80' },
   { tag: 'FARMING', title: 'Preparing your tractor for the next crop season', image: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1000&q=80' },
@@ -21,6 +23,14 @@ const editorial = [
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [brands, setBrands] = useState<Brand[]>(defaultBrands);
+
+  useEffect(() => {
+    const loadBrands = () => listBrands().then((items) => setBrands(items.length ? items : defaultBrands)).catch(() => setBrands(defaultBrands));
+    loadBrands();
+    window.addEventListener('rj-demo-data', loadBrands);
+    return () => window.removeEventListener('rj-demo-data', loadBrands);
+  }, []);
 
   function submitSearch(event: FormEvent) {
     event.preventDefault();
@@ -67,6 +77,19 @@ export default function Home() {
         <div className="hero-stats" aria-label="Platform topics"><div><strong>Reviews</strong><span>Real-world insights</span></div><div><strong>Specifications</strong><span>Clear model data</span></div><div><strong>Farming</strong><span>Practical knowledge</span></div></div>
       </section>
 
+      <section className="brand-marquee" aria-labelledby="brand-marquee-title">
+        <div className="brand-marquee-heading"><p>TRUSTED NAMES IN THE FIELD</p><h2 id="brand-marquee-title">Explore leading tractor brands</h2></div>
+        <div className="brand-marquee-window">
+          <div className="brand-marquee-track">
+            {[...brands, ...brands].map((brand, index) => <a href={`/brand/${brand.slug}`} className="brand-marquee-card" key={`${brand.id}-${index}`} aria-hidden={index >= brands.length ? true : undefined} tabIndex={index >= brands.length ? -1 : undefined}>
+              <span>{brand.logo ? <img src={brand.logo} alt="" /> : brand.name.split(' ').map((word) => word[0]).join('').slice(0, 3)}</span>
+              <strong>{brand.name}</strong><small>{brand.modelCount ? `${brand.modelCount} models` : 'Explore models'} <i>↗</i></small>
+            </a>)}
+          </div>
+        </div>
+        <a className="brand-marquee-link" href="/brands">Discover all brands <span>→</span></a>
+      </section>
+
       <CmsHomepageModules />
       <section className="intro-strip">
         <div><span>01</span><p><strong>Find your tractor</strong>Search by brand, power or budget.</p></div>
@@ -86,7 +109,7 @@ export default function Home() {
 
       <section className="brand-section">
         <div className="section-head"><div><p>EXPLORE THE MARKET</p><h2>Popular tractor brands</h2></div><a href="/brands">View every brand →</a></div>
-        <div className="brand-grid">{brands.map((brand, index) => <a href={`/brand/${brand.toLowerCase().replaceAll(' ', '-')}`} key={brand}><span>{brand.split(' ').map(word => word[0]).join('')}</span><strong>{brand}</strong><small>{index + 5} models →</small></a>)}</div>
+        <div className="brand-grid">{brands.slice(0, 6).map((brand) => <a href={`/brand/${brand.slug}`} key={brand.id}><span>{brand.logo ? <img src={brand.logo} alt="" /> : brand.name.split(' ').map(word => word[0]).join('')}</span><strong>{brand.name}</strong><small>{brand.modelCount ? `${brand.modelCount} models` : 'Explore models'} →</small></a>)}</div>
       </section>
 
       <section className="compare-banner">
