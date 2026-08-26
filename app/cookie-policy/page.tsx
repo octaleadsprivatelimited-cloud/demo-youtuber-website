@@ -1,0 +1,2 @@
+import {InfoPage} from '@/components/InfoPage';
+export default function Page(){return <InfoPage settingKey="cookie-policy" eyebrow="LEGAL" title="Cookie policy" intro="How browser storage and measurement tools support the website."><p>The website may use essential browser storage for sign-in and preferences, plus Firebase Analytics when configured. Analytics helps understand page usage without changing public content.</p></InfoPage>}

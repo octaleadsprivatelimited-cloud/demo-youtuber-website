@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { Newsletter } from '@/components/Newsletter';
 
 const nav = ['Home', 'Tractors', 'Brands', 'Reviews', 'Compare', 'Prices', 'Equipment', 'Agriculture', 'Videos', 'Dealers'];
 const searches = ['Mahindra 575 DI', 'John Deere 5310', 'Swaraj 744 FE', 'Sonalika 745', 'New Holland 3630'];
@@ -101,6 +102,7 @@ export default function Home() {
         <div className="youtube-icon">▶</div><div><p>WATCH. LEARN. DECIDE.</p><h2>RJ Tractor Techs on YouTube</h2><span>Video reviews, field demonstrations and clear tractor explainers from the official RJ Tractor Techs channel.</span></div><a href="https://www.youtube.com/@Rjtractortechs" target="_blank" rel="noreferrer">Visit the channel ↗</a>
       </section>
 
+      <Newsletter />
       <footer>
         <div className="footer-main"><div className="footer-brand"><a className="brand" href="/"><span className="brand-mark">RJ</span><span className="brand-copy"><strong>Tractor Techs</strong><small>Reviews · Specs · Farming</small></span></a><p>Independent tractor information and practical farming knowledge, made easier to explore.</p></div>
         <div><h4>Research</h4>{['Tractors','Brands','Reviews','Compare','Prices','Dealers'].map(link => <a key={link} href={`/${link.toLowerCase()}`}>{link}</a>)}</div>

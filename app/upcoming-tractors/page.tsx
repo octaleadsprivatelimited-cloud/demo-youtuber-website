@@ -1,0 +1,1 @@
+import {TractorCollectionPage} from '@/components/TractorCollectionPage';export const metadata={title:'Upcoming Tractors | RJ Tractor Techs',description:'Research expected upcoming tractors and unconfirmed launch information.'};export default function Page(){return <TractorCollectionPage mode="upcoming"/>}

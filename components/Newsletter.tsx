@@ -1,0 +1,4 @@
+'use client';
+import {useState} from 'react';
+import {subscribeNewsletter} from '@/services/public-content';
+export function Newsletter(){const [email,setEmail]=useState('');const [state,setState]=useState('');async function submit(e:React.FormEvent){e.preventDefault();setState('Saving…');try{await subscribeNewsletter(email);setEmail('');setState('Subscribed. Thank you.');}catch{setState('Connect Firebase to enable subscriptions.');}}return <section className="newsletter"><div><p>RJ FIELD NOTES</p><h2>Useful tractor and farming updates.</h2><span>Occasional editorial updates. No invented offers or subscriber claims.</span></div><form onSubmit={submit}><input type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="Your email address" aria-label="Email address"/><button>Subscribe</button><small aria-live="polite">{state}</small></form></section>}

@@ -1,0 +1,2 @@
+import {InfoPage} from '@/components/InfoPage';
+export default function Page(){return <InfoPage settingKey="terms-and-conditions" eyebrow="LEGAL" title="Terms and conditions" intro="Terms for using the RJ Tractor Techs research platform."><p>Content is provided for general information and research. Verify specifications, availability and final pricing with the manufacturer or an authorized dealer before making a purchase decision.</p><p>Do not misuse the website, attempt unauthorized access or submit unlawful content.</p></InfoPage>}

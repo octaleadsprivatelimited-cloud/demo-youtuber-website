@@ -14,6 +14,7 @@ service cloud.firestore {
     match /brands/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /expertReviews/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /articles/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /articleCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /videos/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /equipment/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /equipmentCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }

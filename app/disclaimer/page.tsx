@@ -1,0 +1,2 @@
+import {InfoPage} from '@/components/InfoPage';
+export default function Page(){return <InfoPage settingKey="disclaimer" eyebrow="LEGAL" title="Disclaimer" intro="Important context for prices, specifications and editorial content."><p>Tractor prices may vary by location, dealer, variant and applicable taxes. Expected launch information and specifications are clearly identified when unconfirmed.</p><p>RJ Tractor Techs is an information and media platform, not an ecommerce seller.</p></InfoPage>}
