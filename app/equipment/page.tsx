@@ -1,0 +1,10 @@
+'use client';
+
+import { useEffect,useState } from 'react';
+import { PublicShell } from '@/components/SiteChrome';
+import { SetupNotice } from '@/components/SetupNotice';
+import { isFirebaseConfigured } from '@/lib/firebase/client';
+import { listEquipment,type Equipment } from '@/services/media';
+
+export default function EquipmentPage(){const [items,setItems]=useState<Equipment[]>([]);const [category,setCategory]=useState('');const [loading,setLoading]=useState(isFirebaseConfigured);const categories=['Rotavator','Cultivator','Harvester','Plough','Seed Drill','Sprayer'];useEffect(()=>{if(!isFirebaseConfigured)return;setLoading(true);listEquipment(category||undefined).then(setItems).finally(()=>setLoading(false));},[category]);return <PublicShell><main className="equipment-index"><section className="page-hero"><p>FARM EQUIPMENT</p><h1>Research implements and machinery</h1><span>Explore specifications, compatibility and published pricing for agricultural equipment.</span></section>{!isFirebaseConfigured?<SetupNotice/>:<section className="equipment-list"><nav><button className={!category?'active':''} onClick={()=>setCategory('')}>All equipment</button>{categories.map(item=><button className={category===item.toLowerCase().replace(' ','-')?'active':''} key={item} onClick={()=>setCategory(item.toLowerCase().replace(' ','-'))}>{item}</button>)}</nav>{loading?<div className="detail-loading">Loading equipment…</div>:!items.length?<div className="empty-state"><h3>No published equipment in this category.</h3><button onClick={()=>setCategory('')}>Clear category</button></div>:<div className="equipment-grid">{items.map(item=><article key={item.id}><div style={item.image?{backgroundImage:'url('+item.image+')'}:undefined}/><section><p>{item.categoryName}{item.brandName?' · '+item.brandName:''}</p><h2>{item.name}</h2><span>{item.description??'Specifications and compatibility information.'}</span>{item.price&&<strong>From ₹{item.price.toLocaleString('en-IN')}</strong>}<a href={'/equipment/'+item.categorySlug+'/'+item.slug}>View equipment →</a></section></article>)}</div>}</section>}</main></PublicShell>;}
+

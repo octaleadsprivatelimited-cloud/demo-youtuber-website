@@ -8,6 +8,11 @@ service cloud.firestore {
     match /tractors/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /brands/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /expertReviews/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /articles/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /videos/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /equipment/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /equipmentCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /dealers/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /reviews/{id} {
       allow read: if resource.data.status == 'approved' || isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
       allow create: if signedIn()
