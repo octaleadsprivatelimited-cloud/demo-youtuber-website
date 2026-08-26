@@ -1,0 +1,2 @@
+import {PublicShell} from '@/components/SiteChrome';
+export default function NotFound(){return <PublicShell><main className="system-state"><p>404 · FIELD NOT FOUND</p><h1>This route has gone off track.</h1><span>The page may have moved, or the address may be incorrect.</span><div><a className="cta-primary" href="/">Return home</a><a className="cta-secondary" href="/tractors">Explore tractors</a></div></main></PublicShell>}

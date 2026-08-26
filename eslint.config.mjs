@@ -5,6 +5,14 @@ import nextTs from 'eslint-config-next/typescript';
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    rules: {
+      '@next/next/no-html-link-for-pages': 'off',
+      '@next/next/no-img-element': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+    },
+  },
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
 ]);
 

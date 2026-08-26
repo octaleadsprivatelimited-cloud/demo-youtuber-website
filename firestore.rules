@@ -48,7 +48,16 @@ service cloud.firestore {
     match /advertisements/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /seo/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /settings/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /users/{userId} { allow read: if owns(userId) || isAdmin(); allow create, update: if owns(userId); allow delete: if isAdmin(); }
+    match /users/{userId} {
+      allow read: if owns(userId) || isAdmin();
+      allow create: if owns(userId) && !request.resource.data.keys().hasAny(['role','disabled','admin','verified']);
+      allow update: if owns(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role','disabled','admin','verified']);
+      allow delete: if isAdmin();
+    }
+    match /comparisons/{id} { allow read, create, update, delete: if signedIn() && request.resource.data.userId == request.auth.uid; }
+    match /newsletterSubscribers/{id} { allow create: if request.resource.data.email is string; allow read, update, delete: if isAdmin(); }
+    match /contactMessages/{id} { allow create: if request.resource.data.email is string && request.resource.data.message is string; allow read, update, delete: if isAdmin(); }
+    match /notifications/{id} { allow read: if signedIn() && resource.data.userId == request.auth.uid; allow write: if isAdmin(); }
     match /{document=**} { allow read, write: if false; }
   }
 }

@@ -1,0 +1,2 @@
+'use client';
+export default function ErrorPage({reset}:{error:Error&{digest?:string};reset:()=>void}){return <main className="system-state"><p>SOMETHING WENT WRONG</p><h1>We could not load this page.</h1><span>Please retry. If the problem continues, return to the homepage.</span><div><button className="cta-primary" onClick={reset}>Try again</button><a className="cta-secondary" href="/">Return home</a></div></main>}
