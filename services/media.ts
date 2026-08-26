@@ -1,66 +1,15 @@
-import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore';
-import { db, isFirebaseConfigured } from '@/lib/firebase/client';
-
-export interface Article {
-  id:string; slug:string; title:string; excerpt:string; body?:string; coverImage?:string;
-  categoryName:string; categorySlug:string; authorName:string; articleType?:'article'|'news';
-  status:'draft'|'review'|'published'|'archived'; featured?:boolean;
-  publishedAt?:{toDate?:()=>Date}; relatedTractorIds?:string[]; relatedVideoIds?:string[];
-}
-export interface Video {
-  id:string; slug:string; title:string; description:string; youtubeVideoId:string;
-  thumbnail?:string; category?:string; tractorId?:string; tractorName?:string;
-  featured?:boolean; status:'draft'|'published'; publishedAt?:{toDate?:()=>Date};
-}
-export interface Equipment {
-  id:string; slug:string; name:string; categoryName:string; categorySlug:string; brandName?:string;
-  description?:string; image?:string; price?:number; specifications?:Record<string,string|number>;
-  status:'draft'|'published';
-}
-export interface Dealer {
-  id:string; slug:string; name:string; brand?:string; phone?:string; whatsapp?:string; email?:string;
-  address:string; city:string; district:string; state:string; pincode?:string; latitude?:number; longitude?:number;
-  services?:string[]; images?:string[]; logo?:string; verified?:boolean; status:'draft'|'published';
-}
-
-function database(){if(!isFirebaseConfigured||!db)throw new Error('Firebase is not configured.');return db;}
-function mapped<T extends {id:string}>(snapshot:Awaited<ReturnType<typeof getDocs>>){return snapshot.docs.map(item=>({id:item.id,...(item.data() as Record<string,unknown>)}) as T);}
-
-export async function listArticles(articleType?:'article'|'news',categorySlug?:string){
-  const filters=[where('status','==','published'),orderBy('publishedAt','desc'),limit(24)];
-  if(articleType)filters.unshift(where('articleType','==',articleType));
-  if(categorySlug)filters.unshift(where('categorySlug','==',categorySlug));
-  return mapped<Article>(await getDocs(query(collection(database(),'articles'),...filters)));
-}
-export async function getArticle(slug:string){
-  const items=mapped<Article>(await getDocs(query(collection(database(),'articles'),where('slug','==',slug),where('status','==','published'),limit(1))));
-  return items[0]??null;
-}
-export async function listVideos(){
-  return mapped<Video>(await getDocs(query(collection(database(),'videos'),where('status','==','published'),orderBy('publishedAt','desc'),limit(24))));
-}
-export async function getVideo(slug:string){
-  const items=mapped<Video>(await getDocs(query(collection(database(),'videos'),where('slug','==',slug),where('status','==','published'),limit(1))));
-  return items[0]??null;
-}
-export async function listEquipment(categorySlug?:string){
-  const filters=[where('status','==','published'),orderBy('name'),limit(30)];
-  if(categorySlug)filters.unshift(where('categorySlug','==',categorySlug));
-  return mapped<Equipment>(await getDocs(query(collection(database(),'equipment'),...filters)));
-}
-export async function getEquipment(categorySlug:string,slug:string){
-  const items=mapped<Equipment>(await getDocs(query(collection(database(),'equipment'),where('categorySlug','==',categorySlug),where('slug','==',slug),where('status','==','published'),limit(1))));
-  return items[0]??null;
-}
-export async function listDealers(filters:{brand?:string;state?:string;district?:string;city?:string}={}){
-  const clauses=[where('status','==','published'),orderBy('name'),limit(30)];
-  if(filters.brand)clauses.unshift(where('brand','==',filters.brand));
-  if(filters.state)clauses.unshift(where('state','==',filters.state));
-  if(filters.district)clauses.unshift(where('district','==',filters.district));
-  if(filters.city)clauses.unshift(where('city','==',filters.city));
-  return mapped<Dealer>(await getDocs(query(collection(database(),'dealers'),...clauses)));
-}
-export async function getDealer(slug:string){
-  const items=mapped<Dealer>(await getDocs(query(collection(database(),'dealers'),where('slug','==',slug),where('status','==','published'),limit(1))));
-  return items[0]??null;
-}
+import{collection,getDocs,limit,orderBy,query,where}from'firebase/firestore';import{db,isLocalDemo}from'@/lib/firebase/client';import{published}from'@/lib/local-demo';
+export interface Article{id:string;slug:string;title:string;excerpt:string;body?:string;coverImage?:string;categoryName:string;categorySlug:string;authorName:string;articleType?:'article'|'news';status:'draft'|'review'|'published'|'archived';featured?:boolean;publishedAt?:{toDate?:()=>Date};relatedTractorIds?:string[];relatedVideoIds?:string[]}
+export interface Video{id:string;slug:string;title:string;description:string;youtubeVideoId:string;thumbnail?:string;category?:string;tractorId?:string;tractorName?:string;featured?:boolean;status:'draft'|'published';publishedAt?:{toDate?:()=>Date}}
+export interface Equipment{id:string;slug:string;name:string;categoryName:string;categorySlug:string;brandName?:string;description?:string;image?:string;price?:number;specifications?:Record<string,string|number>;status:'draft'|'published'}
+export interface Dealer{id:string;slug:string;name:string;brand?:string;phone?:string;whatsapp?:string;email?:string;address:string;city:string;district:string;state:string;pincode?:string;latitude?:number;longitude?:number;services?:string[];images?:string[];logo?:string;verified?:boolean;status:'draft'|'published'}
+function mapped<T extends{id:string}>(snap:Awaited<ReturnType<typeof getDocs>>){return snap.docs.map(d=>({id:d.id,...(d.data()as Record<string,unknown>)})as T)}
+function articles(){return published<Record<string,unknown>&{id:string}>('articles').map(x=>({...x,title:String(x.title),slug:String(x.slug),excerpt:String(x.excerpt??''),body:String(x.body??x.content??''),coverImage:String(x.coverImage??x.image??''),categoryName:String(x.categoryName??x.category??'Article'),categorySlug:String(x.categorySlug??String(x.category??'article').toLowerCase().replaceAll(' ','-')),authorName:String(x.authorName??x.author??'RJ Tractor Techs'),articleType:(x.articleType??'article'),status:'published'}as Article));}
+export async function listArticles(type?:'article'|'news',categorySlug?:string){if(isLocalDemo&&!db)return articles().filter(x=>(!type||x.articleType===type)&&(!categorySlug||x.categorySlug===categorySlug));if(!db)return[];const filters=[where('status','==','published'),orderBy('publishedAt','desc'),limit(24)];if(type)filters.unshift(where('articleType','==',type));if(categorySlug)filters.unshift(where('categorySlug','==',categorySlug));return mapped<Article>(await getDocs(query(collection(db,'articles'),...filters)));}
+export async function getArticle(slug:string){if(isLocalDemo&&!db)return articles().find(x=>x.slug===slug)??null;if(!db)return null;return (await mapped<Article>(await getDocs(query(collection(db,'articles'),where('slug','==',slug),where('status','==','published'),limit(1)))))[0]??null;}
+function videos(){return published<Record<string,unknown>&{id:string}>('videos').map(x=>({...x,title:String(x.title),slug:String(x.slug),description:String(x.description??''),youtubeVideoId:String(x.youtubeVideoId??x.youtubeId??''),thumbnail:String(x.thumbnail??''),status:'published'}as Video));}
+export async function listVideos(){if(isLocalDemo&&!db)return videos();if(!db)return[];return mapped<Video>(await getDocs(query(collection(db,'videos'),where('status','==','published'),orderBy('publishedAt','desc'),limit(24))));}export async function getVideo(slug:string){if(isLocalDemo&&!db)return videos().find(x=>x.slug===slug)??null;if(!db)return null;return(await mapped<Video>(await getDocs(query(collection(db,'videos'),where('slug','==',slug),where('status','==','published'),limit(1)))))[0]??null;}
+function equipment(){return published<Record<string,unknown>&{id:string}>('equipment').map(x=>({...x,name:String(x.name??x.title),slug:String(x.slug),categoryName:String(x.categoryName??x.category??'Equipment'),categorySlug:String(x.categorySlug??String(x.category??'equipment').toLowerCase().replaceAll(' ','-')),brandName:String(x.brandName??x.brand??''),price:Number(x.price??0),status:'published'}as Equipment));}
+export async function listEquipment(categorySlug?:string){if(isLocalDemo&&!db)return equipment().filter(x=>!categorySlug||x.categorySlug===categorySlug);if(!db)return[];const f=[where('status','==','published'),orderBy('name'),limit(30)];if(categorySlug)f.unshift(where('categorySlug','==',categorySlug));return mapped<Equipment>(await getDocs(query(collection(db,'equipment'),...f)));}export async function getEquipment(category:string,slug:string){if(isLocalDemo&&!db)return equipment().find(x=>x.categorySlug===category&&x.slug===slug)??null;if(!db)return null;return(await mapped<Equipment>(await getDocs(query(collection(db,'equipment'),where('categorySlug','==',category),where('slug','==',slug),where('status','==','published'),limit(1)))))[0]??null;}
+function dealers(){return published<Record<string,unknown>&{id:string}>('dealers').map(x=>({...x,name:String(x.name??x.title),slug:String(x.slug),address:String(x.address??''),city:String(x.city??''),district:String(x.district??''),state:String(x.state??''),status:'published'}as Dealer));}
+export async function listDealers(f:{brand?:string;state?:string;district?:string;city?:string}={}){if(isLocalDemo&&!db)return dealers().filter(x=>(!f.brand||x.brand===f.brand)&&(!f.state||x.state===f.state)&&(!f.district||x.district===f.district)&&(!f.city||x.city===f.city));if(!db)return[];const c=[where('status','==','published'),orderBy('name'),limit(30)];if(f.brand)c.unshift(where('brand','==',f.brand));if(f.state)c.unshift(where('state','==',f.state));if(f.district)c.unshift(where('district','==',f.district));if(f.city)c.unshift(where('city','==',f.city));return mapped<Dealer>(await getDocs(query(collection(db,'dealers'),...c)));}export async function getDealer(slug:string){if(isLocalDemo&&!db)return dealers().find(x=>x.slug===slug)??null;if(!db)return null;return(await mapped<Dealer>(await getDocs(query(collection(db,'dealers'),where('slug','==',slug),where('status','==','published'),limit(1)))))[0]??null;}

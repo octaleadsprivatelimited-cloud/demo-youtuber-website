@@ -15,8 +15,9 @@ const firebaseConfig = {
 };
 
 export const isLocalDemo = process.env.NODE_ENV === 'development';
-export const isFirebaseConfigured = Object.values(firebaseConfig).every(Boolean);
-export const firebaseApp = isFirebaseConfigured ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
+export const hasFirebaseCredentials = Object.values(firebaseConfig).every(Boolean);
+export const isFirebaseConfigured = hasFirebaseCredentials || isLocalDemo;
+export const firebaseApp = hasFirebaseCredentials ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
 export const auth = firebaseApp ? getAuth(firebaseApp) : null;
 export const db = firebaseApp ? getFirestore(firebaseApp) : null;
 export const storage = firebaseApp ? getStorage(firebaseApp) : null;

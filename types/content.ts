@@ -29,6 +29,7 @@ export interface Tractor {
   status: TractorStatus;
   popular?: boolean;
   featured?: boolean;
+  upcoming?: boolean;
   popularityScore?: number;
   createdAt?: unknown;
   updatedAt?: unknown;
