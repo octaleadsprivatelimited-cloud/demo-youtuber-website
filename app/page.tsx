@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { Newsletter } from '@/components/Newsletter';
+import { CmsHomepageModules } from '@/components/CmsHomepageModules';
 
 const nav = ['Home', 'Tractors', 'Brands', 'Reviews', 'Compare', 'Prices', 'Equipment', 'Agriculture', 'Videos', 'Dealers'];
 const searches = ['Mahindra 575 DI', 'John Deere 5310', 'Swaraj 744 FE', 'Sonalika 745', 'New Holland 3630'];
@@ -66,6 +67,7 @@ export default function Home() {
         <div className="hero-stats" aria-label="Platform topics"><div><strong>Reviews</strong><span>Real-world insights</span></div><div><strong>Specifications</strong><span>Clear model data</span></div><div><strong>Farming</strong><span>Practical knowledge</span></div></div>
       </section>
 
+      <CmsHomepageModules />
       <section className="intro-strip">
         <div><span>01</span><p><strong>Find your tractor</strong>Search by brand, power or budget.</p></div>
         <div><span>02</span><p><strong>Compare the details</strong>See important specifications side by side.</p></div>
