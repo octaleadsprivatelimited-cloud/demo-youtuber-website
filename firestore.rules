@@ -7,6 +7,22 @@ service cloud.firestore {
 
     match /tractors/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /brands/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /expertReviews/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /reviews/{id} {
+      allow read: if resource.data.status == 'approved' || isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+      allow update, delete: if isAdmin();
+    }
+    match /favorites/{id} {
+      allow read, delete: if signedIn() && request.auth.uid == resource.data.userId;
+      allow create: if signedIn() && request.auth.uid == request.resource.data.userId;
+      allow update: if signedIn() && request.auth.uid == resource.data.userId && request.auth.uid == request.resource.data.userId;
+    }
     match /users/{userId} { allow read, create, update: if owns(userId); allow delete: if isAdmin(); }
     match /{document=**} { allow read, write: if false; }
   }
