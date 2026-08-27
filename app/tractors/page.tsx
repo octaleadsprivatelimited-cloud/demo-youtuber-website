@@ -14,7 +14,7 @@ export default function TractorsPage() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [filters, setFilters] = useState<TractorFilters>({ pageSize: 12 });
   const [draftSearch, setDraftSearch] = useState('');
-  const [cursor, setCursor] = useState<DocumentSnapshot | null>(null);
+  const [cursor, setCursor] = useState<DocumentSnapshot | number | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(isFirebaseConfigured);
   const [error, setError] = useState('');
@@ -42,7 +42,9 @@ export default function TractorsPage() {
     const search = params.get('search')?.trim().toLowerCase();
     const brandId = params.get('brand')?.trim();
     if (search) setDraftSearch(params.get('search') ?? '');
-    if (search || brandId) setFilters((current) => ({ ...current, search: search || undefined, brandId: brandId || undefined }));
+    const numberParam=(key:string)=>{const value=params.get(key);return value!==null&&Number.isFinite(Number(value))?Number(value):undefined;};
+    const condition=params.get('condition');
+    setFilters(current=>({...current,search:search||undefined,brandId:brandId||undefined,minHp:numberParam('minHp'),maxHp:numberParam('maxHp'),condition:condition==='new'||condition==='used'?condition:undefined}));
   }, []);
   useEffect(() => { load(true); }, [filters]);
 
@@ -59,10 +61,10 @@ export default function TractorsPage() {
       <aside className="filters"><div><span>FILTER TRACTORS</span><button onClick={() => { setFilters({ pageSize: 12 }); setDraftSearch(''); }}>Clear</button></div>
         <label>Brand<select value={filters.brandId ?? ''} onChange={(event) => setFilters({...filters, brandId:event.target.value || undefined})}><option value="">All brands</option>{brands.map((brand) => <option value={brand.id} key={brand.id}>{brand.name}</option>)}</select></label>
         <label>Horsepower<select value={filters.minHp ?? ''} onChange={(event) => { const value=Number(event.target.value); setFilters({...filters,minHp:value || undefined,maxHp:value ? value+10 : undefined}); }}><option value="">All HP ranges</option><option value="20">20–30 HP</option><option value="30">30–40 HP</option><option value="40">40–50 HP</option><option value="50">50–60 HP</option><option value="60">60–70 HP</option></select></label>
-        <label>Drive type<select value={filters.driveType ?? ''} onChange={(event) => setFilters({...filters,driveType:event.target.value || undefined})}><option value="">2WD &amp; 4WD</option><option>2WD</option><option>4WD</option></select></label>
+        <label>Condition<select value={filters.condition??''} onChange={event=>setFilters({...filters,condition:event.target.value as TractorFilters['condition']||undefined})}><option value="">New &amp; used</option><option value="new">New</option><option value="used">Used</option></select></label><label>Drive type<select value={filters.driveType ?? ''} onChange={(event) => setFilters({...filters,driveType:event.target.value || undefined})}><option value="">2WD &amp; 4WD</option><option>2WD</option><option>4WD</option></select></label>
         <label>Transmission<select value={filters.transmission ?? ''} onChange={(event) => setFilters({...filters,transmission:event.target.value || undefined})}><option value="">All transmissions</option><option>Manual</option><option>Synchromesh</option><option>Power Reverser</option></select></label>
       </aside>
-      <div className="results"><div className="results-head"><div><p>TRACTOR RESULTS</p><h2>{loading ? 'Loading tractors…' : `${items.length} tractors found`}</h2></div><span>Published models from Firestore</span></div>
+      <div className="results"><div className="results-head"><div><p>TRACTOR RESULTS</p><h2>{loading ? 'Loading tractors…' : `${items.length} tractors found`}</h2></div><span>Published models from the catalog</span></div>
         {error && <div className="error-state"><h3>We couldn&apos;t load the tractor database.</h3><p>{error}</p><button onClick={() => load(true)}>Try again</button></div>}
         {!loading && !error && items.length === 0 && <div className="empty-state"><h3>No tractors found matching your filters.</h3><p>Try widening the horsepower range or choosing another brand.</p><button onClick={() => setFilters({pageSize:12})}>Clear filters</button></div>}
         <div className="catalog-grid">{items.map((tractor) => <TractorCard key={tractor.id} tractor={tractor} />)}</div>

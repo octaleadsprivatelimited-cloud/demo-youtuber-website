@@ -10,7 +10,8 @@ import { adminNavigationGroups } from '@/config/admin-navigation';
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const access = useAdmin();
-  const path = usePathname();
+  const currentPath = usePathname();
+  const path=['/admin/banners','/admin/advertisements'].includes(currentPath)?'/admin/promotions':currentPath;
   const [menuOpen, setMenuOpen] = useState(false);
   const demo = isLocalDemo && !db;
   useEffect(() => {

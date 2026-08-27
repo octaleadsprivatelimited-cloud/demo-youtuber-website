@@ -83,3 +83,13 @@
 .admin-workspace .crm-sidebar .admin-nav-group { display:flex; flex-direction:column; gap:3px; margin-top:14px; }
 .admin-workspace .crm-sidebar .admin-nav-label { margin:0 12px 5px; color:#718095; font-size:10px; line-height:1.5; font-weight:750; letter-spacing:.09em; text-transform:uppercase; }
 .admin-workspace .crm-sidebar .admin-nav-website { margin-top:12px; padding-top:12px; border-top:1px solid #e5e9ef; }
+
+/* Shared CMS selectors and promotion tabs. */
+.cms-fields select{width:100%;min-height:44px;padding:10px 12px;border:1px solid #c5ceda;border-radius:8px;background:#fff;color:#202936;font:inherit;}
+.cms-fields :disabled{opacity:1;color:#475569;background:#f8fafc;cursor:not-allowed;}
+.cms-promotion-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.cms-promotion-tabs button{padding:10px 16px;border:1px solid #c5ceda;border-radius:8px;background:#fff;color:#253448;cursor:pointer;}
+.cms-promotion-tabs button[aria-pressed=true]{background:#b62b20;color:#fff;border-color:#b62b20;}
+.cms-record-list .cms-actions{flex-wrap:wrap;}
+@media(max-width:600px){.cms-record-list article{align-items:flex-start;flex-direction:column;gap:12px;}.cms-record-list .cms-actions{width:100%;}}
+

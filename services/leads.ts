@@ -19,7 +19,7 @@ export interface Lead {
     assignedTo?: string;
     notes?: string;
     userId?: string;
-    createdAt?: {
+    createdAt?: string | {
         toDate?: () => Date;
     };
     updatedAt?: unknown;
@@ -30,7 +30,7 @@ function database() { if (!isFirebaseConfigured || !db)
 async function demos() { return (await readLocal<Lead>('leads')); }
 async function save(items: Lead[]) { return (await writeLocal('leads', items)); }
 export async function createLead(input: NewLead) { if (isLocalDemo && !db) {
-    (await save([{ ...input, id: `demo-${Date.now()}`, status: 'New', assignedTo: '', notes: '' } as Lead, ...(await demos())]));
+    (await save([{ ...input, id: `demo-${Date.now()}`, status: 'New', assignedTo: '', notes: '', createdAt:new Date().toISOString() } as Lead, ...(await demos())]));
     return;
 } const clean = Object.fromEntries(Object.entries(input).filter(([, v]) => v !== undefined && v !== '')); return addDoc(collection(database(), 'leads'), { ...clean, status: 'New', assignedTo: null, notes: '', createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); }
 export async function getAdminRole(userId: string) { if (isLocalDemo && !db)

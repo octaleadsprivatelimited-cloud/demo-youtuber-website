@@ -3,8 +3,8 @@ import { FavouriteButton } from './FavouriteButton';
 
 const formatPrice = (value: number) => value >= 100000 ? `₹${(value / 100000).toFixed(2)} Lakh` : `₹${value.toLocaleString('en-IN')}`;
 
-export function TractorCard({ tractor }: { tractor: Tractor }) {
-  return <article className="tractor-card">
+export function TractorCard({ tractor, duplicate=false }: { tractor: Tractor; duplicate?:boolean }) {
+  return <article className="tractor-card" aria-hidden={duplicate||undefined} inert={duplicate||undefined}>
     <div className="card-image" style={tractor.image ? { backgroundImage: `url(${tractor.image})` } : undefined}>
       <span>{tractor.featured ? 'FEATURED' : tractor.driveType ?? 'TRACTOR'}</span><FavouriteButton compact itemId={tractor.id} itemType="tractor" title={tractor.name} href={`/tractor/${tractor.brandSlug}/${tractor.slug}`} image={tractor.image} />
     </div>

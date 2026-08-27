@@ -1,1 +1,24 @@
-'use client';import{useEffect}from'react';import{listPublicRecords}from'@/services/site-data';export function DynamicSeo(){useEffect(()=>{listPublicRecords('seo',100).then(items=>{const item=items.find(x=>x.path===window.location.pathname);if(!item)return;if(item.title)document.title=String(item.title);if(item.description){let meta=document.querySelector<HTMLMetaElement>('meta[name="description"]');if(!meta){meta=document.createElement('meta');meta.name='description';document.head.appendChild(meta);}meta.content=String(item.description);}});},[]);return null;}
+'use client';
+import {useEffect} from 'react';
+import {usePathname} from 'next/navigation';
+import {usePublicRecords} from '@/hooks/usePublicRecords';
+export function DynamicSeo(){
+  const path=usePathname();const {items}=usePublicRecords('seo');
+  const item=items.find(record=>record.path===path);
+  useEffect(()=>{
+    if(!item)return;
+    const oldTitle=document.title;
+    if(item.title)document.title=String(item.title);
+    const cleanups:(()=>void)[]=[];
+    for(const [attribute,key,value] of [['name','description',item.description],['property','og:title',item.title],['property','og:description',item.description],['property','og:image',item.image]]){
+      if(!value)continue;
+      let element=document.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
+      const existing=Boolean(element);const previous=element?.content;
+      if(!element){element=document.createElement('meta');element.setAttribute(String(attribute),String(key));document.head.appendChild(element);}
+      element.content=String(value);const meta=element;
+      cleanups.push(()=>{if(existing)meta.content=previous??'';else meta.remove();});
+    }
+    return()=>{if(document.title===String(item.title))document.title=oldTitle;cleanups.forEach(cleanup=>cleanup());};
+  },[path,item]);
+  return null;
+}

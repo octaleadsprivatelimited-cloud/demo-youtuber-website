@@ -8,6 +8,7 @@ export interface Tractor {
   brandName: string;
   brandSlug: string;
   model: string;
+  condition?: 'new'|'used';
   tagline?: string;
   description?: string;
   hp: number;
@@ -48,6 +49,7 @@ export interface Brand {
 }
 
 export interface TractorFilters {
+  condition?: 'new'|'used';
   search?: string;
   brandId?: string;
   minHp?: number;

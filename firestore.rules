@@ -4,10 +4,10 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function owns(userId) { return signedIn() && request.auth.uid == userId; }
     function isAdmin() {
-      return signedIn() && (request.auth.token.admin == true || (
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
         && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true
-      ));
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['Admin','Super Admin'];
     }
 
     match /tractors/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
@@ -19,7 +19,7 @@ service cloud.firestore {
     match /equipment/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /equipmentCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /dealers/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /admins/{userId} { allow read: if owns(userId); allow write: if signedIn() && request.auth.token.superAdmin == true; }
+    match /admins/{userId} { allow read: if owns(userId); allow write: if isAdmin() && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'Super Admin'; }
     match /leads/{id} {
       allow create: if request.resource.data.status == 'New'
         && request.resource.data.assignedTo == null
@@ -45,6 +45,8 @@ service cloud.firestore {
       allow create: if signedIn() && request.auth.uid == request.resource.data.userId;
       allow update: if signedIn() && request.auth.uid == resource.data.userId && request.auth.uid == request.resource.data.userId;
     }
+    match /heroSlides/{id} { allow read: if resource.data.status in ['published','approved'] || isAdmin(); allow write: if isAdmin(); }
+    match /partners/{id} { allow read: if resource.data.status in ['published','approved'] || isAdmin(); allow write: if isAdmin(); }
     match /banners/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /advertisements/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /seo/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
@@ -63,3 +65,4 @@ service cloud.firestore {
     match /{document=**} { allow read, write: if false; }
   }
 }
+

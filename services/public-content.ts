@@ -14,7 +14,7 @@ export async function submitContact(input: {
     phone?: string;
     message: string;
 }) { if (isLocalDemo && !db) {
-    (await writeLocal('contactMessages', [{ ...input, id: `demo-${Date.now()}`, status: 'New' }, ...(await readLocal<Generic>('contactMessages'))]));
+    (await writeLocal('contactMessages', [{ ...input, id: `demo-${Date.now()}`, status: 'New', createdAt:new Date().toISOString() }, ...(await readLocal<Generic>('contactMessages'))]));
     return;
 } if (!db)
     throw new Error('Firebase is not configured.'); return addDoc(collection(db, 'contactMessages'), { ...input, status: 'New', createdAt: serverTimestamp() }); }

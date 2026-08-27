@@ -13,18 +13,14 @@ export type AdminUser = {
 async function users() { return (await readLocal<AdminUser>('users')); }
 export async function listUsers() { if (isLocalDemo && !db) {
     const items = (await users());
-    return items.length ? items : [{ id: 'local-demo-admin', email: 'demo@localhost', displayName: 'Demo Administrator', role: 'Super Admin', disabled: false }];
+    return items;
 } if (!db)
     throw new Error('Firebase is not configured.'); const result = await getDocs(query(collection(db, 'users'), orderBy('createdAt', 'desc'), limit(100))); return result.docs.map(row => ({ id: row.id, ...row.data() } as AdminUser)); }
 export async function setUserRole(uid: string, role: string) { if (isLocalDemo && !firebaseApp) {
-    const items = await listUsers();
-    (await writeLocal('users', items.map(x => x.id === uid ? { ...x, role } : x)));
-    return;
+    throw new Error('Account access control requires Firebase Authentication and the deployed admin functions.');
 } if (!firebaseApp)
     throw new Error('Firebase is not configured.'); return httpsCallable(getFunctions(firebaseApp), 'setUserRole')({ uid, role }); }
 export async function setUserDisabled(uid: string, disabled: boolean) { if (isLocalDemo && !firebaseApp) {
-    const items = await listUsers();
-    (await writeLocal('users', items.map(x => x.id === uid ? { ...x, disabled } : x)));
-    return;
+    throw new Error('Account access control requires Firebase Authentication and the deployed admin functions.');
 } if (!firebaseApp)
     throw new Error('Firebase is not configured.'); return httpsCallable(getFunctions(firebaseApp), 'setUserDisabled')({ uid, disabled }); }
