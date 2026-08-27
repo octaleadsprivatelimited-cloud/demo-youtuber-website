@@ -1,4 +1,23 @@
-import{logEvent}from'firebase/analytics';import type{Analytics}from'firebase/analytics';import{initializeAnalytics,isLocalDemo}from'@/lib/firebase/client';import{readLocal,writeLocal}from'@/lib/local-demo';
-export type AnalyticsEvent='page_view'|'tractor_view'|'search'|'comparison'|'favourite'|'video_click'|'youtube_click'|'lead_submission'|'dealer_phone_click'|'whatsapp_click'|'article_view'|'emi_calculation';export type LocalAnalyticsEvent={id:string;name:AnalyticsEvent;parameters:Record<string,unknown>;createdAt:string};const recordEvent=logEvent as unknown as(analytics:Analytics,name:string,parameters?:Record<string,unknown>)=>void;
-export async function trackEvent(name:AnalyticsEvent,parameters:Record<string,string|number|boolean|undefined>={}){try{if(isLocalDemo){const events=readLocal<LocalAnalyticsEvent>('analyticsEvents');writeLocal('analyticsEvents',[{id:`event-${Date.now()}-${Math.random()}`,name,parameters,createdAt:new Date().toISOString()},...events].slice(0,1000));}const analytics=await initializeAnalytics();if(analytics)recordEvent(analytics,name,Object.fromEntries(Object.entries(parameters).filter(([,value])=>value!==undefined)));}catch{}}
-export function listLocalAnalytics(){return readLocal<LocalAnalyticsEvent>('analyticsEvents');}
+import { logEvent } from 'firebase/analytics';
+import type { Analytics } from 'firebase/analytics';
+import { initializeAnalytics, isLocalDemo } from '@/lib/firebase/client';
+import { readLocal, writeLocal } from '@/lib/local-demo';
+export type AnalyticsEvent = 'page_view' | 'tractor_view' | 'search' | 'comparison' | 'favourite' | 'video_click' | 'youtube_click' | 'lead_submission' | 'dealer_phone_click' | 'whatsapp_click' | 'article_view' | 'emi_calculation';
+export type LocalAnalyticsEvent = {
+    id: string;
+    name: AnalyticsEvent;
+    parameters: Record<string, unknown>;
+    createdAt: string;
+};
+const recordEvent = logEvent as unknown as (analytics: Analytics, name: string, parameters?: Record<string, unknown>) => void;
+export async function trackEvent(name: AnalyticsEvent, parameters: Record<string, string | number | boolean | undefined> = {}) { try {
+    if (isLocalDemo) {
+        const events = (await readLocal<LocalAnalyticsEvent>('analyticsEvents'));
+        (await writeLocal('analyticsEvents', [{ id: `event-${Date.now()}-${Math.random()}`, name, parameters, createdAt: new Date().toISOString() }, ...events].slice(0, 1000)));
+    }
+    const analytics = await initializeAnalytics();
+    if (analytics)
+        recordEvent(analytics, name, Object.fromEntries(Object.entries(parameters).filter(([, value]) => value !== undefined)));
+}
+catch { } }
+export async function listLocalAnalytics() { return (await readLocal<LocalAnalyticsEvent>('analyticsEvents')); }

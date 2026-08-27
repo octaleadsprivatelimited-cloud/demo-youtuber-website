@@ -1,5 +1,5 @@
 {
   "project_id": "appgprj_6a8f074bbf548191ac4776dcb135a360",
-  "d1": null,
-  "r2": null
+  "d1": "LOCAL_CMS_DB",
+  "r2": "LOCAL_CMS_MEDIA"
 }

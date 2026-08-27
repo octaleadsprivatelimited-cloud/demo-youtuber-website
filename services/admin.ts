@@ -1,8 +1,54 @@
-import {addDoc,collection,deleteDoc,doc,getCountFromServer,getDocs,limit,orderBy,query,serverTimestamp,setDoc} from 'firebase/firestore';import {getDownloadURL,ref,uploadBytes} from 'firebase/storage';import {db,storage,isLocalDemo} from '@/lib/firebase/client';import {readLocal,writeLocal} from '@/lib/local-demo';
-export type AdminRecord={id:string;[key:string]:unknown};
-function needDb(){if(!db)throw new Error('Firebase is not configured.');return db;}function localRecords(name:string){return readLocal<AdminRecord>(name);}function setLocalRecords(name:string,items:AdminRecord[]){writeLocal(name,items);}
-export async function listAdminRecords(name:string){if(isLocalDemo&&!db)return localRecords(name);const snap=await getDocs(query(collection(needDb(),name),orderBy('updatedAt','desc'),limit(100)));return snap.docs.map(item=>({id:item.id,...item.data()}));}
-export async function saveAdminRecord(name:string,id:string|undefined,data:Record<string,unknown>){if(isLocalDemo&&!db){const items=localRecords(name);const key=id??`demo-${Date.now()}`;const next={...data,id:key,updatedAt:new Date().toISOString()};setLocalRecords(name,id?items.map(item=>item.id===id?next:item):[next,...items]);return key;}const payload={...data,updatedAt:serverTimestamp()};if(id){await setDoc(doc(needDb(),name,id),payload,{merge:true});return id;}const created=await addDoc(collection(needDb(),name),{...payload,createdAt:serverTimestamp()});return created.id;}
-export async function removeAdminRecord(name:string,id:string){if(isLocalDemo&&!db){setLocalRecords(name,localRecords(name).filter(item=>item.id!==id));return;}await deleteDoc(doc(needDb(),name,id));}
-export async function uploadAdminImage(file:File,folder:string){if(isLocalDemo&&!storage)return new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(reader.error);reader.readAsDataURL(file);});if(!storage)throw new Error('Firebase Storage is not configured.');const clean=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const target=ref(storage,`admin/${folder}/${Date.now()}-${clean}`);await uploadBytes(target,file,{contentType:file.type});return getDownloadURL(target);}
-export async function getAdminCounts(names:string[]){if(isLocalDemo&&!db)return Object.fromEntries(names.map(name=>[name,localRecords(name).length]));const rows=await Promise.all(names.map(async name=>[name,(await getCountFromServer(collection(needDb(),name))).data().count] as const));return Object.fromEntries(rows) as Record<string,number>;}
+import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDocs, limit, query, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { db, storage, isLocalDemo } from '@/lib/firebase/client';
+import { localRequest, readLocal, writeLocal } from '@/lib/local-demo';
+import { prepareAdminRecord } from '@/lib/admin-records';
+export type AdminRecord = { id: string; [key: string]: unknown };
+function needDb() { if (!db) throw new Error('Firebase is not configured.'); return db; }
+export async function listAdminRecords(name: string): Promise<AdminRecord[]> {
+  if (isLocalDemo && !db) return readLocal<AdminRecord>(name);
+  // Do not exclude older records that have no updatedAt field.
+  const snapshot = await getDocs(query(collection(needDb(), name), limit(100)));
+  return snapshot.docs.map(item => ({ ...item.data(), id: item.id }));
+}
+export async function saveAdminRecord(name: string, id: string | undefined, data: Record<string, unknown>) {
+  const clean = prepareAdminRecord(name, data);
+  if (isLocalDemo && !db) {
+    const items = await readLocal<AdminRecord>(name);
+    const existing = items.find(item => item.id === id);
+    if (id && !existing) throw new Error('This record was removed. Refresh the list before editing.');
+    const key = id ?? crypto.randomUUID();
+    const next = { ...existing, ...clean, id: key, updatedAt: new Date().toISOString() };
+    await writeLocal(name, id ? items.map(item => item.id === id ? next : item) : [next, ...items]);
+    return key;
+  }
+  const payload = { ...clean, updatedAt: serverTimestamp() };
+  if (id) { await updateDoc(doc(needDb(), name, id), payload); return id; }
+  return (await addDoc(collection(needDb(), name), { ...payload, createdAt: serverTimestamp() })).id;
+}
+export async function removeAdminRecord(name: string, id: string) {
+  if (isLocalDemo && !db) {
+    const items = await readLocal<AdminRecord>(name);
+    await writeLocal(name, items.filter(item => item.id !== id));
+    return;
+  }
+  await deleteDoc(doc(needDb(), name, id));
+}
+export async function uploadAdminImage(file: File, folder: string) {
+  if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) throw new Error('Use a JPG, PNG, WebP, or GIF image.');
+  if (!file.size || file.size > 8 * 1024 * 1024) throw new Error('Choose an image smaller than 8 MB.');
+  if (isLocalDemo && !storage) {
+    const form = new FormData(); form.set('file', file);
+    const result = await localRequest('/api/local-media', { method: 'POST', body: form });
+    return String(result.url);
+  }
+  if (!storage) throw new Error('Firebase Storage is not configured.');
+  const clean = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
+  const target = ref(storage, 'admin/' + folder + '/' + crypto.randomUUID() + '-' + clean);
+  await uploadBytes(target, file, { contentType: file.type });
+  return getDownloadURL(target);
+}
+export async function getAdminCounts(names: string[]) {
+  if (isLocalDemo && !db) return Object.fromEntries(await Promise.all(names.map(async name => [name, (await readLocal(name)).length])));
+  return Object.fromEntries(await Promise.all(names.map(async name => [name, (await getCountFromServer(collection(needDb(), name))).data().count])));
+}
