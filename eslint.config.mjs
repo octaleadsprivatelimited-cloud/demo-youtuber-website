@@ -13,7 +13,7 @@ const eslintConfig = defineConfig([
       'react-hooks/exhaustive-deps': 'off',
     },
   },
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', '.vinext/**', '.wrangler/**', 'dist/**', 'out/**', 'build/**', 'next-env.d.ts']),
 ]);
 
 export default eslintConfig;

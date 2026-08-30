@@ -1,3 +1,3 @@
-import {InfoPage} from '@/components/InfoPage';
-export const metadata={title:'About RJ Tractor Techs',description:'Learn about the RJ Tractor Techs editorial platform and its approach to tractor and farming information.'};
-export default function About(){return <InfoPage settingKey="about" eyebrow="ABOUT RJ TRACTOR TECHS" title="Research for the road and the field" intro="Tractor reviews, specifications, comparisons and practical agriculture information."><h2>What we provide</h2><p>RJ Tractor Techs brings tractor research and farming information together in one clear, approachable platform.</p><h2>Our editorial approach</h2><p>Specifications, pricing and launch information should be checked against published manufacturer or dealer information. Prices can vary by location, variant and applicable taxes.</p><a className="cta-primary" href="https://www.youtube.com/@Rjtractortechs">Watch RJ Tractor Techs on YouTube</a></InfoPage>}
+import {AboutPage} from '@/components/AboutPage';
+export const metadata={title:'About RJ Tractor Techs',description:'A place to explore tractors, understand the details and make your next shortlist.'};
+export default function About(){return <AboutPage/>;}

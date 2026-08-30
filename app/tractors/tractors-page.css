@@ -1,0 +1,193 @@
+.public-site .new-tractors-page {
+  --catalog-navy: #123f68;
+  --catalog-red: #cf3329;
+  --catalog-cream: #fffaf0;
+  --catalog-line: #dfe4ea;
+  background: #fff;
+}
+
+.public-site .new-tractors-page .catalog-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(390px, .88fr);
+  align-items: center;
+  gap: clamp(38px, 6vw, 88px);
+  min-height: 376px;
+  padding-top: 42px;
+  padding-bottom: 46px;
+  background:
+    linear-gradient(96deg, rgba(255,252,246,.99) 0%, rgba(255,249,239,.97) 46%, rgba(255,244,226,.84) 67%, rgba(12,48,78,.22) 100%),
+    url('/hero/tractor-finder-banner.png') center 58% / cover no-repeat;
+  border-bottom-color: #e6d3bd;
+}
+
+.public-site .new-tractors-page .catalog-hero::after { display: none; }
+.public-site .new-tractors-page .catalog-hero-copy { min-width: 0; }
+.public-site .new-tractors-page .catalog-hero-copy > p { margin-bottom: 14px; }
+.public-site .new-tractors-page .catalog-hero-copy h1 { max-width: 650px; font-size: clamp(42px, 4.4vw, 60px); line-height:1.02; }
+.public-site .new-tractors-page .catalog-hero-copy > span { max-width: 640px; font-size: 15px; }
+
+.public-site .new-tractors-page .catalog-power-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.public-site .new-tractors-page .catalog-power-links a {
+  min-height: 36px;
+  padding: 9px 13px;
+  border: 1px solid #d5dde5;
+  border-radius: 6px;
+  background: rgba(255,255,255,.9);
+  color: var(--catalog-navy);
+  font-size: 11px;
+  font-weight: 750;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.public-site .new-tractors-page .catalog-power-links a:hover {
+  transform: translateY(-2px);
+  border-color: #9cb2c6;
+  box-shadow: 0 9px 22px -17px #0d345c;
+}
+
+.public-site .new-tractors-page .catalog-search-card {
+  display: block;
+  width: 100%;
+  max-width: 540px;
+  margin: 0;
+  padding: 22px;
+  border: 1px solid rgba(190,203,216,.88);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .91);
+  box-shadow: inset 0 1px 0 #fff, 0 20px 42px -30px #123f68a0;
+  backdrop-filter: blur(8px);
+}
+
+.public-site .new-tractors-page .catalog-search-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 13px;
+}
+
+.public-site .new-tractors-page .catalog-search-heading span { color: var(--catalog-red); font-size: 9px; font-weight: 800; letter-spacing: .14em; }
+.public-site .new-tractors-page .catalog-search-heading small { color: #798491; font-size: 10px; }
+.public-site .new-tractors-page .catalog-search-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
+.public-site .new-tractors-page .catalog-search-field input { width: 100%; min-height: 48px; padding-inline: 15px; border-color: #cfd7e0; background: #fff; }
+.public-site .new-tractors-page .catalog-search-row > button { min-width: 110px; min-height: 48px; border-radius: 7px; background: var(--catalog-navy); color: #fff; }
+.public-site .new-tractors-page .catalog-search-row > button:hover { background: #0b3459; box-shadow: 0 10px 20px -14px #123f68; }
+.public-site .new-tractors-page .catalog-search-card > p { margin: 13px 0 0; color: #788390; font-size: 10px; line-height: 1.6; }
+
+.public-site .new-tractors-page .catalog-layout {
+  display: grid;
+  grid-template-columns: 258px minmax(0,1fr);
+  align-items: start;
+  gap: 22px;
+  padding-top: 32px;
+}
+
+.public-site .new-tractors-page .filters {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #e2e5e9;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(20,36,54,.06);
+}
+
+.public-site .new-tractors-page .filters > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 17px 18px;
+  border-bottom: 1px solid #e6e8eb;
+  background: #fff;
+}
+
+.public-site .new-tractors-page .filters > header span,
+.public-site .new-tractors-page .filters > header small { display: block; }
+.public-site .new-tractors-page .filters > header span { color: #212934; font-size: 13px; font-weight: 800; letter-spacing: 0; }
+.public-site .new-tractors-page .filters > header small { display:none; }
+.public-site .new-tractors-page .filters > header button { padding: 7px 0; border: 0; background: transparent; color: #2874f0; font-size: 10px; font-weight: 750; text-transform:uppercase; }
+.public-site .new-tractors-page .filters > header button:disabled { color: #a8b0b9; cursor: default; }
+.public-site .new-tractors-page .filters label { display:block; min-width:0; padding: 16px 18px 18px; margin: 0; border: 0; border-bottom:1px solid #eceef0; color: #313943; font-size: 10px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.public-site .new-tractors-page .filters label:last-child { border-bottom:0; }
+.public-site .new-tractors-page .filters select { width:100%; min-height: 38px; margin-top: 10px; padding:8px 10px; border:1px solid #d8dce1; border-radius:2px; background:#fff; color: #273442; font-size: 11px; font-weight:500; text-transform:none; letter-spacing:0; }
+.public-site .new-tractors-page .filters select:hover { border-color:#aeb5bd; }
+
+.public-site .new-tractors-page .results-head {
+  min-height: 54px;
+  margin-bottom: 18px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--catalog-line);
+}
+
+.public-site .new-tractors-page .results-head h2 { color: #17283a; font-size: 28px; }
+.public-site .new-tractors-page .results-head > span { padding: 8px 11px; border-radius: 6px; background: var(--catalog-cream); color: #695e49; font-size: 10px; }
+.public-site .new-tractors-page .catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.public-site .new-tractors-page .catalog-grid .tractor-card { border-color: #dfe4e9; border-radius: 12px; box-shadow: 0 10px 28px -26px #183753; }
+.public-site .new-tractors-page .catalog-grid .tractor-card:hover { transform: translateY(-3px); border-color: #b8c6d4; box-shadow: 0 18px 34px -25px #18375375; }
+.public-site .new-tractors-page .catalog-grid .card-image { height: 190px; background-color: #f5f7f9; }
+.public-site .new-tractors-page .catalog-grid .card-body { padding: 18px; }
+.public-site .new-tractors-page .catalog-grid .card-body > p { color: var(--catalog-red); font-size: 9px; }
+.public-site .new-tractors-page .catalog-grid .card-body h3 { min-height: 2.5em; color: #1a2939; font-size: 17px; }
+.public-site .new-tractors-page .catalog-grid .card-body > div { border-color: #e8ebee; }
+.public-site .new-tractors-page .catalog-grid .card-body a { color: var(--catalog-navy); }
+
+.public-site .new-tractors-page .empty-state {
+  min-height: 245px;
+  margin: 0;
+  border-style: solid;
+  border-color: #dfe4e9;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #fff, #fffaf2);
+}
+
+.public-site .new-tractors-page .empty-state > span { margin-bottom: 14px; color: var(--catalog-red); font-size: 9px; font-weight: 800; letter-spacing: .14em; }
+.public-site .new-tractors-page .empty-state button { background: var(--catalog-navy); }
+.public-site .new-tractors-page .mobile-filter-toggle { display: none; }
+
+@media (max-width: 1080px) {
+  .public-site .new-tractors-page .catalog-hero { grid-template-columns: minmax(0, 1fr) minmax(360px, .85fr); gap: 40px; }
+  .public-site .new-tractors-page .catalog-layout { grid-template-columns:230px minmax(0,1fr); gap:18px; }
+  .public-site .new-tractors-page .catalog-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+
+@media (max-width: 760px) {
+  .public-site .new-tractors-page .catalog-hero {
+    display: block;
+    min-height: 0;
+    padding: 30px 20px 34px;
+    background:
+      linear-gradient(110deg, rgba(255,252,246,.98), rgba(255,247,234,.91)),
+      url('/hero/tractor-finder-banner.png') 62% center / cover no-repeat;
+  }
+  .public-site .new-tractors-page .catalog-hero-copy h1 { font-size: clamp(38px, 11vw, 49px); line-height: 1.02; }
+  .public-site .new-tractors-page .catalog-hero-copy > span { margin-top: 15px; font-size: 13px; line-height: 1.65; }
+  .public-site .new-tractors-page .catalog-power-links { gap: 6px; margin-top: 20px; }
+  .public-site .new-tractors-page .catalog-power-links a { flex: 1 1 calc(50% - 3px); min-height: 37px; padding: 10px; text-align: center; font-size: 10px; }
+  .public-site .new-tractors-page .catalog-search-card { max-width: none; margin-top: 25px; padding: 16px; border-radius: 12px; }
+  .public-site .new-tractors-page .catalog-search-row { grid-template-columns: 1fr; }
+  .public-site .new-tractors-page .catalog-search-row > button { width: 100%; min-height: 47px; }
+  .public-site .new-tractors-page .catalog-search-card > p { display: none; }
+  .public-site .new-tractors-page .catalog-layout { display: block; padding: 22px 20px 42px; }
+  .public-site .new-tractors-page .mobile-filter-toggle { display: flex; width: 100%; min-height: 54px; align-items: center; justify-content: space-between; margin-bottom: 20px; padding: 12px 15px; border: 1px solid #d8e0e8; border-radius: 9px; background: #fff; color: #1e2d3d; text-align: left; }
+  .public-site .new-tractors-page .mobile-filter-toggle strong { font-size: 12px; }
+  .public-site .new-tractors-page .mobile-filter-toggle span { color: #6f7a87; font-size: 9px; }
+  .public-site .new-tractors-page .filters { display: none; position: static; width: 100%; margin: -10px 0 22px; }
+  .public-site .new-tractors-page .filters.is-open { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .public-site .new-tractors-page .filters > header { grid-column: 1 / -1; }
+  .public-site .new-tractors-page .filters label:last-child { grid-column: 1 / -1; }
+  .public-site .new-tractors-page .results-head { align-items: flex-start; margin-bottom: 16px; }
+  .public-site .new-tractors-page .results-head h2 { font-size: 24px; }
+  .public-site .new-tractors-page .results-head > span { padding: 0; background: transparent; }
+  .public-site .new-tractors-page .catalog-grid { grid-template-columns: 1fr; }
+  .public-site .new-tractors-page .catalog-grid .tractor-card { min-width: 0; }
+  .public-site .new-tractors-page .catalog-grid .card-image { height: 220px; }
+  .public-site .new-tractors-page .empty-state { min-height: 260px; padding: 34px 20px; }
+}

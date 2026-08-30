@@ -7,10 +7,10 @@ export function AdminImageField({ label, value, folder, disabled, onChange, onBu
 }) {
   const id = useId();
   const [uploading, setUploading] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failedSource, setFailedSource] = useState('');
   async function choose(file?: File) {
     if (!file) return;
-    setUploading(true); onBusy(true); onError(''); setFailed(false);
+    setUploading(true); onBusy(true); onError(''); setFailedSource('');
     try {
       const source = await uploadAdminImage(file, folder);
       // Confirm the saved image is decodable before allowing the record to save.
@@ -22,12 +22,12 @@ export function AdminImageField({ label, value, folder, disabled, onChange, onBu
   }
   return <div className="cms-image-field">
     <label htmlFor={id}>{label}</label>
-    {value && <div className="cms-image-preview">{failed ? <p>Image unavailable. Choose a replacement.</p> :
-      <img key={value} src={value} alt={label + ' preview'} onError={() => setFailed(true)}/>}</div>}
+    {value && <div className="cms-image-preview">{failedSource === value ? <p>Image unavailable. Choose a replacement.</p> :
+      <img key={value} src={value} alt={label + ' preview'} onError={() => setFailedSource(value)}/>}</div>}
     <div className="cms-upload"><strong>{uploading ? 'Uploading image…' : value ? 'Replace image' : 'Choose an image'}</strong>
       <span>JPG, PNG, WebP or GIF · up to 8 MB</span>
       <input id={id} type="file" accept="image/jpeg,image/png,image/webp,image/gif" disabled={disabled || uploading}
         onChange={event => { void choose(event.target.files?.[0]); event.target.value = ''; }}/></div>
-    {value && <button className="cms-text-button" type="button" disabled={disabled || uploading} onClick={() => { onChange(''); setFailed(false); }}>Remove image</button>}
+    {value && <button className="cms-text-button" type="button" disabled={disabled || uploading} onClick={() => { onChange(''); setFailedSource(''); }}>Remove image</button>}
   </div>;
 }

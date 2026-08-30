@@ -3,6 +3,7 @@ import { db, isFirebaseConfigured, isLocalDemo } from '@/lib/firebase/client';
 import { published, readLocal, writeLocal } from '@/lib/local-demo';
 import {normalizeTractor} from './tractors';
 import type { Tractor } from '@/types/content';
+import { demoReviews } from '@/data/demo-content';
 export interface ExpertReview {
     id: string;
     slug: string;
@@ -59,13 +60,13 @@ export async function getTractorsByIds(ids: string[]): Promise<Tractor[]> {
 }
 export async function listExpertReviews(): Promise<ExpertReview[]> {
     if (isLocalDemo && !db)
-        return (await published<ExpertReview>('expertReviews'));
+        { const saved=await published<ExpertReview>('expertReviews'); return saved.length?saved:demoReviews; }
     const snapshot = await getDocs(query(collection(database(), 'expertReviews'), where('status', '==', 'published'), orderBy('publishedAt', 'desc'), limit(24)));
     return snapshot.docs.map(item => ({ id: item.id, ...item.data() }) as ExpertReview);
 }
 export async function getExpertReview(slug: string): Promise<ExpertReview | null> {
     if (isLocalDemo && !db)
-        return (await published<ExpertReview>('expertReviews')).find(item => item.slug === slug) ?? null;
+        { const saved=await published<ExpertReview>('expertReviews'); return (saved.length?saved:demoReviews).find(item => item.slug === slug) ?? null; }
     const snapshot = await getDocs(query(collection(database(), 'expertReviews'), where('slug', '==', slug), where('status', '==', 'published'), limit(1)));
     const item = snapshot.docs[0];
     return item ? ({ id: item.id, ...item.data() } as ExpertReview) : null;

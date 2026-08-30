@@ -21,8 +21,8 @@ export const adminNavigationGroups: { id: string; label: string; items: AdminNav
     items: [section('tractors', true), section('brands', true), section('equipment'), section('dealers', true)],
   },
   {
-    id: 'content', label: 'Articles & reviews',
-    items: [section('articles', true), section('videos'), section('expert-reviews'), section('reviews', true), section('categories')],
+    id: 'content', label: 'Articles & media',
+    items: [section('articles', true), section('videos'), section('categories')],
   },
   {
     id: 'enquiries', label: 'Enquiries & audience',

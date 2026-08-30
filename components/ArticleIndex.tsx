@@ -1,18 +1,16 @@
 'use client';
-
-import { useEffect,useState } from 'react';
+import {useEffect,useMemo,useState} from 'react';
+import {PublicShell} from './SiteChrome';
+import {PageIntro,EmptyContent} from './PublicPageParts';
+import {FavouriteButton} from './FavouriteButton';
 import {usePublicRecords} from '@/hooks/usePublicRecords';
-import { PublicShell } from './SiteChrome';
-import { SetupNotice } from './SetupNotice';
-import { FavouriteButton } from './FavouriteButton';
-import { isFirebaseConfigured } from '@/lib/firebase/client';
-import { listArticles,type Article } from '@/services/media';
-
+import {listArticles,type Article} from '@/services/media';
 export function ArticleIndex({type}:{type:'article'|'news'}){
- const {items:categories}=usePublicRecords('articleCategories');
- const [items,setItems]=useState<Article[]>([]);const [loading,setLoading]=useState(isFirebaseConfigured);const [error,setError]=useState('');
- useEffect(()=>{if(!isFirebaseConfigured)return;listArticles(type).then(setItems).catch(reason=>setError(reason instanceof Error?reason.message:'Unable to load stories.')).finally(()=>setLoading(false));},[type]);
- const title=type==='news'?'Agriculture and tractor news':'Farming insights and articles';
- return <PublicShell><main className="media-index"><section className="page-hero"><p>{type==='news'?'LATEST UPDATES':'KNOWLEDGE FOR THE FIELD'}</p><h1>{title}</h1><span>{type==='news'?'New launches, industry developments and agricultural updates.':'Practical guides, tractor explainers and farming information from the RJ Tractor Techs editorial workflow.'}</span>{categories.length>0&&<nav className="category-links" aria-label="Article categories">{categories.map(category=><a key={category.id} href={'/category/'+category.slug}>{String(category.title??category.name)}</a>)}</nav>}</section>{!isFirebaseConfigured?<SetupNotice/>:<section className="article-list">{loading?<div className="detail-loading">Loading stories…</div>:error?<div className="error-state"><h3>Stories are unavailable.</h3><p>{error}</p></div>:!items.length?<div className="empty-state"><h3>No published stories yet.</h3><p>Published {type==='news'?'news':'articles'} will appear here automatically.</p></div>:<div className="article-grid">{items.map((item,index)=><article className={index===0?'article-lead':''} key={item.id}><div style={item.coverImage?{backgroundImage:'url('+item.coverImage+')'}:undefined}/><section><p>{item.categoryName} · {type.toUpperCase()}</p><h2>{item.title}</h2><span>{item.excerpt}</span><div><a href={'/articles/'+item.slug}>Read story →</a><FavouriteButton compact itemId={item.id} itemType="article" title={item.title} href={'/articles/'+item.slug} image={item.coverImage}/></div></section></article>)}</div>}</section>}</main></PublicShell>;
+  const [items,setItems]=useState<Article[]>([]);const [loading,setLoading]=useState(true);const [error,setError]=useState('');const [search,setSearch]=useState('');const {items:categories}=usePublicRecords('articleCategories');
+  useEffect(()=>{let cancelled=false;setLoading(true);setError('');listArticles(type).then(rows=>{if(!cancelled)setItems(rows);}).catch(reason=>{if(!cancelled)setError(reason instanceof Error?reason.message:'Unable to load stories.');}).finally(()=>{if(!cancelled)setLoading(false);});return()=>{cancelled=true;};},[type]);
+  const shown=useMemo(()=>items.filter(item=>(item.title+' '+item.excerpt).toLowerCase().includes(search.trim().toLowerCase())),[items,search]);
+  return <PublicShell><main className={`media-index media-index-${type}`}><PageIntro eyebrow={type==='news'?'NEWS & UPDATES':'THE READING ROOM'} title={type==='news'?'What’s happening in the field.':'A clearer view of tractor ownership.'} description={type==='news'?'Explore published updates from the world of tractors and agriculture.':'Buying questions, tractor explainers and farming topics. Take a moment to read before taking the next step.'}><nav className="reading-tabs" aria-label="Reading sections"><a className={type==='article'?'active':''} aria-current={type==='article'?'page':undefined} href="/articles">Articles & guides</a><a className={type==='news'?'active':''} aria-current={type==='news'?'page':undefined} href="/news">News & updates</a></nav></PageIntro>
+    <section className="article-list"><div className="listing-bar"><div><h2>{type==='news'?'Latest updates':'Explore the articles'}</h2></div><div className="listing-controls"><label>Find a story<input type="search" value={search} onChange={event=>setSearch(event.target.value)} placeholder="Search by topic or title"/></label></div></div>{categories.length>0&&<nav className="category-links" aria-label="Article categories">{categories.map(category=><a key={category.id} href={'/category/'+category.slug}>{String(category.title??category.name)}</a>)}</nav>}
+      {loading?<div className="detail-loading" role="status">Loading stories…</div>:error?<div className="error-state" role="alert">{error}</div>:!shown.length?<EmptyContent title={search?'No stories match that search.':type==='news'?'The next update starts here.':'More reading is on the way.'} description={search?'Try a shorter title or another topic.':'There are no published stories in this section yet. You can continue with the tractor catalog or explore the video library.'} href="/videos" action="Explore videos"/>:<div className="article-grid">{shown.map((item,index)=><article className={index===0?'article-lead':''} key={item.id}><div role={item.coverImage?'img':undefined} aria-label={item.coverImage?item.title:undefined} style={item.coverImage?{backgroundImage:'url('+JSON.stringify(item.coverImage)+')'}:undefined}/><section><p>{item.categoryName||'RJ TRACTOR TECHS'} · {type==='news'?'NEWS':'ARTICLE'}</p><h2><a href={'/articles/'+item.slug}>{item.title}</a></h2><span>{item.excerpt}</span><div className="story-actions"><a href={'/articles/'+item.slug}>Read story →</a><FavouriteButton compact itemId={item.id} itemType="article" title={item.title} href={'/articles/'+item.slug} image={item.coverImage}/></div></section></article>)}</div>}
+    </section></main></PublicShell>;
 }
-

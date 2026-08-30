@@ -1,11 +1,12 @@
+import { prepareTractorSpecifications } from './tractor-specifications';
 export function slugify(value: unknown) {
   return String(value ?? '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 export function prepareAdminRecord(collection: string, input: Record<string, unknown>) {
   const data: Record<string, unknown> = Object.fromEntries(Object.entries(input).filter(([key, value]) => !['id', 'createdAt', 'updatedAt'].includes(key) && value !== undefined));
   for (const [key, value] of Object.entries(data)) if (typeof value === 'string' && !key.toLowerCase().includes('image')) data[key] = value.trim();
-  data.status = collection === 'reviews' ? (['pending','approved','rejected'].includes(String(data.status))?data.status:'approved') : collection === 'newsletterSubscribers' ? 'active' : 'published';
-  if (!data.slug && (data.title || data.model || data.name)) data.slug = slugify(data.title || data.model || data.name);
+  if (collection !== 'contactMessages') data.status = collection === 'reviews' ? (['pending','approved','rejected'].includes(String(data.status))?data.status:'approved') : collection === 'newsletterSubscribers' ? data.status || 'active' : 'published';
+  if (!['settings', 'homepageSections', 'contactMessages', 'newsletterSubscribers'].includes(collection) && !data.slug && (data.title || data.model || data.name)) data.slug = slugify(data.title || data.model || data.name);
   if (['heroSlides', 'partners'].includes(collection)) {
     if (!String(data.title ?? '').trim()) throw new Error('Please enter a name.');
     if (!Number.isInteger(Number(data.order)) || Number(data.order) < 1) throw new Error('Display order must be a whole number starting at 1.');
@@ -14,16 +15,20 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
   }
   if (['brands', 'equipment', 'dealers'].includes(collection)) data.name = data.title ?? data.name;
   if (collection === 'tractors') {
+    Object.assign(data, prepareTractorSpecifications(data));
+    if(data.variant&&!input.slug)data.slug=slugify([data.model,data.variant].filter(Boolean).join(' '));
     data.brandName = data.brand ?? data.brandName;
-    data.brandSlug = data.brandSlug || slugify(data.brand);
+    data.brandSlug = data.brandSlug || slugify(data.brand ?? data.brandName);
     data.brandId = data.brandId || data.brandSlug;
     data.condition=data.condition||'new';
-    data.name = [data.brandName, data.model].filter(Boolean).join(' ');
+    data.name = [data.brandName, data.model, data.variant].filter(Boolean).join(' ');
     data.hp = Number(data.horsepower ?? data.hp ?? 0);
     data.minPrice = Number(data.price ?? data.minPrice ?? 0);
-    data.maxPrice = Math.max(Number(data.maxPrice ?? data.price ?? 0),Number(data.minPrice));
+    const hasMaximum = data.maxPrice != null && String(data.maxPrice).trim() !== '';
+    data.maxPrice = hasMaximum ? Number(data.maxPrice) : '';
+    if(!Number.isFinite(Number(data.minPrice))||Number(data.minPrice)<0||(hasMaximum&&(!Number.isFinite(Number(data.maxPrice))||Number(data.maxPrice)<Number(data.minPrice))))throw new Error('Enter valid prices with maximum price at least equal to starting price.');
     data.popularityScore = Number(data.popularityScore ?? 0);
-    data.transmission = data.transmission || 'Not specified';
+    data.transmission = data.transmission ?? '';
     const name = String(data.name).toLowerCase();
     data.searchTerms = [...new Set([name, ...name.split(/\s+/), String(data.model).toLowerCase(), String(data.brand).toLowerCase()])];
     data.searchPrefixes = Array.from({ length: Math.min(name.length, 30) }, (_, index) => name.slice(0, index + 1));
@@ -35,7 +40,7 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
   }
   if (['articles', 'equipment'].includes(collection)) {
     data.categoryName = data.category ?? data.categoryName ?? '';
-    data.categorySlug = data.categorySlug || slugify(data.categoryName);
+    data.categorySlug = collection === 'equipment' ? slugify(data.categoryName) || 'equipment' : data.categorySlug || slugify(data.categoryName);
   }
   if(collection==='advertisements')data.placement='homepage';
   if(collection==='articles')data.articleType=data.articleType||'article';

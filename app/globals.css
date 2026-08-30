@@ -142,6 +142,9 @@ footer { padding:68px 7vw 22px; background:#0e1b13; color:#dce5df; }
 .footer-main>div>a:hover { color:var(--accent-bright); }
 .footer-bottom { margin-top:48px; padding-top:20px; display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,.1); color:#748178; font-size:10px; }
 .footer-bottom a { color:var(--accent-bright); font-weight:800; }
+.footer-socials { display:flex; align-items:center; gap:9px; }
+.footer-socials a { width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; margin:0; border:1px solid currentColor; border-radius:50%; }
+.footer-socials img { width:18px; height:18px; object-fit:contain; }
 .catalog-page,.simple-page,.detail-page,.account-page { min-height:80vh; background:#fff; }
 .catalog-hero,.page-hero { padding:70px 7vw; background:var(--cream); border-bottom:1px solid var(--line); }
 .catalog-hero>p,.page-hero>p,.auth-page>section>p,.account-panel>div>p { margin:0 0 10px; color:var(--accent); font-size:10px; font-weight:900; letter-spacing:.17em; }

@@ -2,6 +2,7 @@ import { collection, documentId, getDocs, limit, orderBy, query, type QueryConst
 import { db, isLocalDemo } from '@/lib/firebase/client';
 import { published } from '@/lib/local-demo';
 import type { Brand, Tractor, TractorFilters } from '@/types/content';
+import { demoTractors } from '@/data/demo-content';
 export interface TractorPage {
     items: Tractor[];
     cursor: DocumentSnapshot | number | null;
@@ -12,7 +13,7 @@ async function locals() { return (await published<Record<string, unknown> & {
     id: string;
 }>('tractors')).map(normalizeTractor); }
 export async function listTractors(filters: TractorFilters = {}, cursor?: DocumentSnapshot | number | null): Promise<TractorPage> { const pageSize = Math.min(filters.pageSize ?? 12, 24); if (isLocalDemo && !db) {
-    let items = (await locals());
+    const saved=await locals(); let items = saved.length?saved:demoTractors;
     if(filters.condition)items=items.filter(x=>x.condition===filters.condition);
     const q = filters.search?.toLowerCase();
     if (q)
@@ -44,11 +45,11 @@ export async function listTractors(filters: TractorFilters = {}, cursor?: Docume
 else if (filters.maxPrice !== undefined)
     constraints.push(orderBy('minPrice')); constraints.push(orderBy('popularityScore', 'desc'), orderBy(documentId()), limit(pageSize + 1)); if (cursor && typeof cursor!=='number')
     constraints.splice(constraints.length - 1, 0, startAfter(cursor)); const snapshot = await getDocs(query(collection(db, 'tractors'), ...constraints)); const docs = snapshot.docs.slice(0, pageSize); return { items: docs.map(d => normalizeTractor({ id: d.id, ...d.data() })), cursor: docs.at(-1) ?? null, hasMore: snapshot.docs.length > pageSize }; }
-export async function searchTractorSuggestions(prefix: string) { if (isLocalDemo && !db)
-    return (await locals()).filter(x => x.name.toLowerCase().includes(prefix.toLowerCase())).slice(0, 6); if (!db)
+export async function searchTractorSuggestions(prefix: string) { if (isLocalDemo && !db) {
+    const saved=await locals(); return (saved.length?saved:demoTractors).filter(x => x.name.toLowerCase().includes(prefix.toLowerCase())).slice(0, 6); } if (!db)
     return []; const snap = await getDocs(query(collection(db, 'tractors'), where('status', '==', 'published'), where('searchPrefixes', 'array-contains', prefix.trim().toLowerCase().slice(0, 30)), orderBy('popularityScore', 'desc'), limit(6))); return snap.docs.map(d => normalizeTractor({ id: d.id, ...d.data() })); }
-export async function getTractorBySlugs(brandSlug: string, modelSlug: string) { if (isLocalDemo && !db)
-    return (await locals()).find(x => x.brandSlug === brandSlug && x.slug === modelSlug) ?? null; if (!db)
+export async function getTractorBySlugs(brandSlug: string, modelSlug: string) { if (isLocalDemo && !db) {
+    const saved=await locals(); return (saved.length?saved:demoTractors).find(x => x.brandSlug === brandSlug && x.slug === modelSlug) ?? null; } if (!db)
     return null; const snap = await getDocs(query(collection(db, 'tractors'), where('brandSlug', '==', brandSlug), where('slug', '==', modelSlug), where('status', '==', 'published'), limit(1))); const d = snap.docs[0]; return d ? normalizeTractor({ id: d.id, ...d.data() }) : null; }
 export async function listBrands(): Promise<Brand[]> { if (isLocalDemo && !db)
     return (await published<Record<string, unknown> & {
