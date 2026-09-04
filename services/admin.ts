@@ -62,6 +62,7 @@ export async function saveAdminRecord(name: string, id: string | undefined, inpu
         if (!existing || related[field] !== existing[field]) throw new Error('The selected ' + label + ' no longer exists. Select another record.');
         continue;
       }
+      if (name === 'expertReviews' && related.status === 'published' && selected.status !== 'published') throw new Error('Publish the linked tractor before publishing its review.');
       related[label] = String(selected.title ?? selected.name ?? selected.model ?? '');
       if (field === 'brandId') related.brandSlug = selected.slug;
       if (field === 'categoryId') related.categorySlug = selected.slug;
@@ -80,11 +81,11 @@ export async function saveAdminRecord(name: string, id: string | undefined, inpu
     if (id && !sameAdminRecord(current, existing)) throw new Error(conflictMessage);
     const key = id ?? crypto.randomUUID();
     const now = new Date().toISOString();
-    const next = { ...current, ...clean, id: key, createdAt: current?.createdAt ?? now, publishedAt: current?.publishedAt ?? now, updatedAt: now };
+    const next = { ...current, ...clean, id: key, createdAt: current?.createdAt ?? now, publishedAt: name === 'expertReviews' ? (clean.status === 'published' ? (current?.status === 'published' ? current.publishedAt ?? now : now) : current?.publishedAt ?? null) : current?.publishedAt ?? now, updatedAt: now };
     await writeLocal(name, id ? items.map(item => item.id === id ? next : item) : [next, ...items]);
     return key;
   }
-  const payload = { ...clean, publishedAt: clean.publishedAt ?? serverTimestamp(), updatedAt: serverTimestamp() };
+  const payload = { ...clean, publishedAt: name === 'expertReviews' ? (clean.status === 'published' ? (existing?.status === 'published' ? existing.publishedAt ?? serverTimestamp() : serverTimestamp()) : existing?.publishedAt ?? null) : clean.publishedAt ?? serverTimestamp(), updatedAt: serverTimestamp() };
   if (id) {
     const target = doc(needDb(), name, id);
     await runTransaction(needDb(), async transaction => {

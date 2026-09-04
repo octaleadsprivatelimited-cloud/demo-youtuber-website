@@ -24,6 +24,7 @@ export function prepareAdminForm(section: AdminSection, item?: Row | null, items
     if (field.key === 'order' && !item) next.order = Math.max(0, ...items.map(row => Number(row.order) || 0)) + 1;
     if (next[field.key] == null) next[field.key] = field.type === 'boolean' ? field.key === 'visible' : '';
   }
+  if (section.collection === 'expertReviews' && !next.status) next.status = 'draft';
   if (!item) {
     if (section.collection === 'homepageSections') next.visible = true;
   }

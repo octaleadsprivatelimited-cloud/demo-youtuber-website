@@ -3,7 +3,7 @@ import { db, isFirebaseConfigured, isLocalDemo } from '@/lib/firebase/client';
 import { published, readLocal, writeLocal } from '@/lib/local-demo';
 import {normalizeTractor} from './tractors';
 import type { Tractor } from '@/types/content';
-import { demoReviews } from '@/data/demo-content';
+
 export interface ExpertReview {
     id: string;
     slug: string;
@@ -15,10 +15,12 @@ export interface ExpertReview {
     tractorId?: string;
     tractorName?: string;
     verdict?: string;
+    methodology?: string;
+    disclosure?: string;
     score?: number;
     pros?: string[];
     cons?: string[];
-    status: 'draft' | 'published';
+    status: 'draft' | 'published' | 'archived';
     publishedAt?: {
         toDate?: () => Date;
     };
@@ -60,13 +62,13 @@ export async function getTractorsByIds(ids: string[]): Promise<Tractor[]> {
 }
 export async function listExpertReviews(): Promise<ExpertReview[]> {
     if (isLocalDemo && !db)
-        { const saved=await published<ExpertReview>('expertReviews'); return saved.length?saved:demoReviews; }
+        { const saved=await published<ExpertReview>('expertReviews'); return saved; }
     const snapshot = await getDocs(query(collection(database(), 'expertReviews'), where('status', '==', 'published'), orderBy('publishedAt', 'desc'), limit(24)));
     return snapshot.docs.map(item => ({ id: item.id, ...item.data() }) as ExpertReview);
 }
 export async function getExpertReview(slug: string): Promise<ExpertReview | null> {
     if (isLocalDemo && !db)
-        { const saved=await published<ExpertReview>('expertReviews'); return (saved.length?saved:demoReviews).find(item => item.slug === slug) ?? null; }
+        { const saved=await published<ExpertReview>('expertReviews'); return saved.find(item => item.slug === slug) ?? null; }
     const snapshot = await getDocs(query(collection(database(), 'expertReviews'), where('slug', '==', slug), where('status', '==', 'published'), limit(1)));
     const item = snapshot.docs[0];
     return item ? ({ id: item.id, ...item.data() } as ExpertReview) : null;
@@ -81,13 +83,8 @@ export async function listApprovedOwnerReviews(tractorId?: string): Promise<Owne
     return snapshot.docs.map(item => ({ id: item.id, ...item.data() }) as OwnerReview);
 }
 export async function submitOwnerReview(input: Omit<OwnerReview, 'id' | 'status' | 'createdAt'>) {
-    if (input.rating < 1 || input.rating > 5)
-        throw new Error('Rating must be between 1 and 5.');
-    if (isLocalDemo && !db) {
-        (await writeLocal('reviews', [{ ...input, id: `demo-${Date.now()}`, status: 'pending', createdAt:new Date().toISOString() }, ...(await readLocal<OwnerReview>('reviews'))]));
-        return;
-    }
-    await addDoc(collection(database(), 'reviews'), { ...input, status: 'pending', createdAt: serverTimestamp() });
+    void input;
+    throw new Error('Reviews are published by the editorial team only.');
 }
 export async function isFavourite(userId: string, itemType: FavouriteRecord['itemType'], itemId: string) {
     if (isLocalDemo && !db)

@@ -1,6 +1,7 @@
 export const homepageSections = [
   { key: 'hero', title: 'Your next tractor, researched.', visible: true },
   { key: 'tractors', title: 'Tractors in ' + new Date().getUTCFullYear(), visible: true },
+  { key: 'reviews', title: 'Tractor reviews from our editorial team', visible: true },
   { key: 'brands', title: 'Tractors by brands', visible: true },
   { key: 'compare', title: 'Compare the details. Make a confident choice.', visible: true },
   { key: 'articles', title: 'Stories from the field.', visible: true },

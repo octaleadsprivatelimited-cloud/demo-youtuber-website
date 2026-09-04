@@ -1,3 +1,4 @@
+import { prepareEditorialReview } from './editorial-review';
 import { prepareTractorSpecifications } from './tractor-specifications';
 export function slugify(value: unknown) {
   return String(value ?? '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -5,7 +6,7 @@ export function slugify(value: unknown) {
 export function prepareAdminRecord(collection: string, input: Record<string, unknown>) {
   const data: Record<string, unknown> = Object.fromEntries(Object.entries(input).filter(([key, value]) => !['id', 'createdAt', 'updatedAt'].includes(key) && value !== undefined));
   for (const [key, value] of Object.entries(data)) if (typeof value === 'string' && !key.toLowerCase().includes('image')) data[key] = value.trim();
-  if (collection !== 'contactMessages') data.status = collection === 'reviews' ? (['pending','approved','rejected'].includes(String(data.status))?data.status:'approved') : collection === 'newsletterSubscribers' ? data.status || 'active' : 'published';
+  if (collection !== 'contactMessages' && collection !== 'expertReviews') data.status = collection === 'reviews' ? (['pending','approved','rejected'].includes(String(data.status))?data.status:'approved') : collection === 'newsletterSubscribers' ? data.status || 'active' : 'published';
   if (!['settings', 'homepageSections', 'contactMessages', 'newsletterSubscribers'].includes(collection) && !data.slug && (data.title || data.model || data.name)) data.slug = slugify(data.title || data.model || data.name);
   if (['heroSlides', 'partners'].includes(collection)) {
     if (!String(data.title ?? '').trim()) throw new Error('Please enter a name.');
@@ -38,6 +39,7 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
     data.body = data.content ?? data.body ?? '';
     data.authorName = data.authorName || 'RJ Tractor Techs';
   }
+  if (collection === 'expertReviews') Object.assign(data, prepareEditorialReview(data));
   if (['articles', 'equipment'].includes(collection)) {
     data.categoryName = data.category ?? data.categoryName ?? '';
     data.categorySlug = collection === 'equipment' ? slugify(data.categoryName) || 'equipment' : data.categorySlug || slugify(data.categoryName);

@@ -21,7 +21,7 @@ export const setUserRole=onCall(async request=>{
   await getAuth().setCustomUserClaims(uid,{...target.customClaims,admin:isAdmin,superAdmin:role==='Super Admin',role});
   const batch=getFirestore().batch();
   batch.set(getFirestore().doc('users/'+uid),{role,updatedAt:new Date()},{merge:true});
-  batch.set(getFirestore().doc('admins/'+uid),{role,active:isAdmin&&!target.disabled,updatedAt:new Date()},{merge:true});
+  batch.set(getFirestore().doc('admins/'+uid),{role,active:['Editor','Admin','Super Admin'].includes(role!)&&!target.disabled,updatedAt:new Date()},{merge:true});
   await batch.commit();await getAuth().revokeRefreshTokens(uid);return {ok:true};
 });
 export const setUserDisabled=onCall(async request=>{
@@ -32,7 +32,7 @@ export const setUserDisabled=onCall(async request=>{
   await getAuth().updateUser(uid,{disabled});
   const batch=getFirestore().batch();
   batch.set(getFirestore().doc('users/'+uid),{disabled,updatedAt:new Date()},{merge:true});
-  batch.set(getFirestore().doc('admins/'+uid),{role,active:!disabled&&['Admin','Super Admin'].includes(role),updatedAt:new Date()},{merge:true});
+  batch.set(getFirestore().doc('admins/'+uid),{role,active:!disabled&&['Editor','Admin','Super Admin'].includes(role),updatedAt:new Date()},{merge:true});
   await batch.commit();await getAuth().revokeRefreshTokens(uid);return {ok:true};
 });
 export const syncYouTubeVideos=onCall(async request=>{await requireAdmin(request.auth?.uid);const apiKey=process.env.YOUTUBE_API_KEY;const channelId=process.env.YOUTUBE_CHANNEL_ID;if(!apiKey||!channelId)throw new HttpsError('failed-precondition','Configure YOUTUBE_API_KEY and YOUTUBE_CHANNEL_ID.');const url=new URL('https://www.googleapis.com/youtube/v3/search');url.search=new URLSearchParams({part:'snippet',channelId,maxResults:'25',order:'date',type:'video',key:apiKey}).toString();const response=await fetch(url);if(!response.ok)throw new HttpsError('internal','YouTube Data API request failed.');const payload=await response.json()as{items?:Array<{id:{videoId:string};snippet:{title:string;description:string;publishedAt:string;thumbnails?:{high?:{url:string}}}}>};for(const item of payload.items??[]){const slug=item.snippet.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');await getFirestore().doc(`videos/${item.id.videoId}`).set({title:item.snippet.title,slug,description:item.snippet.description,youtubeVideoId:item.id.videoId,thumbnail:item.snippet.thumbnails?.high?.url??'',publishedAt:new Date(item.snippet.publishedAt),status:'draft',source:'youtube',updatedAt:new Date()},{merge:true});}return{ok:true,synced:payload.items?.length??0};});

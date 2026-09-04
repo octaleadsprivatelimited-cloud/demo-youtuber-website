@@ -22,7 +22,7 @@ export const adminNavigationGroups: { id: string; label: string; items: AdminNav
   },
   {
     id: 'content', label: 'Articles & media',
-    items: [section('articles', true), section('videos'), section('categories')],
+    items: [section('expert-reviews', true), section('articles', true), section('videos'), section('categories')],
   },
   {
     id: 'enquiries', label: 'Enquiries & audience',

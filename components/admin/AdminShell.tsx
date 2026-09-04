@@ -22,7 +22,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   if (!demo && !isFirebaseConfigured) return <main className="crm-page"><SetupNotice/></main>;
   if (!demo && access.loading) return <div className="detail-loading">Checking admin access…</div>;
   if (!demo && !access.user) return <main className="admin-gate"><h1>Admin sign-in required</h1><Link href="/login">Sign in →</Link></main>;
-  if (!demo && !access.isAdmin) return <main className="admin-gate"><h1>Access restricted</h1><p>Your account does not have an active administrator role.</p><Link href="/">Return to website</Link></main>;
+  if (!demo && !access.isAdmin && !(access.isEditor && path === '/admin/expert-reviews')) return <main className="admin-gate"><h1>Access restricted</h1><p>This section is restricted to administrators. Editorial team members can manage reviews.</p><Link href="/admin/expert-reviews">Editorial reviews</Link><Link href="/">Return to website</Link></main>;
 
   function navLink(href: string, label: string) {
     return <Link key={href} className={path === href ? 'active' : ''} href={href}
@@ -35,10 +35,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <aside className="crm-sidebar">
       <Link className="brand" href="/" onClick={() => setMenuOpen(false)}><span className="brand-mark">RJ</span><span className="brand-copy"><strong>Admin</strong><small>TRACTOR TECHS</small></span></Link>
       <nav id="admin-navigation" aria-label="Admin navigation">
-        {navLink('/admin', 'Overview')}
-        {adminNavigationGroups.map(group => <div className="admin-nav-group" key={group.id} role="group" aria-labelledby={'admin-nav-' + group.id}>
+        {!access.isEditor && navLink('/admin', 'Overview')}
+        {adminNavigationGroups.filter(group => !access.isEditor || group.id === 'content').map(group => <div className="admin-nav-group" key={group.id} role="group" aria-labelledby={'admin-nav-' + group.id}>
           <p className="admin-nav-label" id={'admin-nav-' + group.id}>{group.label}</p>
-          {group.items.map(item => navLink(item.href, item.label))}
+          {group.items.filter(item => !access.isEditor || item.href === '/admin/expert-reviews').map(item => navLink(item.href, item.label))}
         </div>)}
         <div className="admin-nav-website">{navLink('/', 'View website ↗')}</div>
       </nav>

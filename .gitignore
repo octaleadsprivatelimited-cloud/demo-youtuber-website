@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+/functions/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -37,3 +38,5 @@ next-env.d.ts
 /outputs/
 /work/
 *.tsbuildinfo
+
+/functions/lib/

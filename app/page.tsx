@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { EditorialReviews } from '@/components/EditorialReviews';
 import { HomepageHeader } from '@/components/HomepageHeader';
 import { HomepageHero } from '@/components/HomepageHero';
 import { HomepagePromotions } from '@/components/HomepagePromotions';
@@ -62,6 +63,7 @@ export default function Home() {
   function renderSection(key: string, title: string) {
     if (key === 'hero') return <HomepageHero title={title} slides={heroSlides} index={heroIndex} onSlide={setHeroIndex} brands={brands}/>;
     if (key === 'tractors') return <TractorShowcase title={title} tractors={tractors} loading={tractorsLoading} error={tractorsError} onRetry={retryTractors} design="reference"/>;
+    if (key === 'reviews') return <EditorialReviews title={title}/>;
     if (key === 'compare') return <HomeCompare title={title}/>;
     if (key === 'articles') return <HomeArticles title={title} articles={articles}/>;
     if (key === 'videos') return <HomeVideos title={title} videos={videos} channelUrl={youtube}/>;

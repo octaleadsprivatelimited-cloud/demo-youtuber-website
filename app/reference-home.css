@@ -17,7 +17,7 @@
 .ref-home-header-actions .round-action,.ref-home-menu-toggle { width:44px; height:44px; display:grid; place-items:center; border:0; border-radius:6px; background:#fff; color:var(--ref-home-navy); }
 .ref-home-header-actions .round-action:hover,.ref-home-menu-toggle:hover { background:#f5f7fa; }
 .ref-home-menu-toggle { display:none; }
-.ref-home-mobile-navigation { padding:12px 24px 22px; max-height:calc(100dvh - 70px); overflow-y:auto; border-top:1px solid var(--ref-home-line); background:#fff; }
+.ref-home-mobile-navigation { position:absolute; top:100%; inset-inline:0; padding:12px 24px 22px; max-height:calc(100dvh - 70px); overflow-y:auto; overscroll-behavior:contain; border-top:1px solid var(--ref-home-line); background:#fff; box-shadow:0 16px 28px #0b2c5226; }
 .ref-home-mobile-navigation a { display:flex; align-items:center; justify-content:space-between; min-height:48px; border-bottom:1px solid #edf0f3; font-size:14px; }
 .ref-home-hero { background:#fff; }
 .ref-home-hero-scene { position:relative; min-height:650px; isolation:isolate; }

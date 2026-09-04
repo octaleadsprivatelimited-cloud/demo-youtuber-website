@@ -10,9 +10,32 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['Admin','Super Admin'];
     }
 
-    match /tractors/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    function isEditor() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'Editor';
+    }
+    function validEditorialReview() {
+      let d = request.resource.data;
+      return d.status in ['draft', 'published', 'archived']
+        && (d.status != 'published' || (
+          d.title is string && d.title.size() > 0 && d.title.size() <= 200
+          && d.authorName is string && d.authorName.size() > 0
+          && d.excerpt is string && d.excerpt.size() > 0
+          && d.body is string && d.body.size() >= 100
+          && d.verdict is string && d.verdict.size() > 0
+          && d.methodology is string && d.methodology.size() > 0
+          && d.score is number && d.score >= 0 && d.score <= 10
+          && d.slug is string && d.slug.size() > 0
+          && d.tractorId is string
+          && exists(/databases/$(database)/documents/tractors/$(d.tractorId))
+          && get(/databases/$(database)/documents/tractors/$(d.tractorId)).data.status == 'published'
+        ));
+    }
+
+    match /tractors/{id} { allow read: if resource.data.status == 'published' || isAdmin() || isEditor(); allow write: if isAdmin(); }
     match /brands/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /expertReviews/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /expertReviews/{id} { allow read: if resource.data.status == 'published' || isAdmin() || isEditor(); allow create, update: if (isAdmin() || isEditor()) && validEditorialReview(); allow delete: if isAdmin() || isEditor(); }
     match /articles/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /articleCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /videos/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
@@ -32,12 +55,7 @@ service cloud.firestore {
     }
     match /reviews/{id} {
       allow read: if resource.data.status == 'approved' || isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
-      allow create: if signedIn()
-        && request.resource.data.userId == request.auth.uid
-        && request.resource.data.status == 'pending'
-        && request.resource.data.rating is int
-        && request.resource.data.rating >= 1
-        && request.resource.data.rating <= 5;
+      allow create: if false;
       allow update, delete: if isAdmin();
     }
     match /favorites/{id} {
