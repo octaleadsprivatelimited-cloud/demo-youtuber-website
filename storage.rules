@@ -6,6 +6,16 @@ service firebase.storage {
         && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.active == true
         && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.role in ['Admin','Super Admin'];
     }
+    function isEditor() {
+      return request.auth != null
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.active == true
+        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.role == 'Editor';
+    }
+    match /admin/expertReviews/{file} {
+      allow read: if true;
+      allow write: if (isAdmin() || isEditor()) && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp|gif)');
+    }
     match /admin/{allPaths=**} { allow read: if true; allow write: if isAdmin() && request.resource.size < 10 * 1024 * 1024 && request.resource.contentType.matches('image/.*'); }
     match /users/{userId}/{allPaths=**} { allow read: if true; allow write: if request.auth != null && request.auth.uid == userId; }
   }
