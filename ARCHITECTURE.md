@@ -1,5 +1,7 @@
 # RJ Tractor Techs — Website Architecture
 
+> Editorial review implementation: see [editorial-review-platform.md](docs/editorial-review-platform.md) for the current review workflow, local D1/R2 storage, Editor permissions and production setup. The older browser-storage and owner-submission descriptions below are historical.
+
 ## 1. System overview
 
 RJ Tractor Techs is a content-led tractor research platform with a public website and an integrated administration workspace. The application is built with React 19, Next.js App Router conventions, TypeScript, and Vinext/Vite. Production content, identity, media, and privileged account operations are backed by Firebase.

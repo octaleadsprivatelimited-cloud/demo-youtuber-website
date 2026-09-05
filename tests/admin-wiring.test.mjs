@@ -96,17 +96,14 @@ test('equipment, videos, dealers and expert reviews render their saved public da
   await assert.rejects(admin.saveAdminRecord('videos',undefined,{title:'Bad video',youtubeId:'invalid'}),/valid YouTube/);
   await admin.saveAdminRecord('dealers',undefined,{title:'QA dealer',brand:'QA Brand',city:'Test city',district:'Test district',state:'Test state'});
   assert.equal((await media.listDealers({district:'Test district'}))[0].name,'QA dealer');
-  await admin.saveAdminRecord('expertReviews',undefined,{title:'QA expert',content:'Actual full review',verdict:'Verdict',score:8,image:'/review.png'});
-  const expert=await reviews.getExpertReview('qa-expert');assert.equal(expert.body,'Actual full review');assert.equal(expert.score,8);assert.equal(expert.coverImage,'/review.png');
+  const reviewBrand=await admin.saveAdminRecord('brands',undefined,{title:'Review brand'});
+  const reviewTractor=await admin.saveAdminRecord('tractors',undefined,{brandId:reviewBrand,model:'Review tractor'});
+  await admin.saveAdminRecord('expertReviews',undefined,{title:'QA expert',status:'published',tractorId:reviewTractor,authorName:'QA editor',excerpt:'Summary',methodology:'Supplied specifications',content:'Actual full review. '.repeat(10).trim(),verdict:'Verdict',score:8,image:'/review.png'});
+  const expert=await reviews.getExpertReview('qa-expert');assert.equal(expert.body,'Actual full review. '.repeat(10).trim());assert.equal(expert.score,8);assert.equal(expert.coverImage,'/review.png');
 });
-test('owner review moderation controls public visibility without rewriting submitted content',async()=>{
-  await reviews.submitOwnerReview({tractorId:'test-tractor',tractorName:'QA tractor',userId:'qa-owner',userName:'Owner',rating:5,title:'Saved review',comment:'Owner content'});
-  const review=(await admin.listAdminRecords('reviews'))[0];assert.equal(review.status,'pending');
-  assert.deepEqual(await site.listPublicRecords('reviews'),[]);
-  await admin.saveAdminRecord('reviews',review.id,{...review,status:'approved'});
-  assert.equal((await site.listPublicRecords('reviews'))[0].comment,'Owner content');
-  await admin.saveAdminRecord('reviews',review.id,{...review,status:'rejected'});
-  assert.deepEqual(await reviews.listApprovedOwnerReviews('test-tractor'),[]);
+test('public owner review submission is disabled for the editorial-only site',async()=>{
+  await assert.rejects(reviews.submitOwnerReview({tractorId:'test-tractor',tractorName:'QA tractor',userId:'qa-owner',userName:'Owner',rating:5,title:'Saved review',comment:'Owner content'}),/editorial team only/);
+  assert.deepEqual(await admin.listAdminRecords('reviews'),[]);
 });
 test('hero and partner edits notify public subscribers; deleting never restores old content',async()=>{
   const hero=load('services/hero-slides.ts');
@@ -135,12 +132,14 @@ test('homepage visibility, settings, SEO and promotions save without duplicate k
   assert.equal((await site.listPublicRecords('banners')).length,1);assert.equal((await site.listPublicRecords('advertisements')).length,1);
   const links=navigation.flatMap(group=>group.items.map(item=>item.href));assert.equal(new Set(links).size,links.length);
   assert.ok(links.includes('/admin/promotions'));assert.ok(!links.includes('/admin/banners'));assert.ok(!links.includes('/admin/advertisements'));assert.ok(!links.includes('/admin/subscribers'));
-  for(const key of ['reviews','expert-reviews']){
+  for(const key of ['reviews']){
     assert.ok(!links.includes('/admin/'+key));
     assert.equal(sections[key],undefined);
   }
   const dashboard=load('config/admin-navigation.ts').adminDashboardItems;
-  assert.ok(dashboard.every(item=>!['reviews','expertReviews'].includes(item.collection)));
+  assert.ok(dashboard.some(item=>item.collection==='expertReviews'));
+  assert.ok(links.includes('/admin/expert-reviews'));
+  assert.ok(dashboard.every(item=>item.collection!=='reviews'));
  assert.equal(sections['contact-messages'].allowCreate,false);
 });
 test('public enquiries reach the inbox and CRM with editable notes and status',async()=>{
@@ -307,6 +306,7 @@ test('every content module supports reopening, repeated partial edits and cleari
   ['brands',{title:'Editable brand'},{description:'Brand description',logo:'/brand.png'},{description:'',logo:''}],
   ['equipment',{title:'Editable implement'},{description:'Implement details',category:'Cultivators',price:40000,image:'/equipment.png'},{description:'',category:'',price:'',image:''}],
   ['articles',{title:'Editable article'},{content:'Full article',excerpt:'Summary',image:'/article.png'},{content:'',excerpt:'',image:''}],
+  ['expert-reviews',{title:'Editable review'},{content:'Draft review text',score:7,pros:['Easy controls']},{content:'',score:'',pros:[]}],
   ['categories',{title:'Editable category'},{description:'Category text'},{description:''}],
   ['videos',{title:'Editable video',youtubeId:'abcdefghijk'},{youtubeId:'zyxwvutsrqp',description:'Video details',thumbnail:'/video.png'},{description:'',thumbnail:''}],
   ['dealers',{title:'Editable dealer'},{phone:'9876543210',address:'Dealer address',city:'Pune'},{phone:'',address:'',city:''}],
@@ -316,7 +316,7 @@ test('every content module supports reopening, repeated partial edits and cleari
   ['advertisements',{title:'Editable advertisement'},{image:'/ad.png',destinationUrl:'/brands'},{image:'',destinationUrl:''}],
   ['seo',{title:'Editable metadata',path:'/qa-edit'},{description:'Meta text',image:'/meta.png'},{description:'',image:''}],
   ['settings',{key:'tagline'},{value:'Site tagline'},{value:''}],
-  ['homepage',{key:'youtube'},{title:'Edited YouTube section',visible:false,order:9},{title:'',visible:true,order:''}],
+  ['homepage',{key:'reviews'},{title:'Edited reviews section',visible:false,order:9},{title:'',visible:true,order:''}],
  ];
  for(const [sectionKey,initial,patch,clears] of cases){
   const section=sections[sectionKey];const name=section.collection;

@@ -37,3 +37,13 @@ test('self-demotion and self-disable cannot lock out the active administrator',a
   await assert.rejects(f.setUserRole({auth:{uid:'root'},data:{uid:'root',role:'Customer'}}),/your own/);
   await assert.rejects(f.setUserDisabled({auth:{uid:'root'},data:{uid:'root',disabled:true}}),/your own/);
 });
+
+test('editor role permits editorial membership without administrator claims',async()=>{
+ const f=fixture();await f.setUserRole({auth:{uid:'root'},data:{uid:'customer',role:'Editor'}});
+ assert.equal(f.docs.get('admins/customer').active,true);
+ assert.equal(f.docs.get('admins/customer').role,'Editor');
+ assert.equal(f.users.get('customer').customClaims.admin,false);
+ await assert.rejects(f.setUserRole({auth:{uid:'customer'},data:{uid:'staff',role:'Customer'}}),/Administrator access required/);
+ await f.setUserDisabled({auth:{uid:'root'},data:{uid:'customer',disabled:true}});
+ assert.equal(f.docs.get('admins/customer').active,false);
+});

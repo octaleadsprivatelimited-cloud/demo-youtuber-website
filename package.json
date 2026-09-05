@@ -10,7 +10,10 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "node --test tests/editorial-reviews.test.mjs tests/admin-records.test.mjs tests/admin-access.test.mjs tests/homepage-sections.test.mjs",
+    "test:integration": "node --test tests/editorial-workflow.test.mjs tests/local-cms.test.mjs tests/admin-wiring.test.mjs"
   },
   "dependencies": {
     "firebase": "^12.18.0",
