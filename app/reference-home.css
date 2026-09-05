@@ -819,7 +819,7 @@
 @media (max-width: 760px) {
   .reference-home .ref-home-hero-scene { min-height: 430px; display: block; overflow: hidden; background: #fbf7ef; }
   .reference-home .ref-home-hero-scene::before { display: block; inset: 0 auto 62px 0; width: 58%; background: linear-gradient(90deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,.91) 82%,rgba(255,255,255,.7) 100%); }
-  .reference-home .ref-home-hero-inner { min-height: 430px; padding: 28px 14px 82px; background: transparent; align-items: center; }
+  .reference-home .ref-home-hero-inner { min-height: 430px; padding: 14px 14px 82px; background: transparent; align-items: flex-start; }
   .reference-home .ref-home-hero-copy { width: 57%; max-width: none; }
   .reference-home .ref-home-eyebrow { margin-bottom: 10px; font-size: 8px; letter-spacing: .1em; }
   .reference-home .ref-home-hero-copy h1 { max-width: 260px; font-size: clamp(25px,7vw,34px); line-height: 1.05; letter-spacing: -.04em; }
