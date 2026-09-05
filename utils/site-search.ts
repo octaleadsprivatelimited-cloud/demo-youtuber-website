@@ -46,6 +46,7 @@ export function buildSearchItems(source: SearchSource, rows: SearchRecord[]): Se
       case 'expertReviews': category = 'Reviews'; if (recordSlug) href = path('reviews', recordSlug); keywords = [row.tractorName, row.verdict, row.body ?? row.content].map(text).join(' '); break;
     }
     if (!title || !href) return [];
+    keywords += ' ' + Object.entries(row).filter(([key]) => key.endsWith('Te')).map(([,value]) => text(value)).join(' ');
     return [{ id: source + ':' + row.id, title, category, href, image, description: description.slice(0, 180), keywords }];
   });
 }

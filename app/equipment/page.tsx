@@ -1,6 +1,14 @@
-'use client';
-import {useEffect,useMemo,useState} from 'react';
-import {PublicShell} from '@/components/SiteChrome';
-import {PageIntro,EmptyContent} from '@/components/PublicPageParts';
-import {listEquipment,type Equipment} from '@/services/media';
-export default function EquipmentPage(){const [items,setItems]=useState<Equipment[]>([]);const [category,setCategory]=useState('');const [loading,setLoading]=useState(true);const [error,setError]=useState('');useEffect(()=>{listEquipment().then(setItems).catch(reason=>setError(reason instanceof Error?reason.message:'Unable to load equipment.')).finally(()=>setLoading(false));},[]);const categories=useMemo(()=>Array.from(new Map(items.filter(item=>item.categorySlug).map(item=>[item.categorySlug,item.categoryName])).entries()),[items]);const shown=items.filter(item=>!category||item.categorySlug===category);return <PublicShell><main className="equipment-index"><PageIntro eyebrow="FARM EQUIPMENT" title="Explore the tools for the job." description="Research implements and machinery alongside your tractor. Browse the listed equipment, read the details and prepare your questions about compatibility."/><section className="equipment-list"><div className="listing-bar"><h2>Equipment directory</h2><a className="text-action" href="/contact">Ask a question →</a></div><nav aria-label="Equipment categories"><button aria-pressed={!category} className={!category?'active':''} onClick={()=>setCategory('')}>All equipment</button>{categories.map(([slug,name])=><button key={slug} aria-pressed={category===slug} className={category===slug?'active':''} onClick={()=>setCategory(slug)}>{name}</button>)}</nav>{loading?<div className="detail-loading" role="status">Loading equipment…</div>:error?<div className="error-state" role="alert">{error}</div>:!shown.length?<EmptyContent title="Equipment details are on the way." description="Published implements and machinery will appear here. Explore tractor specifications while you prepare your equipment shortlist."/>:<div className="equipment-grid">{shown.map(item=><article key={item.id}><div style={item.image?{backgroundImage:'url('+JSON.stringify(item.image)+')'}:undefined}/><section><p>{item.categoryName}{item.brandName?' · '+item.brandName:''}</p><h2>{item.name}</h2><span>{item.description}</span>{Number(item.price)>0&&<strong>From ₹{Number(item.price).toLocaleString('en-IN')}</strong>}<a href={'/equipment/'+item.categorySlug+'/'+item.slug}>View equipment →</a></section></article>)}</div>}</section></main></PublicShell>;}
+import type { Metadata } from 'next';
+import EquipmentPageClient from './equipment-page-client';
+
+export const metadata: Metadata = {
+  title: 'Farm Equipment | RJ Tractor Techs',
+  description: 'Browse implements and machinery categories with details for farmers planning a full tractor setup.',
+  alternates: {
+    canonical: '/equipment',
+  },
+};
+
+export default function EquipmentPage() {
+  return <EquipmentPageClient />;
+}

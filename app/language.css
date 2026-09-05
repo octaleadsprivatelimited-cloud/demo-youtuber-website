@@ -1,0 +1,38 @@
+/* A compact language chooser with raised type tiles and quiet depth. */
+.language-dialog { box-sizing:border-box; width:min(420px,calc(100% - 32px)); max-height:calc(100dvh - 32px); overflow:auto; padding:28px; margin:auto; border:1px solid #fff; border-radius:22px; background:#fff; color:#202c35; box-shadow:0 30px 90px #0c1a3459,0 4px 16px #0c1a3414; }
+.language-dialog::backdrop { background:#1223318c; backdrop-filter:blur(7px); }
+.language-dialog[open] { animation:language-enter .2s ease-out; }
+.language-dialog-top { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+.language-emblem { position:relative; display:grid; place-items:center; flex:none; width:42px; height:42px; border-radius:12px; background:#20333e; color:#fff; font-size:24px; box-shadow:inset 0 1px 0 #ffffff40,0 4px 0 #11212a,0 8px 12px #20333e26; transform:rotate(-7deg); }
+.language-emblem > span { position:absolute; bottom:-5px; right:-8px; display:grid; place-items:center; width:23px; height:23px; border:2px solid #fff; border-radius:7px; background:#c72c35; font:700 13px/1 Arial,sans-serif; transform:rotate(14deg); }
+.language-dialog .language-brand { margin:0; color:#7b3640; font-size:11px; font-weight:800; letter-spacing:.12em; }
+.language-dialog h2 { margin:0 0 8px; font-size:27px; line-height:1.25; font-weight:750; letter-spacing:-.035em; }
+.language-dialog > p[lang=te] { margin:0; color:#69747c; font-size:16px; line-height:1.65; }
+.language-options { display:grid; gap:12px; margin:24px 0 0; }
+.language-options button { display:flex; align-items:center; gap:14px; width:100%; min-height:86px; padding:14px; border:1px solid #dde4e8; border-radius:13px; background:#fff; color:#202c35; text-align:left; cursor:pointer; box-shadow:0 3px 0 #edf1f3; transition:border-color .16s,background .16s,transform .16s,box-shadow .16s; }
+.language-options .language-letter { display:grid; place-items:center; width:46px; height:48px; flex:none; border:1px solid #e2e8eb; border-radius:10px; background:linear-gradient(145deg,#fff,#edf2f4); color:#203943; font:750 28px/1.2 Arial,sans-serif; text-shadow:0 1px 0 #fff; box-shadow:inset 0 2px 0 #fff,0 3px 0 #dae2e6; }
+.language-options button[lang=te] .language-letter { background:linear-gradient(145deg,#fff9f8,#fce8e6); border-color:#f0d5d2; color:#ac2730; box-shadow:inset 0 2px 0 #fff,0 3px 0 #edcecb; }
+.language-choice-copy { display:flex; flex:1; min-width:0; flex-direction:column; gap:4px; }
+.language-choice-copy strong { font-size:19px; line-height:1.4; font-weight:750; }
+.language-choice-copy > span { font-size:13px; color:#69747c; line-height:1.6; }
+.language-choice-arrow { flex:none; color:#657984; font-size:21px; }
+.language-options button:hover { background:#f7fafb; border-color:#7e9da8; transform:translateY(-2px); box-shadow:0 5px 0 #e2eaee; }
+.language-options button:active { transform:translateY(1px); box-shadow:none; }
+.language-button { display:inline-flex; flex-shrink:0; align-items:center; justify-content:center; gap:6px; min-height:44px; padding:8px 10px; background:#fff; border:1px solid #d4dce1; border-radius:6px; color:#24424c; font-size:14px; white-space:nowrap; cursor:pointer; }
+.language-button:focus-visible,.language-dialog button:focus-visible { outline:3px solid #007b85; outline-offset:3px; }
+html[lang=te] body { font-family:Arial,'Noto Sans Telugu',sans-serif; }
+html[lang=te] :is(h1,h2,h3,h4,p,a,button,label,span) { letter-spacing:normal; }
+@keyframes language-enter { from { opacity:0; transform:translateY(8px) scale(.98); } to { opacity:1; transform:none; } }
+@media(max-width:760px) {
+  .language-button-label { display:none; }
+  .language-button { width:36px; min-width:36px; height:36px; min-height:36px; padding:0; gap:0; border-radius:5px; font-size:11px; line-height:1; }
+  .reference-home .ref-home-header-actions { gap:4px; }
+  .reference-home .ref-home-search { min-width:32px; }
+  .language-dialog { width:min(380px,calc(100% - 32px)); padding:22px; border-radius:18px; }
+  .language-dialog-top { margin-bottom:20px; }
+  .language-dialog h2 { font-size:24px; }
+  .language-options { margin-top:20px; gap:10px; }
+  .language-options button { min-height:78px; gap:12px; padding:12px; }
+}
+@media(max-width:360px) { .language-dialog { padding:18px; } .language-options button { gap:9px; padding:10px; } .language-options .language-letter { width:36px; height:42px; font-size:24px; } .language-choice-arrow { font-size:18px; } }
+@media(prefers-reduced-motion:reduce) { .language-dialog[open] { animation:none; } .language-options button { transition:none; } .language-options button:hover { transform:none; } }

@@ -133,7 +133,8 @@ test('only essential identifying fields are mandatory and field changes exclude 
  const {adminSections}=load('config/admin-sections.ts');
  const {prepareAdminForm,adminFormChanges,sameAdminRecord}=load('lib/admin-form.ts');
  assert.deepEqual(adminSections.tractors.fields.filter(field=>field.required).map(field=>field.key),['brandId','model']);
- for(const key of ['hero-slides','partners'])assert.deepEqual(adminSections[key].fields.filter(field=>field.required).map(field=>field.key),['title']);
+ assert.deepEqual(adminSections['hero-slides'].fields.filter(field=>field.required).map(field=>field.key),['title']);
+ assert.deepEqual(adminSections.partners.fields.filter(field=>field.required).map(field=>field.key),['title','image']);
  assert.equal(adminSections.articles.fields.find(field=>field.key==='articleType').required,undefined);
  const current={id:'a',title:'Original',description:'Optional',slug:'original',createdAt:'old'};
  const form=prepareAdminForm(adminSections.brands,current);
@@ -149,4 +150,10 @@ test('optional maximum price and transmission remain blank after clearing',()=>{
  const missing=prepareAdminRecord('tractors',{brand:'QA',model:'Optional model',price:700000});
  assert.equal(missing.maxPrice,'');assert.equal(missing.transmission,'');
  assert.throws(()=>prepareAdminRecord('tractors',{brand:'QA',model:'Invalid price',price:700000,maxPrice:600000}),/maximum price/);
+});
+
+test('partners require a logo before publishing',()=>{
+ const {prepareAdminRecord}=load('lib/admin-records.ts');
+ assert.throws(()=>prepareAdminRecord('partners',{title:'Partner',order:1}),/upload a partner logo/);
+ assert.equal(prepareAdminRecord('partners',{title:'Partner',order:1,image:'/logo.png'}).image,'/logo.png');
 });

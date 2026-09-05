@@ -1,7 +1,12 @@
-'use client';
-import {useEffect,useState} from 'react';
-import {PublicShell} from '@/components/SiteChrome';
-import {PageIntro,EmptyContent} from '@/components/PublicPageParts';
-import {listBrands} from '@/services/tractors';
-import type {Brand} from '@/types/content';
-export default function BrandsPage(){const [brands,setBrands]=useState<Brand[]>([]);const [loading,setLoading]=useState(true);const [error,setError]=useState('');useEffect(()=>{listBrands().then(setBrands).catch(reason=>setError(reason instanceof Error?reason.message:'Unable to load brands.')).finally(()=>setLoading(false));},[]);return <PublicShell><main><PageIntro eyebrow="THE BRAND DIRECTORY" title="Find a familiar name. Explore the details." description="Browse the manufacturers in our catalog, open a brand profile and discover its listed tractor models."/><section className="brand-listing"><div className="listing-bar"><h2>Explore tractor brands</h2><p>{!loading&&!error?brands.length+' '+(brands.length===1?'brand':'brands')+' in the directory':''}</p></div>{loading?<div className="detail-loading" role="status">Loading brands…</div>:error?<div className="error-state" role="alert">{error}</div>:!brands.length?<EmptyContent title="The brand directory is being prepared." description="Manufacturer profiles will appear here when they are published. In the meantime, explore the research tools." href="/compare" action="Explore comparisons"/>:<div className="brand-directory">{brands.map(brand=><a key={brand.id} href={'/brand/'+brand.slug}><div>{brand.logo?<img src={brand.logo} alt={brand.name+' logo'}/>:<strong>{brand.name}</strong>}</div><h2>{brand.name}</h2><p>{brand.description||'Explore the listed models, specifications and reviews for '+brand.name+'.'}</p><span>Explore models →</span></a>)}</div>}</section></main></PublicShell>;}
+import type { Metadata } from 'next';
+import BrandPage from './brands-page-client';
+
+export const metadata: Metadata = {
+  title: 'Brands | RJ Tractor Techs',
+  description: 'Browse manufacturers and open detailed profiles for published tractor brands.',
+  alternates: { canonical: '/brands' },
+};
+
+export default function BrandsPage() {
+  return <BrandPage />;
+}

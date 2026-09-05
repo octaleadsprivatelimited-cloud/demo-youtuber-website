@@ -11,6 +11,7 @@ const source=ts.transpileModule(fs.readFileSync(new URL('../components/HomepageS
 const testModule={exports:{}};
 new Function('require','module','exports',source)(name=>{
   if(name.endsWith('.css'))return {};
+  if(name==='@/components/LocalizedElement')return {LocalizedElement:({as,children,...props})=>React.createElement(as,props,children)};
   if(name==='@/lib/partner-scroll')return loadShowcase('lib/partner-scroll.ts');
   if(name==='./FavouriteButton')return {FavouriteButton:props=>React.createElement('button',{'data-favourite':props.itemId},'Save '+props.title)};
   return require(name);
@@ -97,6 +98,7 @@ function loadShowcase(relative){
  const loaded={exports:{}};
  new Function('require','module','exports',source)(name=>{
   if(name.endsWith('.css'))return {};
+  if(name==='@/components/LocalizedElement')return {LocalizedElement:({as,children,...props})=>React.createElement(as,props,children)};
   if(name.startsWith('@/'))return loadShowcase(name.slice(2)+'.ts');
   if(name.startsWith('./'))return loadShowcase(relative.slice(0,relative.lastIndexOf('/')+1)+name.slice(2)+'.ts');
   return require(name);
@@ -140,13 +142,15 @@ test('video section supports a configured channel when empty and actual saved vi
  assert.ok(!empty.includes('href="/videos/'));
  const videos=Array.from({length:11},(_,index)=>({id:'v'+(index+1),title:'Saved demonstration '+(index+1),slug:'saved-demonstration-'+(index+1),thumbnail:'/uploaded-video-'+(index+1)+'.jpg'}));
  const live=render(HomeVideos,{title:'In the field',videos,channelUrl:'https://www.youtube.com/@ConfiguredChannel'});
- assert.equal((live.match(/class="home-video-card"/g)||[]).length,9);
+ assert.equal((live.match(/class="home-video-card"/g)||[]).length,10);
  assert.ok(live.includes('href="/videos/saved-demonstration-1"'));
  assert.ok(live.includes('href="/videos/saved-demonstration-9"'));
- assert.ok(!live.includes('href="/videos/saved-demonstration-10"'));
+ assert.ok(live.includes('href="/videos/saved-demonstration-10"'));
  assert.ok(live.includes('src="/uploaded-video-1.jpg"'));
  assert.ok(!live.includes('class="home-play"'));
- assert.ok(!live.includes('player-play.svg'));
+ assert.ok(live.includes('player-play.svg'));
+ assert.ok(!live.includes('>YOUTUBE<'));
+ assert.ok(!live.includes('>Watch video'));
  assert.ok(live.includes('class="home-video-channel"'));
  assert.ok(live.includes('href="https://www.youtube.com/@ConfiguredChannel"'));
 });
@@ -185,13 +189,13 @@ test('showcase has honest empty, loading and error states without fabricated spe
  const missing=render(ShowcaseTractorCard,{tractor:{...showcaseBase,hp:0,engineCapacityCc:'',image:'',inDemand:false}});assert.ok(missing.includes('HP not listed'));assert.ok(missing.includes('CC not listed'));assert.ok(missing.includes('Image not added'));assert.ok(!missing.includes('class="showcase-demand"'));
 });
 
-test('the partner carousel and tractor section stay together below the hero without duplicates',()=>{
+test('the partner strip, video carousel and tractor section stay together below the hero without duplicates',()=>{
  const {resolveHomepageSections}=loadShowcase('config/homepage-sections.ts');
- const defaults=resolveHomepageSections([]);assert.deepEqual(defaults.slice(0,3).map(item=>item.key),['hero','partners','tractors']);assert.ok(!defaults.some(item=>item.key==='youtube'));
+ const defaults=resolveHomepageSections([]);assert.deepEqual(defaults.slice(0,4).map(item=>item.key),['hero','partners','videos','tractors']);assert.ok(!defaults.some(item=>item.key==='youtube'));
  assert.ok(!resolveHomepageSections([{id:'y',key:'youtube',visible:true,title:'Should not return'}]).some(item=>item.key==='youtube'));
  const overridden=resolveHomepageSections([{id:'t',key:'tractors',order:99,title:'Our tractors'},{id:'i',key:'introduction',order:3},{id:'p',key:'partners',visible:false}]);
- assert.equal(overridden[overridden.findIndex(item=>item.key==='hero')+1].key,'tractors');assert.equal(overridden.filter(item=>item.key==='tractors').length,1);assert.equal(overridden.find(item=>item.key==='tractors').title,'Our tractors');assert.ok(!overridden.some(item=>item.key==='partners'));
- const noTractors=resolveHomepageSections([{id:'t',key:'tractors',visible:false}]);assert.deepEqual(noTractors.slice(0,2).map(item=>item.key),['hero','partners']);assert.ok(!noTractors.some(item=>item.key==='tractors'));
+ assert.deepEqual(overridden.slice(0,3).map(item=>item.key),['hero','videos','tractors']);assert.equal(overridden.filter(item=>item.key==='tractors').length,1);assert.equal(overridden.find(item=>item.key==='tractors').title,'Our tractors');assert.ok(!overridden.some(item=>item.key==='partners'));
+ const noTractors=resolveHomepageSections([{id:'t',key:'tractors',visible:false}]);assert.deepEqual(noTractors.slice(0,3).map(item=>item.key),['hero','partners','videos']);assert.ok(!noTractors.some(item=>item.key==='tractors'));
 });
 
 test('partner frame loop only moves left through repeated seams and cleans up its clock',()=>{
@@ -218,7 +222,7 @@ test('partner frame loop only moves left through repeated seams and cleans up it
  controller.destroy();assert.equal(pending.size,0);controller.play();assert.equal(pending.size,0);
 });
 
-test('partner carousel starts moving on mount without a click or motion-preference gate',()=>{
+test('partner carousel starts moving on mount when reduced motion is disabled',()=>{
  const effects=[];const pending=new Map();let frameId=0;
  const element={scrollWidth:984,style:{}};
  const refs=[{current:{clientWidth:472}},{current:element},{current:{getBoundingClientRect:()=>({width:492})}}];
@@ -226,12 +230,13 @@ test('partner carousel starts moving on mount without a click or motion-preferen
  new Function('require','module','exports',source)(name=>{
   if(name==='react')return {...React,useRef:()=>refs.shift(),useEffect:effect=>effects.push(effect),useState:initial=>[initial,()=>{}]};
   if(name.endsWith('.css'))return {};
+  if(name==='@/components/LocalizedElement')return {LocalizedElement:({as,children,...props})=>React.createElement(as,props,children)};
   if(name==='./FavouriteButton')return {FavouriteButton:()=>null};
   if(name==='@/lib/partner-scroll')return loadShowcase('lib/partner-scroll.ts');
   return require(name);
  },loaded,loaded.exports);
  const partners=[{id:'1',title:'First',image:'/first.png'},{id:'2',title:'Last',image:'/last.png'}];
- const child=loaded.exports.HomePartners({title:'Partners',partners}).props.children;
+ const child=loaded.exports.HomePartners({title:'Partners',partners}).props.children.find(child=>child.type?.name==='PartnerLogoCarousel');
  child.type(child.props);
  const previousWindow=Object.getOwnPropertyDescriptor(globalThis,'window');
  const previousObserver=Object.getOwnPropertyDescriptor(globalThis,'ResizeObserver');
@@ -239,7 +244,7 @@ test('partner carousel starts moving on mount without a click or motion-preferen
   requestAnimationFrame:callback=>{pending.set(++frameId,callback);return frameId;},
   cancelAnimationFrame:id=>pending.delete(id),
   addEventListener:()=>{},removeEventListener:()=>{},
-  matchMedia:()=>{throw new Error('Partner autoplay must not wait for motion preferences');},
+  matchMedia:()=>({matches:false,addEventListener:()=>{},removeEventListener:()=>{}}),
  }});
  Object.defineProperty(globalThis,'ResizeObserver',{configurable:true,value:undefined});
  let cleanup;

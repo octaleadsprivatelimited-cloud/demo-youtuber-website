@@ -8,3 +8,33 @@
 .comparison-source-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:22px;}.comparison-source-cards>div{border:1px solid #e1e5eb;border-radius:9px;padding:18px;}.comparison-source-cards strong{display:block;font-size:12px;}.comparison-source-cards a,.comparison-source-cards span{display:block;font-size:11px;color:#89909b;margin-top:12px;}.comparison-source-cards a{color:#b03124;font-weight:650;}
 .tractor-specifications .spec-guidance{font-size:12px;line-height:1.8;color:#707986;margin:0 0 22px;}.tractor-specifications details{margin-bottom:14px;border:1px solid #e0e4e9;border-radius:10px;overflow:hidden;}.tractor-specifications summary{padding:15px 18px;background:#f6f7f8;font-size:13px;font-weight:750;color:#333e50;cursor:pointer;}.detail-content .tractor-specifications table{width:100%;margin:0;border-collapse:collapse;}.detail-content .tractor-specifications th,.detail-content .tractor-specifications td{padding:13px 18px;border-bottom:1px solid #e9ebef;font-size:12px;vertical-align:top;text-align:left;line-height:1.7;overflow-wrap:anywhere;}.detail-content .tractor-specifications th{width:44%;font-weight:550;color:#707989;}.detail-content .tractor-specifications td{font-weight:500;color:#2d3747;}.tractor-specifications .spec-source-link{display:inline-block;margin:10px 0 25px;font-size:12px;color:#ae3025;font-weight:750;}
 @media(max-width:760px){.public-site .comparison-workspace{padding:25px 20px 48px;}.comparison-find{display:block;}.comparison-find>label{display:block;width:100%;}.comparison-find>p{margin:15px 0 0;}.comparison-pickers{grid-template-columns:1fr;gap:12px;}.comparison-picker{padding:16px;}.comparison-picker-label{margin-bottom:8px;}.comparison-picked-model{margin-top:12px;}.comparison-picker>p{margin-top:11px;}.comparison-toolbar{align-items:flex-start;flex-direction:column;}.comparison-toolbar>div{width:100%;}.comparison-toolbar button{flex:1;font-size:10px;padding:10px;}.tractor-comparison-table :is(th,td){min-width:190px;padding:13px 14px;font-size:11px;}.tractor-comparison-table tr>th:first-child:not([colspan]){min-width:130px;width:130px;}.tractor-comparison-table thead th{font-size:12px;}.comparison-source-cards{grid-template-columns:1fr;}.tractor-spec-editor .tractor-spec-group>.cms-fields{padding:0 14px 17px;}.tractor-spec-editor .tractor-csv-import{padding:16px;}.tractor-import-preview dl>div{grid-template-columns:1fr;gap:4px;}.tractor-spec-editor .tractor-spec-group>summary{font-size:12px;padding:14px;}.tractor-spec-editor .tractor-spec-group>summary small{font-size:9px;}.detail-content .tractor-specifications th,.detail-content .tractor-specifications td{padding:12px;font-size:11px;}}
+
+/* Compact phone selectors: full-width controls without oversized card padding. */
+@media (max-width:760px) {
+  .public-site .comparison-workspace { padding:18px 16px 32px; }
+  .comparison-find { margin-bottom:16px; }
+  .comparison-find > label { font-size:14px; }
+  .comparison-find input { min-height:44px; height:44px; margin-top:6px; padding:10px 12px; font-size:16px; }
+  .comparison-find > p { margin-top:8px; font-size:12px; line-height:1.5; }
+  .comparison-find > p > span { margin-top:2px; font-size:12px; }
+  .comparison-pickers { gap:10px; }
+  .comparison-picker { padding:12px; border-radius:8px; background:#fff; }
+  .comparison-picker-label { min-height:20px; margin-bottom:6px; }
+  .comparison-picker-label > label { font-size:12px; letter-spacing:.04em; }
+  .comparison-picker-label > button { width:44px; height:44px; margin-top:-6px; margin-bottom:-6px; font-size:20px; }
+  .comparison-picker select { min-width:0; min-height:44px; height:44px; padding:8px 32px 8px 10px; font-size:16px!important; border-radius:6px; }
+  .comparison-picker > p { margin:6px 0 0; font-size:12px; line-height:1.45; }
+  .comparison-picked-model { margin-top:8px; gap:10px; }
+  .comparison-picked-model > img,.comparison-picked-model > span { width:48px; height:40px; }
+  .comparison-picked-model strong { font-size:14px; }
+  .comparison-picked-model a { display:inline-flex; align-items:center; min-height:44px; margin-top:0; font-size:14px; }
+  .comparison-workspace > .empty-state { margin-top:16px; padding:18px 16px; border-radius:8px; text-align:left; align-items:flex-start; }
+  .comparison-workspace > .empty-state h3 { font-size:18px; line-height:1.35; }
+  .comparison-workspace > .empty-state p { font-size:14px; line-height:1.5; }
+  .comparison-workspace > .empty-state a { min-height:44px; margin-top:12px; font-size:14px; }
+  .comparison-toolbar { gap:12px; margin-top:20px; }
+  .comparison-toolbar > label { min-height:44px; font-size:14px; }
+  .comparison-toolbar > div { flex-wrap:wrap; }
+  .comparison-toolbar button { min-height:44px; font-size:12px; }
+  .comparison-table-scroll { max-width:100%; }
+}

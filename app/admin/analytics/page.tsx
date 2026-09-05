@@ -1,4 +1,6 @@
 'use client';
+import { LocalizedElement } from '@/components/LocalizedElement';
+
 import {useEffect,useState} from 'react';
 import {AdminShell} from '@/components/admin/AdminShell';
 import {listLeads,type Lead} from '@/services/leads';
@@ -11,9 +13,9 @@ export default function AnalyticsPage(){
   useEffect(()=>{void load();},[]);
   const count=(name:string)=>events.filter(item=>item.name===name).length;
   const sources=leads.reduce<Record<string,number>>((all,item)=>({...all,[item.source]:(all[item.source]||0)+1}),{});
-  return <AdminShell><header className="admin-heading"><div><p>PERFORMANCE</p><h1>Analytics</h1><span>Enquiry totals for the latest 100 leads.{isLocalDemo?' Local interaction totals cover the latest 1,000 recorded events.':' Website traffic is available in Firebase Analytics.'}</span></div><button disabled={loading} onClick={()=>void load()}>{loading?'Loading…':'Refresh'}</button></header>
-    {error&&<div className="admin-error" role="alert">{error}</div>}
-    <div className="crm-metrics">{isLocalDemo&&<><article><span>Page views</span><strong>{count('page_view')}</strong></article><article><span>Tractor views</span><strong>{count('tractor_view')}</strong></article><article><span>Searches</span><strong>{count('search')}</strong></article></>}<article><span>Converted leads</span><strong>{leads.filter(item=>item.status==='Converted').length}</strong></article></div>
-    <section className="admin-panel"><h2>Lead sources</h2>{!leads.length?<p>No enquiries recorded.</p>:<div className="analytics-bars">{Object.entries(sources).map(([name,value])=><div key={name}><span>{name}</span><i style={{width:`${value/leads.length*100}%`}}/><strong>{value}</strong></div>)}</div>}</section>
+  return <AdminShell><header className="admin-heading"><LocalizedElement as="div"><LocalizedElement as="p">PERFORMANCE</LocalizedElement><LocalizedElement as="h1">Analytics</LocalizedElement><LocalizedElement as="span">Enquiry totals for the latest 100 leads.{isLocalDemo?' Local interaction totals cover the latest 1,000 recorded events.':' Website traffic is available in Firebase Analytics.'}</LocalizedElement></LocalizedElement><LocalizedElement as="button" disabled={loading} onClick={()=>void load()}>{loading?'Loading…':'Refresh'}</LocalizedElement></header>
+    {error&&<LocalizedElement as="div" className="admin-error" role="alert">{error}</LocalizedElement>}
+    <LocalizedElement as="div" className="crm-metrics">{isLocalDemo&&<><article><LocalizedElement as="span">Page views</LocalizedElement><LocalizedElement as="strong">{count('page_view')}</LocalizedElement></article><article><LocalizedElement as="span">Tractor views</LocalizedElement><LocalizedElement as="strong">{count('tractor_view')}</LocalizedElement></article><article><LocalizedElement as="span">Searches</LocalizedElement><LocalizedElement as="strong">{count('search')}</LocalizedElement></article></>}<article><LocalizedElement as="span">Converted leads</LocalizedElement><LocalizedElement as="strong">{leads.filter(item=>item.status==='Converted').length}</LocalizedElement></article></LocalizedElement>
+    <section className="admin-panel"><LocalizedElement as="h2">Lead sources</LocalizedElement>{!leads.length?<LocalizedElement as="p">No enquiries recorded.</LocalizedElement>:<LocalizedElement as="div" className="analytics-bars">{Object.entries(sources).map(([name,value])=><LocalizedElement as="div" key={name}><LocalizedElement as="span">{name}</LocalizedElement><i style={{width:`${value/leads.length*100}%`}}/><LocalizedElement as="strong">{value}</LocalizedElement></LocalizedElement>)}</LocalizedElement>}</section>
   </AdminShell>;
 }

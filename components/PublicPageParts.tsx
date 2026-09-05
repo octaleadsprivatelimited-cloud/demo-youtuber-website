@@ -1,22 +1,24 @@
 'use client';
+import { LocalizedElement } from '@/components/LocalizedElement';
+
 import type {ReactNode} from 'react';
 import {parseReadingContent} from '@/utils/reading-content';
 import {usePathname} from 'next/navigation';
 
 export function PageIntro({eyebrow,title,description,children}:{eyebrow:string;title:string;description:string;children?:ReactNode}){
-  return <section className="page-hero"><p>{eyebrow}</p><h1>{title}</h1><span>{description}</span>{children}</section>;
+  return <section className="page-hero"><LocalizedElement as="p">{eyebrow}</LocalizedElement><LocalizedElement as="h1">{title}</LocalizedElement><LocalizedElement as="span">{description}</LocalizedElement>{children}</section>;
 }
 export function EmptyContent({title,description,href='/tractors',action='Explore tractors'}:{title:string;description:string;href?:string;action?:string}){
-  return <div className="empty-state"><span className="empty-mark" aria-hidden="true">↗</span><h3>{title}</h3><p>{description}</p><a href={href}>{action} <span aria-hidden="true">→</span></a></div>;
+  return <LocalizedElement as="div" className="empty-state"><LocalizedElement as="span" className="empty-mark" aria-hidden="true">↗</LocalizedElement><LocalizedElement as="h3">{title}</LocalizedElement><LocalizedElement as="p">{description}</LocalizedElement><LocalizedElement as="a" href={href}>{action} <LocalizedElement as="span" aria-hidden="true">→</LocalizedElement></LocalizedElement></LocalizedElement>;
 }
 export function ReadingContent({text}:{text:string}){
-  return <div className="reading-copy">{parseReadingContent(text).map((block,index)=>block.kind==='list'?<ul key={index}>{block.items.map((item,i)=><li key={i}>{item}</li>)}</ul>:block.kind==='heading'?(block.level===3?<h3 key={index}>{block.text}</h3>:<h2 key={index}>{block.text}</h2>):<p key={index}>{block.text}</p>)}</div>;
+  return <LocalizedElement as="div" className="reading-copy">{parseReadingContent(text).map((block,index)=>block.kind==='list'?<ul key={index}>{block.items.map((item,i)=><LocalizedElement as="li" key={i}>{item}</LocalizedElement>)}</ul>:block.kind==='heading'?(block.level===3?<LocalizedElement as="h3" key={index}>{block.text}</LocalizedElement>:<LocalizedElement as="h2" key={index}>{block.text}</LocalizedElement>):<LocalizedElement as="p" key={index}>{block.text}</LocalizedElement>)}</LocalizedElement>;
 }
 const destinations:Record<string,[string,string]>={tractors:['Tractors','/tractors'],tractor:['Tractors','/tractors'],brand:['Brands','/brands'],brands:['Brands','/brands'],articles:['Articles','/articles'],category:['Articles','/articles'],news:['News','/news'],videos:['Videos','/videos'],reviews:['Reviews','/reviews'],equipment:['Equipment','/equipment'],dealers:['Dealers','/dealers'],account:['My account','/account'],'emi-calculator':['EMI calculator','/emi-calculator'],'new-tractors':['New tractors','/new-tractors'],'upcoming-tractors':['Upcoming tractors','/upcoming-tractors'],'privacy-policy':['Privacy policy','/privacy-policy'],'terms-and-conditions':['Terms and conditions','/terms-and-conditions'],'cookie-policy':['Cookie policy','/cookie-policy']};
 export function PublicBreadcrumbs(){
   const path=usePathname();const parts=path.split('/').filter(Boolean);if(!parts.length)return null;
   const group=destinations[parts[0]];const label=(group&&parts.length===1?group[0]:decodeURIComponent(parts.at(-1)??'').replaceAll('-',' '));
-  return <nav className="public-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span>{parts.length>1&&group&&<><a href={group[1]}>{group[0]}</a><span aria-hidden="true">/</span></>}<span aria-current="page">{label}</span></nav>;
+  return <nav className="public-breadcrumbs" aria-label="Breadcrumb"><LocalizedElement as="a" href="/">Home</LocalizedElement><LocalizedElement as="span" aria-hidden="true">/</LocalizedElement>{parts.length>1&&group&&<><LocalizedElement as="a" href={group[1]}>{group[0]}</LocalizedElement><LocalizedElement as="span" aria-hidden="true">/</LocalizedElement></>}<LocalizedElement as="span" aria-current="page">{label}</LocalizedElement></nav>;
 }
 type Guide={eyebrow:string;title:string;intro:string;items:[string,string][];link:[string,string]};
 const guides:Record<string,Guide>={
@@ -34,5 +36,5 @@ export function PageSupport(){
   if(!guide)return null;
   const shortlistIcons=['/icons/tabler/book-2.svg','/icons/tabler/settings.svg','/icons/tabler/news.svg'];
   const isTractorCatalog=first==='tractors'||first==='new-tractors';
-  return <section className={`page-support${isTractorCatalog?' page-support-shortlist':''}`} aria-labelledby="page-support-title"><div className="support-heading"><p>{guide.eyebrow}</p><h2 id="page-support-title">{guide.title}</h2><span>{guide.intro}</span></div><div className="support-grid">{guide.items.map(([title,text],index)=><article key={title}>{isTractorCatalog&&<span className="support-icon" aria-hidden="true"><img src={shortlistIcons[index]} alt="" width={32} height={32}/></span>}<div className="support-step-copy"><span className="support-number">0{index+1}</span><h3>{title}</h3><p>{text}</p></div></article>)}</div><a className="text-action" href={guide.link[1]}>{guide.link[0]} <span>→</span></a></section>;
+  return <section className={`page-support${isTractorCatalog?' page-support-shortlist':''}`} aria-labelledby="page-support-title"><LocalizedElement as="div" className="support-heading"><LocalizedElement as="p">{guide.eyebrow}</LocalizedElement><LocalizedElement as="h2" id="page-support-title">{guide.title}</LocalizedElement><LocalizedElement as="span">{guide.intro}</LocalizedElement></LocalizedElement><LocalizedElement as="div" className="support-grid">{guide.items.map(([title,text],index)=><article key={title}>{isTractorCatalog&&<LocalizedElement as="span" className="support-icon" aria-hidden="true"><LocalizedElement as="img" src={shortlistIcons[index]} alt="" width={32} height={32}/></LocalizedElement>}<LocalizedElement as="div" className="support-step-copy"><LocalizedElement as="span" className="support-number">0{index+1}</LocalizedElement><LocalizedElement as="h3">{title}</LocalizedElement><LocalizedElement as="p">{text}</LocalizedElement></LocalizedElement></article>)}</LocalizedElement><LocalizedElement as="a" className="text-action" href={guide.link[1]}>{guide.link[0]} <LocalizedElement as="span">→</LocalizedElement></LocalizedElement></section>;
 }

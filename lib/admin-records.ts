@@ -14,6 +14,7 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
     data.order = Number(data.order);
     if (collection === 'heroSlides' && data.backgroundColor && !/^#[0-9a-f]{6}$/i.test(String(data.backgroundColor))) throw new Error('Use a six-digit colour such as #ffffff.');
   }
+  if (collection === 'partners' && !String(data.image ?? '').trim()) throw new Error('Please upload a partner logo before saving.');
   if (['brands', 'equipment', 'dealers'].includes(collection)) data.name = data.title ?? data.name;
   if (collection === 'tractors') {
     Object.assign(data, prepareTractorSpecifications(data));

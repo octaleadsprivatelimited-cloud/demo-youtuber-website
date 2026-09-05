@@ -1,6 +1,14 @@
-'use client';
-import {useEffect,useState} from 'react';
-import {PublicShell} from '@/components/SiteChrome';
-import {PageIntro,EmptyContent} from '@/components/PublicPageParts';
-import {listDealers,type Dealer} from '@/services/media';
-export default function DealersPage(){const [items,setItems]=useState<Dealer[]>([]);const [filters,setFilters]=useState({brand:'',state:'',district:'',city:''});const [loading,setLoading]=useState(true);const [error,setError]=useState('');useEffect(()=>{listDealers().then(setItems).catch(reason=>setError(reason instanceof Error?reason.message:'Unable to load the dealer directory.')).finally(()=>setLoading(false));},[]);const shown=items.filter(item=>Object.entries(filters).every(([key,value])=>String(item[key as keyof Dealer]??'').toLowerCase().includes(value.trim().toLowerCase())));return <PublicShell><main className="dealers-index"><PageIntro eyebrow="THE NEXT CONVERSATION" title="Find a dealer. Bring your questions." description="Explore the published dealer directory by brand and location. Open a profile for its listed contact and address details."/><section className="dealer-list"><div className="dealer-filters">{(['brand','state','district','city'] as const).map(field=><label key={field}>{field}<input value={filters[field]} onChange={event=>setFilters({...filters,[field]:event.target.value})} placeholder={'Search '+field}/></label>)}<button onClick={()=>setFilters({brand:'',state:'',district:'',city:''})}>Clear filters</button></div>{loading?<div className="detail-loading" role="status">Loading dealers…</div>:error?<div className="error-state" role="alert">{error}</div>:!shown.length?<EmptyContent title={items.length?'No dealers match those filters.':'The dealer directory is being prepared.'} description={items.length?'Try a nearby city, fewer filters or a different brand.':'Dealer profiles will appear here as they are published. Use the catalog to prepare your shortlist before arranging a visit.'}/>:<div className="dealer-grid">{shown.map(item=><article key={item.id}><div className="dealer-logo">{item.logo?<img src={item.logo} alt={item.name+' logo'}/>:item.name.slice(0,2).toUpperCase()}</div><section><p>{item.verified?'VERIFIED DEALER':'DEALER PROFILE'}</p><h2>{item.name}</h2><span>{[item.address,item.city,item.state].filter(Boolean).join(', ')}</span>{item.brand&&<small>{item.brand}</small>}<a href={'/dealers/'+item.slug}>Contact & details →</a></section></article>)}</div>}</section></main></PublicShell>;}
+import type { Metadata } from 'next';
+import DealersPageContent from './dealers-page-client';
+
+export const metadata: Metadata = {
+  title: 'Dealers Directory | RJ Tractor Techs',
+  description: 'Search and filter the verified dealer directory by brand, city, district and state.',
+  alternates: {
+    canonical: '/dealers',
+  },
+};
+
+export default function DealersPage() {
+  return <DealersPageContent />;
+}

@@ -1,16 +1,12 @@
-'use client';
-import {useState,type FormEvent} from 'react';
-import {PublicShell,useSiteSettings} from '@/components/SiteChrome';
-import {PageIntro} from '@/components/PublicPageParts';
-import {submitContact} from '@/services/public-content';
-export default function Contact(){
-  const settings=useSiteSettings();const [form,setForm]=useState({name:'',email:'',phone:'',message:''});const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [sent,setSent]=useState(false);
-  async function submit(event:FormEvent){event.preventDefault();if(busy)return;setBusy(true);setError('');setSent(false);try{await submitContact(form);setForm({name:'',email:'',phone:'',message:''});setSent(true);}catch(reason){setError(reason instanceof Error?reason.message:'We could not send your message. Please try again.');}finally{setBusy(false);}}
-  return <PublicShell><main className="contact-page"><PageIntro eyebrow="GET IN TOUCH" title="Let’s talk tractors." description="Have a question, a correction or an idea to share? Send a note to RJ Tractor Techs."/>
-    <section className="contact-grid"><article className="contact-intro"><p className="section-kicker">START A CONVERSATION</p><h2>What’s on your mind?</h2><p>Tell us a little about what you need. For a question about a specific tractor or article, include the model name or page link so we can understand the context.</p>
-      <div className="contact-reasons">{[['Website questions','Help finding information or using the research tools.'],['Content and corrections','A topic you would like covered, or a detail that needs checking.'],['Business enquiries','Partnership, media and general business conversations.']].map(([title,text])=><div key={title}><h3>{title}</h3><p>{text}</p></div>)}</div>
-      {(settings.email||settings.phone)&&<div className="contact-direct"><h3>Contact details</h3>{settings.email&&<a href={'mailto:'+settings.email}>{settings.email}</a>}{settings.phone&&<a href={'tel:'+settings.phone}>{settings.phone}</a>}</div>}
-      <a className="text-action" href={settings.youtube||'https://www.youtube.com/@Rjtractortechs'} target="_blank" rel="noreferrer">Find us on YouTube <span>↗</span></a>
-    </article><form id="contact-form" className="contact-form" onSubmit={submit}><h2>Send a message</h2><p>Fields marked with * are required.</p><label>Your name *<input name="name" autoComplete="name" required value={form.name} onChange={event=>setForm({...form,name:event.target.value})}/></label><label>Email address *<input name="email" type="email" autoComplete="email" required value={form.email} onChange={event=>setForm({...form,email:event.target.value})}/></label><label>Phone number <span>(optional)</span><input name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={event=>setForm({...form,phone:event.target.value})}/></label><label>Your message *<textarea name="message" rows={5} required placeholder="How can we help?" value={form.message} onChange={event=>setForm({...form,message:event.target.value})}/></label><small>Please do not include passwords, payment details or sensitive documents.</small>{error&&<p className="form-error" role="alert">{error}</p>}{sent&&<p className="contact-success" role="status">Your message has been received. Thank you for getting in touch.</p>}<button disabled={busy} className="cta-primary">{busy?'Sending…':'Send message →'}</button><a className="contact-privacy" href="/privacy-policy">Read our privacy information</a></form></section>
-  </main></PublicShell>;
+import type { Metadata } from 'next';
+import ContactPage from './contact-page-client';
+
+export const metadata: Metadata = {
+  title: 'Contact Us | RJ Tractor Techs',
+  description: 'Get in touch with RJ Tractor Techs for tractor details, corrections, partnerships and research support.',
+  alternates: { canonical: '/contact' },
+};
+
+export default function Page() {
+  return <ContactPage />;
 }

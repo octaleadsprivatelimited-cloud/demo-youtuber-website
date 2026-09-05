@@ -1,0 +1,281 @@
+/* Automotive catalogue theme. Kept local to the public homepage. */
+.reference-home {
+  --ref-home-ink: #24272b;
+  --ref-home-navy: #006b75;
+  --ref-home-muted: #62676d;
+  --ref-home-line: #e1e3e5;
+  --auto-red: #c72c35;
+  --auto-link: #006b75;
+  color: var(--ref-home-ink);
+  background: #fff;
+}
+.reference-home .home-v2 { --home-ink: #24272b; --home-muted: #62676d; --home-line: #e1e3e5; --home-navy: #006b75; }
+.reference-home .ref-home-header { background: #fff; border-bottom: 1px solid #dedfe1; box-shadow: 0 2px 8px #00000008; }
+.reference-home .ref-home-brand strong { color: #24272b; }
+.reference-home .ref-home-brand-mark { color: var(--auto-red); }
+.reference-home .ref-home-header-inner { grid-template-rows: 72px 44px; min-height: 116px; }
+.reference-home .ref-home-navigation { border-top: 1px solid #eceeef; }
+.reference-home .ref-home-navigation a { color: #35393d; font-size: 12px; }
+.reference-home .ref-home-navigation a:hover { color: var(--auto-red); }
+.reference-home .ref-home-account { border-color: #d4d7da; color: #35393d; border-radius: 5px; }
+.reference-home .ref-home-account:hover { background: #f3f4f5; }
+.reference-home .ref-home-header-primary { background: var(--auto-red); border-color: var(--auto-red); border-radius: 5px; }
+.reference-home .ref-home-search .site-search-trigger-wide { background: #f5f6f7; border-color: #e1e3e5; border-radius: 5px; }
+.reference-home .ref-home-hero-scene { background: #f3f4f5; }
+.reference-home .ref-home-hero-scene::before { display: none; }
+.reference-home .ref-home-hero-inner { background: transparent; }
+.reference-home .ref-home-hero-copy { padding: 26px; background: #fff; border: 1px solid #e1e3e5; border-radius: 8px; box-shadow: 0 8px 28px #20242812; }
+.reference-home .ref-home-hero-copy h1 { color: #24272b; font-size: clamp(32px,3.2vw,46px); line-height: 1.15; }
+.reference-home .ref-home-eyebrow { color: var(--auto-red); font-size: 12px; }
+.reference-home .ref-home-hero-description { color: #62676d; font-size: 16px; }
+.reference-home .ref-home-hero-search { border: 1px solid #b9bfc4; box-shadow: none; border-radius: 5px; }
+.reference-home .ref-home-hero-search input { font-size: 14px; }
+.reference-home .ref-home-hero-search button { background: var(--auto-red); font-size: 14px; }
+.reference-home .ref-home-power-rail { background: #fff; border-top: 1px solid #dedfe1; }
+.reference-home .ref-home-power-rail a { color: #34393d; font-size: 14px; border-color: #e1e3e5; }
+.reference-home .ref-home-power-rail a:hover { background: #f0f5f5; color: var(--auto-link); }
+.reference-home > main > section:not(.ref-home-hero) { border-top: 1px solid #e1e3e5; border-bottom: 0; }
+.reference-home > main > :is(.home-introduction,.home-brands,.home-editorial,.home-partners) { background: #fff; }
+.reference-home > main > :is(.showcase-reference,.home-compare,.home-videos,.home-channel) { background: #f3f4f5; }
+.reference-home > main > .editorial-section { max-width: none; padding-inline: max(24px,calc((100% - 1240px)/2)); background: #fff; }
+.reference-home .home-v2.home-compare::after,
+.reference-home .home-v2.home-editorial::before { display: none; }
+.reference-home .home-v2 .home-compare-panel { background: transparent; }
+.reference-home :is(.home-v2 h2,.showcase-reference .showcase-heading h2,.editorial-section-heading h2),
+.reference-home .home-v2.home-editorial .home-section-heading h2 { color: #24272b; font-size: clamp(24px,2.4vw,30px); line-height: 1.3; letter-spacing: -.025em; }
+.reference-home .home-v2 :is(.home-eyebrow,.home-section-heading .home-eyebrow) { color: #686e73; font-size: 12px; letter-spacing: .06em; }
+.reference-home .home-v2 :is(.home-section-heading .home-description,.home-compare-copy > p:not(.home-eyebrow)) { color: #62676d; font-size: 16px; }
+.reference-home :is(.ref-home-link,.home-v2 .home-text-link,.editorial-section-heading > a) { color: var(--auto-link); font-size: 14px; }
+.reference-home :is(.ref-home-button,.home-v2 .home-button,.showcase-detail),
+.reference-home .home-v2.home-video-library .home-video-channel { background: var(--auto-red); border-color: var(--auto-red); color: #fff; box-shadow: none; border-radius: 5px; }
+.reference-home :is(.ref-home-button,.home-v2 .home-button,.showcase-detail):hover,
+.reference-home .ref-home-hero-search button:hover { background: #a9212a; border-color: #a9212a; }
+.reference-home .showcase-tabs button[aria-selected=true] { color: var(--auto-link); box-shadow: inset 0 -3px var(--auto-link); }
+.reference-home .showcase-reference .showcase-tabs button { font-size: 14px; }
+.reference-home :is(.showcase-tractor-card,.home-compare-card,.editorial-card,.home-video-empty),
+.reference-home .home-v2.home-editorial .home-reading-grid > a,
+.reference-home .home-v2.home-video-library .home-video-card { border: 1px solid #dedfe1; border-radius: 6px; background: #fff; box-shadow: none; }
+.reference-home :is(.showcase-tractor-card,.home-compare-card,.editorial-card):hover { border-color: #aeb6bb; box-shadow: 0 4px 14px #22272b0b; }
+.reference-home .showcase-reference .showcase-tractor-body { text-align: left; }
+.reference-home .showcase-reference .showcase-tractor-body h3 { color: #24272b; font-size: 16px; line-height: 1.4; }
+.reference-home .showcase-reference .showcase-specs { justify-content: flex-start; flex-wrap: wrap; }
+.reference-home .showcase-reference .showcase-specs > span { color: #62676d; background: #f3f4f5; font-size: 12px; border-radius: 3px; }
+.reference-home .showcase-reference .showcase-detail { font-size: 14px; min-height: 44px; }
+.reference-home .home-compare-card h3,
+.reference-home .home-v2.home-editorial .home-reading-grid h3 { color: #24272b; font-size: 18px; }
+.reference-home .home-compare-card p,
+.reference-home .home-v2.home-editorial .home-reading-grid p { color: #62676d; font-size: 14px; line-height: 1.6; }
+.reference-home .home-v2.home-editorial .home-reading-index { color: #eef0f1; }
+.reference-home .home-v2.home-editorial .home-reading-grid .home-text-link { color: var(--auto-link); font-size: 14px; }
+.reference-home .home-v2 .home-brand-cards h3 { color: #35393d; font-size: 14px; }
+.reference-home .home-v2.home-video-library .home-video-card h3 { color: #24272b; font-size: 16px; }
+.reference-home .home-v2.home-video-library .home-video-card > p { color: #62676d; font-size: 12px; }
+.reference-home .home-v2.home-video-library .home-video-card > .home-text-link { color: var(--auto-link); font-size: 14px; min-height: 40px; }
+.reference-home > .home-footer { background: #252a30; }
+.reference-home > .home-footer::after { display: none; }
+.reference-home .home-footer .footer-main > div > a:not(.brand),
+.reference-home .home-footer .footer-brand p { font-size: 14px; }
+.reference-home :is(a,button,input,select):focus-visible { outline: 3px solid #007b85; outline-offset: 3px; }
+
+@media (max-width: 760px) {
+  .reference-home .ref-home-header-inner { min-height: 64px; padding-inline: 14px; }
+  .reference-home .ref-home-brand strong { font-size: 15px; }
+  .reference-home .ref-home-hero-scene { display: flex; min-height: 0; flex-direction: column; background: #fff; overflow: hidden; }
+  .reference-home .ref-home-hero-inner { order: 0; min-height: 0; padding: 18px 20px 12px; }
+  .reference-home .ref-home-hero-copy { width: 100%; padding: 0; border: 0; box-shadow: none; border-radius: 0; }
+  .reference-home .ref-home-eyebrow { margin-bottom: 10px; }
+  .reference-home .ref-home-hero-copy h1 { max-width: 440px; font-size: clamp(30px,8vw,38px); }
+  .reference-home .ref-home-hero-description { max-width: 440px; margin-top: 12px; font-size: 16px; line-height: 1.5; }
+  .reference-home .ref-home-hero-search { min-height: 50px; grid-template-columns: 18px minmax(0,1fr) auto; gap: 7px; padding: 4px 4px 4px 10px; }
+  .reference-home .ref-home-hero-search input { min-width: 0; font-size: 16px; }
+  .reference-home .ref-home-hero-search button { min-height: 42px; min-width: 70px; font-size: 14px; }
+  .reference-home .ref-home-hero-actions { gap: 18px; flex-wrap: wrap; }
+  .reference-home .ref-home-hero-actions .ref-home-link { min-height: 44px; font-size: 14px; }
+  .reference-home .ref-home-hero-media { position: relative; inset: auto; order: 1; width: 100%; height: auto; aspect-ratio: 2.1; }
+  .reference-home .ref-home-hero-media > img { object-fit: contain; object-position: center; }
+  .reference-home .ref-home-power-rail { position: relative; inset: auto; order: 2; width: 100%; }
+  .reference-home .ref-home-power-rail a { font-size: 12px; min-height: 70px; gap: 7px; }
+  .reference-home .ref-home-slide-controls { left: auto; right: 16px; bottom: 82px; }
+  .reference-home .home-v2.home-video-library .home-video-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+  .reference-home .home-v2.home-video-library .home-video-card > div { aspect-ratio: 16/9; }
+  .reference-home .home-v2.home-video-library .home-video-card > .home-text-link { margin-inline: 6px; padding-inline: 6px; font-size: 12px; }
+  .reference-home .home-v2.home-video-library .home-section-heading { grid-template-columns: 1fr; gap: 14px; }
+  .reference-home .home-v2.home-video-library .home-section-heading > a { width: fit-content; min-height: 44px; font-size: 14px; }
+  .reference-home .home-v2.home-editorial .home-reading-grid { grid-template-columns: 1fr; }
+  .reference-home .home-v2.home-editorial .home-reading-grid > a { min-height: 0; padding: 22px; }
+  .reference-home .home-compare-card { padding: 18px 14px; }
+  .reference-home .home-compare-card h3 { font-size: 16px; }
+}
+
+/* Full section redesign: a shared content grid and distinct section compositions. */
+.reference-home > main > section:not(.ref-home-hero):not(.home-partners) { padding-block: 56px; }
+.reference-home .home-v2 .home-container,
+.reference-home .home-v2.home-editorial .home-container,
+.reference-home .home-v2.home-video-library .home-container,
+.reference-home .home-compare .home-container { max-width: 1240px; padding-inline: 32px; }
+.reference-home .tractor-showcase-inner { max-width: 1176px; margin-inline: auto; }
+.reference-home .home-v2 .home-section-heading,
+.reference-home .home-v2 .home-brand-layout .home-section-heading { margin-bottom: 28px; gap: 24px; }
+.reference-home :is(.home-v2 h2,.showcase-reference .showcase-heading h2,.editorial-section-heading h2),
+.reference-home .home-v2.home-editorial .home-section-heading h2 { font-size: clamp(28px,3vw,38px); font-weight: 750; letter-spacing: -.035em; }
+.reference-home .home-section-heading > div { max-width: 700px; }
+.reference-home .home-section-heading .home-description { max-width: 600px; }
+.reference-home .home-v2 .home-section-heading .home-eyebrow { margin-bottom: 10px; color: #a9252d; font-weight: 750; }
+.reference-home .home-v2 .home-section-heading > .home-text-link,
+.reference-home .home-v2.home-editorial .home-section-heading > a,
+.reference-home .home-v2.home-video-library .home-section-heading > a { background: transparent; border: 0; border-bottom: 2px solid #006b75; border-radius: 0; padding: 8px 0; color: #006b75; font-size: 14px; min-height: 44px; flex-shrink: 0; }
+
+/* Hero: two true columns, with unfiltered tractor imagery. */
+.reference-home > main > .ref-home-hero { padding: 0; background: #fff; }
+.reference-home .ref-home-hero-scene { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; background: #fff; }
+.reference-home .ref-home-hero-inner { grid-column: 1; grid-row: 1; min-height: 420px; width: 100%; padding: 44px 32px 44px max(32px,calc((100vw - 1176px)/2)); }
+.reference-home .ref-home-hero-copy { width: 100%; max-width: 560px; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.reference-home .ref-home-hero-copy h1 { font-size: clamp(36px,4vw,56px); max-width: 520px; }
+.reference-home .ref-home-hero-media { position: relative; grid-column: 2; grid-row: 1; inset: auto; width: 100%; height: 100%; min-height: 0; z-index: 0; }
+.reference-home .ref-home-hero-media > img { object-fit: contain; object-position: center; }
+.reference-home .ref-home-power-rail { position: relative; grid-column: 1/-1; inset: auto; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); background: #202c35; border: 0; }
+.reference-home .ref-home-power-rail a { justify-content: center; min-height: 76px; gap: 14px; color: #fff; border-right: 1px solid #45515a; font-size: 14px; }
+.reference-home .ref-home-power-rail a img { filter: brightness(0) invert(1); }
+.reference-home .ref-home-power-rail a:hover { background: #334550; color: #fff; }
+.reference-home .ref-home-slide-controls { right: 24px; left: auto; bottom: 90px; }
+
+/* Research tools: three equal action cards with visible sequence numbers. */
+.reference-home > main > .home-introduction { background: #f2f4f5; }
+.reference-home .home-introduction .home-container { display: block; }
+.reference-home .home-intro-heading { margin-bottom: 26px; max-width: none; }
+.reference-home .home-tool-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+.reference-home .home-tool { display: flex; align-items: flex-start; gap: 18px; padding: 26px; background: #fff; border: 1px solid #dfe4e7; border-radius: 10px; }
+.reference-home .home-tool > div { flex: 1; min-width: 0; }
+.reference-home .home-step { display: grid; place-items: center; flex: none; width: 40px; height: 40px; background: #202c35; color: #fff; border-radius: 8px; font-size: 14px; }
+.reference-home .home-tool h3 { font-size: 19px; margin: 0 0 8px; }
+.reference-home .home-tool p { font-size: 14px; line-height: 1.6; color: #62676d; }
+.reference-home .home-tool-action { display: block; margin-top: 18px; font-size: 14px; font-weight: 700; color: #006b75; }
+.reference-home .home-tool > .home-arrow { display: none; }
+
+/* Catalogue: generous photography, segmented tabs, and a clear card action. */
+.reference-home > main > .showcase-reference { background: #fff; }
+.reference-home .showcase-reference .tractor-showcase-inner { display: grid; grid-template-columns: 1fr; gap: 24px; }
+.reference-home .showcase-reference .showcase-heading { display: flex; justify-content: space-between; }
+.reference-home .showcase-reference .showcase-heading p { display: block; color: #a9252d; font-size: 12px; letter-spacing: .06em; margin-bottom: 10px; }
+.reference-home .showcase-reference .showcase-tabs { display: flex; width: fit-content; padding: 5px; gap: 4px; border: 1px solid #dfe4e7; background: #f2f4f5; border-radius: 8px; margin: 0; }
+.reference-home .showcase-reference .showcase-tabs button { padding: 10px 22px; border-radius: 5px; min-height: 44px; font-size: 14px; }
+.reference-home .showcase-reference .showcase-tabs button[aria-selected=true] { color: #fff; background: #202c35; box-shadow: none; }
+.reference-home .showcase-reference .showcase-row { gap: 18px; }
+.reference-home .showcase-reference .showcase-tractor-card { border-radius: 10px; overflow: hidden; }
+.reference-home .showcase-reference .showcase-tractor-photo { aspect-ratio: 1.4; background: #f6f7f8; padding: 16px; border-radius: 0; }
+.reference-home .showcase-reference .showcase-tractor-body { padding: 20px 16px; }
+.reference-home .showcase-reference .showcase-detail { background: #fff; border-color: #c72c35; color: #ac2029; }
+.reference-home .showcase-reference .showcase-detail img { filter: none; }
+.reference-home .showcase-reference .showcase-detail:hover { background: #fff1f2; }
+.reference-home .showcase-reference .showcase-footer { justify-content: flex-start; }
+
+/* Brands: individual tiles with room for logos. */
+.reference-home > main > .home-brands { background: #f2f4f5; }
+.reference-home .home-v2 .home-brand-cards { grid-template-columns: repeat(6,minmax(0,1fr)); gap: 14px; border: 0; }
+.reference-home .home-v2 .home-brand-cards > a { border: 1px solid #dfe4e7; border-radius: 10px; min-height: 144px; padding: 22px 14px; gap: 18px; }
+.reference-home .home-v2 .home-brand-cards > a:hover { border-color: #006b75; background: #fff; }
+
+/* Comparison: a solid dark section with a compact category matrix. */
+.reference-home > main > .home-compare { background: #202c35; }
+.reference-home .home-v2 .home-compare-panel { grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 56px; padding: 0; }
+.reference-home .home-compare h2 { color: #fff; }
+.reference-home .home-v2 .home-compare-copy > p:not(.home-eyebrow) { color: #d0d9df; }
+.reference-home .home-compare-copy .home-eyebrow { color: #a8dce0; }
+.reference-home .home-compare-grid { gap: 14px; }
+.reference-home .home-compare-card { min-height: 170px; padding: 24px; border-radius: 10px; border-color: #4a5a65; background: #2d3e49; }
+.reference-home .home-compare-card h3 { color: #fff; }
+.reference-home .home-compare-card p { color: #d0d9df; }
+.reference-home .home-compare-card > img { filter: brightness(0) invert(1); }
+.reference-home .home-compare-card > span { background: #73c2c9; }
+
+/* Reviews and reading: editorial cards with distinct image and text regions. */
+.reference-home > main > .editorial-section { padding-inline: max(32px,calc((100% - 1176px)/2)); background: #f2f4f5; }
+.reference-home .editorial-card { border-radius: 10px; }
+.reference-home .editorial-card-image { background: #e1e7eb; aspect-ratio: 16/9; }
+.reference-home .editorial-card h3 a { color: #24272b; }
+.reference-home .editorial-card footer strong { color: #006b75; }
+.reference-home .editorial-empty { background: #fff; border-radius: 10px; border-left: 4px solid #006b75; padding: 32px; }
+.reference-home .home-v2.home-editorial .home-reading-grid { gap: 22px; }
+.reference-home .home-v2.home-editorial .home-reading-grid > a { padding: 30px; border-radius: 10px; border-top: 4px solid #c72c35; min-height: 280px; }
+.reference-home .home-v2.home-editorial .home-reading-number { width: 52px; height: 52px; padding: 10px; border-radius: 10px; background: #f0f4f5; }
+.reference-home .home-v2.home-editorial .home-reading-accent { display: none; }
+.reference-home .home-v2.home-editorial .home-reading-grid h3 { font-size: 22px; }
+.reference-home .home-v2.home-editorial .home-reading-grid p { font-size: 16px; }
+.reference-home .home-story { overflow: hidden; border-radius: 10px; }
+
+/* Video library: large widescreen previews instead of tiny thumbnails. */
+.reference-home > main > .home-videos { background: #eaf0f2; }
+.reference-home .home-v2.home-video-library .home-video-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; }
+.reference-home .home-v2.home-video-library .home-video-card { padding: 0 0 20px; border-radius: 10px; overflow: hidden; }
+.reference-home .home-v2.home-video-library .home-video-card > div { aspect-ratio: 16/9; border-radius: 0; }
+.reference-home .home-v2.home-video-library .home-video-card h3 { font-size: 18px; margin-inline: 20px; }
+.reference-home .home-v2.home-video-library .home-video-card > p,
+.reference-home .home-v2.home-video-library .home-video-card > .home-text-link { margin-left: 20px; margin-right: 20px; }
+.reference-home .home-video-empty { padding: 32px; border-radius: 10px; }
+.reference-home .home-video-empty-copy { padding: 0; }
+.reference-home .home-video-empty-copy p { font-size: 16px; }
+.reference-home .home-v2.home-video-library .home-video-channel { margin-top: 28px; }
+.reference-home .home-video-carousel-window { width:100%; overflow:hidden; }
+.reference-home .home-video-carousel-track { display:flex; width:100%; transition:transform .72s cubic-bezier(.22,1,.36,1); will-change:transform; }
+.reference-home .home-video-carousel-page { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); flex:0 0 100%; gap:24px; }
+.reference-home .home-video-carousel .home-video-card { min-width:0; padding-bottom:0; }
+.reference-home .home-video-thumbnail { position:relative; }
+.reference-home .home-video-play { position:absolute; left:18px; bottom:18px; display:grid; place-items:center; width:46px; height:46px; border-radius:50%; background:#c72c35; box-shadow:0 8px 22px #0003; }
+.reference-home .home-video-play img { width:19px!important; height:19px!important; filter:brightness(0) invert(1); }
+.reference-home > main > .home-promotions { background: #fff; }
+.reference-home .home-promotions .cms-home { max-width: 1240px; padding: 0 32px; margin: auto; }
+.reference-home .cms-banner { overflow: hidden; border-radius: 12px; border: 1px solid #dfe4e7; }
+.reference-home .cms-ad { border: 1px solid #dfe4e7; border-radius: 8px; padding: 16px; background: #f2f4f5; }
+.reference-home > main > .home-partners { padding-block: 28px; background: #fff; }
+.reference-home .home-partner-logo { border: 0; margin-inline: 8px; }
+.reference-home > .home-footer { border-top: 5px solid #c72c35; }
+.reference-home .home-footer footer { max-width: 1240px; padding: 48px 32px 24px; }
+
+@media (max-width: 1000px) {
+  .reference-home .home-tool-grid { grid-template-columns: 1fr; }
+  .reference-home .home-tool { padding: 22px; }
+  .reference-home .home-v2 .home-brand-cards { grid-template-columns: repeat(4,minmax(0,1fr)); }
+  .reference-home .home-v2 .home-compare-panel { gap: 28px; }
+  .reference-home .home-v2.home-video-library .home-video-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 760px) {
+  .reference-home > main > section:not(.ref-home-hero):not(.home-partners) { padding-block: 34px; }
+  .reference-home .home-v2 .home-container,
+  .reference-home .home-v2.home-editorial .home-container,
+  .reference-home .home-v2.home-video-library .home-container,
+  .reference-home .home-compare .home-container { padding-inline: 20px; }
+  .reference-home .ref-home-hero-scene { display: flex; }
+  .reference-home .ref-home-hero-inner { min-height: 0; padding: 20px 20px 8px; }
+  .reference-home .ref-home-hero-copy h1 { font-size: clamp(32px,8vw,40px); }
+  .reference-home .ref-home-hero-media { height: auto; aspect-ratio: 2; }
+  .reference-home .ref-home-power-rail a { min-height: 76px; font-size: 12px; gap: 8px; }
+  .reference-home .home-v2 .home-section-heading,
+  .reference-home .home-v2 .home-brand-layout .home-section-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .reference-home .showcase-reference .showcase-tabs { width: 100%; }
+  .reference-home .showcase-reference .showcase-tabs button { flex: 1; padding-inline: 12px; }
+  .reference-home .home-v2 .home-brand-cards { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
+  .reference-home .home-v2 .home-brand-cards > a { min-height: 126px; padding: 14px 8px; }
+  .reference-home .home-v2 .home-compare-panel { grid-template-columns: 1fr; }
+  .reference-home .home-compare-card { padding: 20px 16px; }
+  .reference-home > main > .editorial-section { padding-inline: 20px; }
+  .reference-home .home-v2.home-editorial .home-reading-grid > a { min-height: 0; padding: 24px; }
+  .reference-home .home-v2.home-video-library .home-video-grid { gap: 14px; }
+  .reference-home .home-video-carousel-page { gap:10px; }
+  .reference-home .home-video-carousel .home-video-card { padding-bottom:0; }
+  .reference-home .home-video-play { left:10px; bottom:10px; width:34px; height:34px; }
+  .reference-home .home-v2.home-video-library .home-video-card h3 { font-size: 16px; margin-inline: 12px; }
+  .reference-home .home-v2.home-video-library .home-video-card > p,
+  .reference-home .home-v2.home-video-library .home-video-card > .home-text-link { margin-inline: 12px; }
+  .reference-home .home-promotions .cms-home { padding-inline: 20px; }
+  .reference-home .home-footer footer { padding-inline: 20px; }
+}
+@media(prefers-reduced-motion:reduce) { .reference-home .home-video-carousel-track { transition:none; } }
+@media (max-width: 390px) {
+  .reference-home .home-v2.home-video-library .home-video-grid { grid-template-columns: 1fr; }
+  .reference-home .home-compare-grid { grid-template-columns: 1fr; }
+}
+
+.reference-home .home-partners .partner-heading h2 { font-size:18px; margin:0 0 18px; letter-spacing:0; }
+.reference-home .home-partners .home-partner-logo { width:160px; height:84px; margin-inline:8px; padding:16px 22px; border:1px solid #e1e5e8; border-radius:8px; background:#fff; }
+.reference-home .home-partners .home-partner-logo img { max-width:100%; max-height:50px; height:50px; filter:none; opacity:1; object-fit:contain; }
+@media(max-width:760px) { .reference-home .home-partners .home-partner-logo { width:132px; height:72px; padding:12px 18px; } }

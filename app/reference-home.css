@@ -318,12 +318,24 @@
 .reference-home .home-scroll-reveal.is-revealed{opacity:1;transform:translate3d(0,0,0);will-change:auto}
 .reference-home .home-scroll-reveal .home-scroll-item{opacity:0;transform:translate3d(0,22px,0) scale(.985);transition:opacity .58s cubic-bezier(.22,1,.36,1),transform .58s cubic-bezier(.22,1,.36,1);transition-delay:calc(var(--reveal-order,0) * 65ms)}
 .reference-home .home-scroll-reveal.is-revealed .home-scroll-item{opacity:1;transform:translate3d(0,0,0) scale(1)}
+@media(max-width:760px){
+  .reference-home .ref-home-hero.home-scroll-reveal,
+  .reference-home .ref-home-hero.home-scroll-reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}
 @media(prefers-reduced-motion:reduce){.reference-home .home-scroll-reveal,.reference-home .home-scroll-reveal .home-scroll-item{opacity:1;transform:none;transition:none}}
 .reference-home .ref-home-header-inner { display: grid; grid-template-columns: 190px minmax(180px,1fr) auto; grid-template-rows: 78px 46px; min-height: 124px; gap: 0 28px; max-width: 1400px; padding-inline: 40px; }
 .reference-home .ref-home-brand { grid-column: 1; grid-row: 1; }
 .reference-home .ref-home-brand strong { color:#fff; font-size: 18px; letter-spacing:-.45px; }
 .reference-home .ref-home-brand-mark { color:#ffb2aa; font-size:36px; }
 .reference-home .ref-home-search { grid-column: 2; grid-row: 1; min-width: 0; }
+.reference-home .ref-home-collaborate { grid-column:2; grid-row:1; display:flex; align-items:center; justify-content:flex-end; min-width:0; }
+.reference-home .ref-home-collaborate a { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:9px 22px; border-radius:5px; background:#c72c35; color:#fff; font-size:13px; font-weight:750; letter-spacing:.01em; white-space:nowrap; }
+.reference-home .ref-home-collaborate a:hover { background:#ab2029; }
 .reference-home .ref-home-search .site-search-trigger-wide { display: flex; align-items: center; gap: 14px; width: 100%; height: 44px; padding: 0 18px; border: 1px solid transparent; border-radius: 7px; background: #f2f3f6; color: #546172; text-align: left; }
 .reference-home .site-search-trigger-label { color: #72777e; font-size: 13px; font-weight: 400; }
 .reference-home .ref-home-search .site-search-trigger-wide:hover { border-color: #bdc8d3; }
@@ -365,10 +377,12 @@
   .reference-home .ref-home-brand-mark { font-size:27px; letter-spacing:-3px; padding-right:3px; }
   .reference-home .ref-home-brand-image { width:34px; height:34px; }
   .reference-home .ref-home-search { margin-left:auto; flex:1 1 auto; min-width:0; }
+  .reference-home .ref-home-collaborate { margin-left:auto; flex:0 0 auto; }
+  .reference-home .ref-home-collaborate a { min-height:36px; padding:7px 10px; font-size:10px; }
   .reference-home .ref-home-search .site-search-trigger-wide { width:100%; height:36px; justify-content:flex-start; gap:8px; padding:0 10px; border:1px solid #d9e0e8; background:#fff; border-radius:5px; }
   .reference-home .site-search-trigger-label { display:block; overflow:hidden; color:#687483; font-size:10px; white-space:nowrap; text-overflow:ellipsis; }
   .reference-home .ref-home-account,.reference-home .ref-home-navigation { display: none; }
-  .reference-home .ref-home-header-actions { flex:none; gap:0; }
+  .reference-home .ref-home-header-actions { flex:none; gap:7px; }
   .reference-home .ref-home-menu-toggle { width:36px; height:36px; border-radius:5px; }
   .reference-home .ref-home-menu-toggle img { width:19px; height:19px; }
   .reference-home > main > section:not(.ref-home-hero):not(.home-partners) { padding-block: 28px; }
@@ -382,6 +396,9 @@
   .reference-home .home-v2 .home-brand-cards > a { min-height: 130px; padding: 17px 8px; gap: 12px; }
   .reference-home .home-v2 .home-brand-cards h3 { font-size: 12px; }
   .reference-home .home-v2 .home-brand-logo img { width: 75px; max-height: 42px; }
+}
+@media (max-width: 430px) {
+  .reference-home .ref-home-brand strong { display:none; }
 }
 
 /* Footer image treatment: shared field imagery with a high-contrast brand overlay. */
@@ -1378,3 +1395,8 @@
     height: 11px;
   }
 }
+
+/* Translate only the media; the hero copy and container retain their geometry. */
+.reference-home .ref-home-hero-media { overflow:hidden; }
+.reference-home .hero-slide-frame { position:absolute; inset:0; width:100%; height:100%; }
+.reference-home .hero-slide-frame > img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; }

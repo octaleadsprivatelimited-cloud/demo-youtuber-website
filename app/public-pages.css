@@ -50,6 +50,9 @@
 .public-site .empty-state :is(a,button){display:inline-flex;gap:20px;align-items:center;margin-top:22px;border:0;border-radius:7px;padding:12px 18px;background:var(--page-red);color:#fff;font-size:12px;font-weight:750;}
 .public-site :is(.detail-loading,.error-state){border-radius:12px;padding:36px;}.public-site .error-state{background:#fff4f2;border:1px solid #f2c8c2;color:#8f2118;}
 .public-site .page-support{max-width:1280px;margin:0 auto;padding:56px 40px 76px;border-top:1px solid var(--page-line);}
+/* Generic steps wrap their number, title and description in one container.
+   Span both mobile article columns; the shortlist uses a separate icon column. */
+.public-site .page-support:not(.page-support-shortlist) .support-step-copy{grid-column:1/-1;min-width:0;}
 .public-site .support-heading{max-width:720px;}.public-site .support-heading>p{font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--page-red);margin:0 0 14px;}
 .public-site .support-heading h2{font-size:clamp(26px,2.8vw,38px);line-height:1.15;letter-spacing:-.04em;margin:0 0 16px;}.public-site .support-heading>span{font-size:14px;line-height:1.7;color:var(--page-muted);}
 .public-site .support-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:32px;}.public-site .support-grid article{border-top:2px solid var(--page-ink);padding-top:20px;}

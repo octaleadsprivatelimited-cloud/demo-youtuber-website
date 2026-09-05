@@ -1,4 +1,6 @@
 'use client';
+import { LocalizedElement } from '@/components/LocalizedElement';
+
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -18,6 +20,6 @@ export function ReviewForm({ tractorId, tractorName }: { tractorId: string; trac
     } catch (reason) { setMessage(reason instanceof Error ? reason.message : 'Unable to submit review.'); }
     finally { setBusy(false); }
   }
-  return <form className="review-form" onSubmit={submit}><p>OWNER REVIEW</p><h3>Share your experience</h3><label>Rating<select value={rating} onChange={event => setRating(Number(event.target.value))}>{[5,4,3,2,1].map(value => <option value={value} key={value}>{value} star{value>1?'s':''}</option>)}</select></label><label>Review title<input required maxLength={100} value={title} onChange={event => setTitle(event.target.value)} /></label><label>Your review<textarea required minLength={30} maxLength={1500} value={comment} onChange={event => setComment(event.target.value)} /></label>{message && <span>{message}</span>}<button disabled={busy}>{busy?'Submitting…':'Submit review →'}</button></form>;
+  return <form className="review-form" onSubmit={submit}><LocalizedElement as="p">OWNER REVIEW</LocalizedElement><LocalizedElement as="h3">Share your experience</LocalizedElement><LocalizedElement as="label">Rating<LocalizedElement as="select" value={rating} onChange={event => setRating(Number(event.target.value))}>{[5,4,3,2,1].map(value => <LocalizedElement as="option" value={value} key={value}>{value} star{value>1?'s':''}</LocalizedElement>)}</LocalizedElement></LocalizedElement><LocalizedElement as="label">Review title<LocalizedElement as="input" required maxLength={100} value={title} onChange={event => setTitle(event.target.value)} /></LocalizedElement><LocalizedElement as="label">Your review<LocalizedElement as="textarea" required minLength={30} maxLength={1500} value={comment} onChange={event => setComment(event.target.value)} /></LocalizedElement>{message && <LocalizedElement as="span">{message}</LocalizedElement>}<LocalizedElement as="button" disabled={busy}>{busy?'Submitting…':'Submit review →'}</LocalizedElement></form>;
 }
 

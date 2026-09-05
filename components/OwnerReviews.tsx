@@ -1,11 +1,13 @@
 'use client';
+import { LocalizedElement } from '@/components/LocalizedElement';
+
 import {usePublicRecords} from '@/hooks/usePublicRecords';
 export function OwnerReviews({tractorId}:{tractorId:string}){
   const {items,error}=usePublicRecords('reviews');
   const reviews=items.filter(item=>item.tractorId===tractorId);
-  return <section className="owner-reviews" aria-label="Owner reviews"><h2>Owner reviews</h2>
-    {error?<p role="alert">Unable to load owner reviews.</p>:!reviews.length?<p>No approved owner reviews yet.</p>:reviews.map(review=><article key={review.id}>
-      <h3>{String(review.title||'Owner review')}</h3><p><strong>{String(review.userName||'Tractor owner')}</strong> · {Number(review.rating)}/5</p><p>{String(review.comment||'')}</p>
+  return <section className="owner-reviews" aria-label="Owner reviews"><LocalizedElement as="h2">Owner reviews</LocalizedElement>
+    {error?<LocalizedElement as="p" role="alert">Unable to load owner reviews.</LocalizedElement>:!reviews.length?<LocalizedElement as="p">No approved owner reviews yet.</LocalizedElement>:reviews.map(review=><article key={review.id}>
+      <LocalizedElement as="h3">{String(review.title||'Owner review')}</LocalizedElement><LocalizedElement as="p"><LocalizedElement as="strong">{String(review.userName||'Tractor owner')}</LocalizedElement> · {Number(review.rating)}/5</LocalizedElement><LocalizedElement as="p">{String(review.comment||'')}</LocalizedElement>
     </article>)}
   </section>;
 }

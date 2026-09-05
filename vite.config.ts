@@ -55,6 +55,7 @@ export default defineConfig(async () => {
       cloudflare({
         viteEnvironment: { name: 'rsc', childEnvironments: ['ssr'] },
         config: localBindingConfig,
+        inspectorPort: process.env.DISABLE_INSPECTOR_PORT === '1' ? false : undefined,
       }),
     ],
   };
