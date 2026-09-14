@@ -19,8 +19,8 @@ export default function AdminPage() {
     <LocalizedElement as="div" className="admin-dashboard-grid">{adminDashboardItems.map(item => <LocalizedElement as="a" href={item.href} key={item.collection}>
       <LocalizedElement as="span">{item.label}</LocalizedElement><LocalizedElement as="strong">{counts[item.collection] ?? '—'}</LocalizedElement><LocalizedElement as="small">Manage {item.label.toLowerCase()} →</LocalizedElement>
     </LocalizedElement>)}</LocalizedElement>
-    <section className="admin-panel admin-quick"><LocalizedElement as="h2">Quick actions</LocalizedElement><LocalizedElement as="p">Manage homepage images and partner logos, then update your catalog and editorial content.</LocalizedElement>
-      <LocalizedElement as="div"><LocalizedElement as="a" href="/admin/hero-slides">Manage hero slides</LocalizedElement><LocalizedElement as="a" href="/admin/partners">Update partner logos</LocalizedElement><LocalizedElement as="a" href="/admin/tractors">Add a tractor</LocalizedElement><LocalizedElement as="a" href="/admin/articles">Create an article</LocalizedElement><LocalizedElement as="a" href="/admin/leads">Review enquiries</LocalizedElement></LocalizedElement>
+    <section className="admin-panel admin-quick"><LocalizedElement as="h2">Quick actions</LocalizedElement><LocalizedElement as="p">Manage homepage images and brand logos, then update your catalog and editorial content.</LocalizedElement>
+      <LocalizedElement as="div"><LocalizedElement as="a" href="/admin/hero-slides">Manage hero slides</LocalizedElement><LocalizedElement as="a" href="/admin/brands">Update brand logos</LocalizedElement><LocalizedElement as="a" href="/admin/tractors">Add a tractor</LocalizedElement><LocalizedElement as="a" href="/admin/articles">Create an article</LocalizedElement><LocalizedElement as="a" href="/admin/leads">Review enquiries</LocalizedElement></LocalizedElement>
     </section>
   </AdminShell>;
 }

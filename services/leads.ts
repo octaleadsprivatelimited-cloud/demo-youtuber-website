@@ -1,7 +1,8 @@
+import { isOwnerToken } from '@/lib/admin-identity';
 import { listAdminRecords } from '@/services/admin';
 import { readLocal, writeLocal } from '@/lib/local-demo';
 import { addDoc, collection, deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { db, isFirebaseConfigured, isLocalDemo } from '@/lib/firebase/client';
+import { auth, db, isFirebaseConfigured, isLocalDemo } from '@/lib/firebase/client';
 export type LeadStatus = 'New' | 'Contacted' | 'Interested' | 'Follow-up' | 'Converted' | 'Closed' | 'Spam';
 export interface Lead {
     id: string;
@@ -33,9 +34,12 @@ export async function createLead(input: NewLead) { if (isLocalDemo && !db) {
     (await save([{ ...input, id: `demo-${Date.now()}`, status: 'New', assignedTo: '', notes: '', createdAt:new Date().toISOString() } as Lead, ...(await demos())]));
     return;
 } const clean = Object.fromEntries(Object.entries(input).filter(([, v]) => v !== undefined && v !== '')); return addDoc(collection(database(), 'leads'), { ...clean, status: 'New', assignedTo: null, notes: '', createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); }
-export async function getAdminRole(userId: string) { if (isLocalDemo && !db)
-    return 'Super Admin'; const snap = await getDoc(doc(database(), 'admins', userId)); if (!snap.exists() || snap.data().active !== true)
-    return null; return String(snap.data().role ?? ''); }
+export async function getAdminRole(userId: string) {
+    const user = auth?.currentUser;
+    if (!user || user.uid !== userId) return null;
+    return isOwnerToken(await user.getIdTokenResult()) ? 'Super Admin' : null;
+}
+
 export async function listLeads(filters: { status?: LeadStatus; source?: string } = {}) {
     const records = await listAdminRecords('leads');
     return (records as unknown as Lead[]).filter(item => (!filters.status || item.status === filters.status) && (!filters.source || item.source === filters.source));

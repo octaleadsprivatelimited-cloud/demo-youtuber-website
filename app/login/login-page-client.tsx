@@ -1,88 +1,34 @@
 'use client';
 import { LocalizedElement } from '@/components/LocalizedElement';
-
-
-import { isLocalDemo, auth } from '@/lib/firebase/client';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useAdmin } from '@/hooks/useAdmin';
 import { PublicShell } from '@/components/SiteChrome';
 import { SetupNotice } from '@/components/SetupNotice';
 
 export default function LoginPage() {
-  const localPreview = isLocalDemo && !auth;
-  const { configured, user, signInEmail, signInGoogle, logOut } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { configured, user, loading, signInGoogle, logOut } = useAuth();
+  const access = useAdmin();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-
-  async function submit(event: React.FormEvent) {
-    event.preventDefault();
-    setBusy(true);
-    setError('');
-    try {
-      await signInEmail(email, password);
-      window.location.href = '/admin';
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Authentication failed.');
-    } finally {
-      setBusy(false);
-    }
+  async function login() {
+    setBusy(true); setError('');
+    try { await signInGoogle(); }
+    catch (reason) { setError(reason instanceof Error ? reason.message : 'Unable to sign in with Google. Please try again.'); }
+    finally { setBusy(false); }
   }
-
-  return (
-    <PublicShell>
-      <main className="auth-page">
-        <section>
-          <LocalizedElement as="p">EDITORIAL ADMINISTRATION</LocalizedElement>
-          <LocalizedElement as="h1">Admin panel sign in.</LocalizedElement>
-          <LocalizedElement as="span">Authorized team members can manage tractors, reviews, videos and website content.</LocalizedElement>
-        </section>
-        {!configured ? (
-          <SetupNotice message="Add the Firebase project variables and enable Email/Password or Google sign-in in Firebase Authentication." />
-        ) : user ? (
-          <LocalizedElement as="div" className="auth-card">
-            <LocalizedElement as="h2">You&apos;re signed in</LocalizedElement>
-            <LocalizedElement as="p">{localPreview ? 'You are using the local preview account. Real sign-in will be available when account access is connected.' : user.email}</LocalizedElement>
-            <LocalizedElement as="a" href="/admin">Open admin panel →</LocalizedElement>
-            <LocalizedElement as="button" onClick={logOut} disabled={localPreview}>Sign out</LocalizedElement>
-          </LocalizedElement>
-        ) : (
-          <LocalizedElement as="div" className="auth-card">
-            <LocalizedElement as="button" className="google-button" onClick={() => signInGoogle().catch((reason) => setError(reason.message))}>
-              G&nbsp; Continue with Google
-            </LocalizedElement>
-            <LocalizedElement as="div" className="or">
-              <LocalizedElement as="span">or use email</LocalizedElement>
-            </LocalizedElement>
-            <form onSubmit={submit}>
-              <LocalizedElement as="label">
-                Email address
-                <LocalizedElement as="input"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-              </LocalizedElement>
-              <LocalizedElement as="label">
-                Password
-                <LocalizedElement as="input"
-                  type="password"
-                  autoComplete="current-password"
-                  minLength={6}
-                  required
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-              </LocalizedElement>
-              {error && <LocalizedElement as="p" className="form-error">{error}</LocalizedElement>}
-              <LocalizedElement as="button" disabled={busy}>{busy ? 'Please wait…' : 'Sign in →'}</LocalizedElement>
-            </form>
-          </LocalizedElement>
-        )}
-      </main>
-    </PublicShell>
-  );
+  return <PublicShell><main className="auth-page">
+    <section><LocalizedElement as="p">EDITORIAL ADMINISTRATION</LocalizedElement>
+      <LocalizedElement as="h1">Admin panel sign in.</LocalizedElement>
+      <LocalizedElement as="span">Sign in with the site owner’s Google account to manage website content.</LocalizedElement></section>
+    <div className="auth-card">
+      {!configured && <SetupNotice message="Connect Firebase and enable Google sign-in to access the admin panel." />}
+      {loading || (user && access.loading) ? <p role="status">Checking admin access…</p> : user ? <>
+        <p>{user.email}</p>
+        {access.isAdmin || access.isEditor ? <a href={access.isAdmin ? '/admin' : '/admin/expert-reviews'}>Open admin panel →</a> : <p role="alert">This Google account does not have admin access. Contact the site owner or use an authorized account.</p>}
+        <button type="button" onClick={() => logOut().catch(() => setError('Unable to sign out. Please try again.'))}>Sign out</button>
+      </> : <button type="button" className="google-button" disabled={!configured || busy} onClick={login}>{busy ? 'Signing in…' : 'Continue with Google'}</button>}
+      {error && <p className="form-error" role="alert">{error}</p>}
+    </div>
+  </main></PublicShell>;
 }

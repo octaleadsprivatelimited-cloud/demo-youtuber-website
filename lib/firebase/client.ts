@@ -2,25 +2,28 @@ import { getApp, getApps, initializeApp } from 'firebase/app';
 import { getAnalytics, isSupported } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
-const firebaseConfig = {
+const requiredFirebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-export const isLocalDemo = process.env.NODE_ENV === 'development';
-export const hasFirebaseCredentials = Object.values(firebaseConfig).every(Boolean);
-export const isFirebaseConfigured = hasFirebaseCredentials || isLocalDemo;
+const firebaseConfig = {
+  ...requiredFirebaseConfig,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+};
+
+// Firebase is the backend in every environment; never grant demo admin access.
+export const isLocalDemo = false;
+export const hasFirebaseCredentials = Object.values(requiredFirebaseConfig).every(Boolean);
+export const isFirebaseConfigured = hasFirebaseCredentials;
 export const firebaseApp = hasFirebaseCredentials ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
 export const auth = firebaseApp ? getAuth(firebaseApp) : null;
 export const db = firebaseApp ? getFirestore(firebaseApp) : null;
-export const storage = firebaseApp ? getStorage(firebaseApp) : null;
 
 if (firebaseApp && typeof window !== 'undefined' && process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK_SITE_KEY) {
   initializeAppCheck(firebaseApp, {

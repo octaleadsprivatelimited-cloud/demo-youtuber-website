@@ -2,15 +2,8 @@ import { env } from 'cloudflare:workers';
 import { localCmsSchema } from '@/db/schema';
 
 export function requireLocalRequest(request: Request) {
-  const url = new URL(request.url);
-  const local = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
-  if (process.env.NODE_ENV !== 'development' || !local) {
-    throw new Error('Local CMS is available only on the development server.');
-  }
-  const origin = request.headers.get('origin');
-  if (origin && origin !== url.origin) throw new Error('Cross-origin request rejected.');
-  const site = request.headers.get('sec-fetch-site');
-  if (site && site !== 'same-origin' && site !== 'none') throw new Error('Cross-origin request rejected.');
+  void request;
+  throw new Error('Local CMS is disabled. This website uses Firebase.');
 }
 
 export async function localDatabase() {

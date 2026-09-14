@@ -14,7 +14,7 @@ function section(key: string, dashboard = false): AdminNavigationItem {
 export const adminNavigationGroups: { id: string; label: string; items: AdminNavigationItem[] }[] = [
   {
     id: 'homepage', label: 'Homepage & promotions',
-    items: [section('hero-slides', true), section('partners', true), section('homepage'), { href:'/admin/promotions', label:'Promotions' }],
+    items: [section('hero-slides', true), section('homepage'), { href:'/admin/promotions', label:'Promotions' }],
   },
   {
     id: 'catalog', label: 'Tractor catalog',

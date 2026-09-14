@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {createLegacyCmsFixture} from './legacy-cms-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -16,15 +17,16 @@ function load(file) {
   new Function('require','module','exports',code)(name => name.startsWith('@/') ? load(name.slice(2)+'.ts') : name.startsWith('.') ? load(path.resolve(path.dirname(absolute),name)+'.ts') : require(name),mod,mod.exports);
   return mod.exports;
 }
-test('editorial workflow persists drafts, publishes, edits without changing URLs and archives',async()=>{
+test('editorial service contract drafts, publishes, edits without changing URLs and archives',async()=>{
   const originalFetch=globalThis.fetch;
+  const fixtureFetch=createLegacyCmsFixture();
   const previous={window:globalThis.window,localStorage:globalThis.localStorage,BroadcastChannel:globalThis.BroadcastChannel};
   const base=process.env.LOCAL_CMS_TEST_URL || 'http://localhost:3000';
   const suffix=crypto.randomUUID();
   globalThis.window=new EventTarget();
   globalThis.localStorage={getItem:()=>null};
   globalThis.BroadcastChannel=undefined;
-  globalThis.fetch=(url,options)=>originalFetch(base+String(url).replace('/api/local-cms/tractors','/api/local-cms/qa-tractors-'+suffix).replace('/api/local-cms/expertReviews','/api/local-cms/qa-reviews-'+suffix),options);
+  globalThis.fetch=(url,options)=>fixtureFetch(base+String(url).replace('/api/local-cms/tractors','/api/local-cms/qa-tractors-'+suffix).replace('/api/local-cms/expertReviews','/api/local-cms/qa-reviews-'+suffix),options);
   const {writeLocal}=load('lib/local-demo.ts');
   const {saveAdminRecord,getAdminRecord}=load('services/admin.ts');
   const {listPublicRecords}=load('services/site-data.ts');

@@ -93,3 +93,11 @@
 .cms-record-list .cms-actions{flex-wrap:wrap;}
 @media(max-width:600px){.cms-record-list article{align-items:flex-start;flex-direction:column;gap:12px;}.cms-record-list .cms-actions{width:100%;}}
 
+
+.admin-logout { margin-top: 12px; }
+.admin-logout button { display:block; width:100%; min-height:44px; padding:10px 16px; border:1px solid #c5ceda; border-radius:8px; background:#fff; color:#92251e; font:inherit; font-weight:600; cursor:pointer; }
+.admin-logout button:disabled { opacity:.65; cursor:wait; }
+.admin-logout p { color:#92251e; font-size:14px; }
+.admin-gate { max-width:720px; margin:60px auto; padding:24px; }
+.admin-gate > button { min-height:44px; padding:10px 16px; cursor:pointer; }
+

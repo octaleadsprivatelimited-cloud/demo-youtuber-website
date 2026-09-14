@@ -3,21 +3,17 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
   GoogleAuthProvider,
-  createUserWithEmailAndPassword,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   type User,
 } from 'firebase/auth';
-import { auth, isFirebaseConfigured, isLocalDemo } from '@/lib/firebase/client';
+import { auth, isFirebaseConfigured } from '@/lib/firebase/client';
 
 interface AuthContextValue {
   user: User | null;
   loading: boolean;
   configured: boolean;
-  signInEmail: (email: string, password: string) => Promise<void>;
-  registerEmail: (email: string, password: string) => Promise<void>;
   signInGoogle: () => Promise<void>;
   logOut: () => Promise<void>;
 }
@@ -25,8 +21,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const demoUser=useMemo(()=>isLocalDemo&&!auth?({uid:'local-demo-admin',email:'demo@localhost',displayName:'Demo Administrator'} as User):null,[]);
-  const [user, setUser] = useState<User | null>(demoUser);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(isFirebaseConfigured);
 
   useEffect(() => {
@@ -37,18 +32,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo<AuthContextValue>(() => ({
     user,
     loading,
-    configured: isFirebaseConfigured || isLocalDemo,
-    signInEmail: async (email, password) => {
-      if (!auth) throw new Error('Firebase is not configured.');
-      await signInWithEmailAndPassword(auth, email, password);
-    },
-    registerEmail: async (email, password) => {
-      if (!auth) throw new Error('Firebase is not configured.');
-      await createUserWithEmailAndPassword(auth, email, password);
-    },
+    configured: isFirebaseConfigured,
     signInGoogle: async () => {
       if (!auth) throw new Error('Firebase is not configured.');
-      await signInWithPopup(auth, new GoogleAuthProvider());
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      await signInWithPopup(auth, provider);
     },
     logOut: async () => { if (auth) await signOut(auth); },
   }), [user, loading]);

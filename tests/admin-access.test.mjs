@@ -15,35 +15,43 @@ function fixture(){
   const mod={exports:{}};new Function('require','module','exports',compiled)(name=>adapters[name],mod,mod.exports);
   return{...mod.exports,docs,users,revoked};
 }
-test('demotion removes admin profile access, preserves other claims and revokes sessions',async()=>{
-  const f=fixture();await f.setUserRole({auth:{uid:'root'},data:{uid:'staff',role:'Customer'}});
-  assert.equal(f.docs.get('admins/staff').active,false);assert.equal(f.users.get('staff').customClaims.admin,false);
-  assert.equal(f.users.get('staff').customClaims.unrelated,'preserve');assert.deepEqual(f.revoked,['staff']);
+const owner = {uid:'root',token:{email:'rakeshpatel0944@gmail.com',email_verified:true,firebase:{sign_in_provider:'google.com'}}};
+test('only the verified Google owner can administer accounts, even without a profile', async()=>{
+ const f=fixture();f.docs.delete('admins/root');
+ await f.setUserRole({auth:owner,data:{uid:'staff',role:'Customer'}});
+ assert.equal(f.docs.get('admins/staff').active,false);
+ assert.equal(f.users.get('staff').customClaims.admin,false);
+ assert.equal(f.users.get('staff').customClaims.unrelated,'preserve');
+ assert.deepEqual(f.revoked,['staff']);
 });
-test('regular admins cannot demote, disable or promote administrator accounts',async()=>{
-  const f=fixture();
-  await assert.rejects(f.setUserRole({auth:{uid:'admin'},data:{uid:'staff',role:'Customer'}}),/Only a Super Admin/);
-  await assert.rejects(f.setUserDisabled({auth:{uid:'admin'},data:{uid:'root',disabled:true}}),/Only a Super Admin/);
-  await assert.rejects(f.setUserRole({auth:{uid:'admin'},data:{uid:'customer',role:'Admin'}}),/Only a Super Admin/);
+test('other emails, unverified emails, and non-Google sessions cannot access admin functions', async()=>{
+ const f=fixture();
+ for(const token of [
+  {...owner.token,email:'someone@gmail.com'},
+  {...owner.token,email_verified:false},
+  {...owner.token,email_verified:undefined},
+  {...owner.token,email:undefined},
+  {...owner.token,firebase:{sign_in_provider:'password'}},
+  {...owner.token,firebase:{}},
+ ]) await assert.rejects(f.setUserDisabled({auth:{uid:'root',token},data:{uid:'staff',disabled:true}}), /access required|Google sign-in required/);
+ await assert.rejects(f.setUserDisabled({data:{uid:'staff',disabled:true}}), /Sign in required/);
 });
-test('disabling and enabling staff also updates the authoritative admin profile',async()=>{
-  const f=fixture();await f.setUserDisabled({auth:{uid:'root'},data:{uid:'staff',disabled:true}});
-  assert.equal(f.users.get('staff').disabled,true);assert.equal(f.docs.get('admins/staff').active,false);
-  await f.setUserDisabled({auth:{uid:'root'},data:{uid:'staff',disabled:false}});
-  assert.equal(f.docs.get('admins/staff').active,true);
+test('no role action can grant staff access to a second account',async()=>{
+ const f=fixture();
+ for(const role of ['Editor','Admin','Super Admin']) await assert.rejects(f.setUserRole({auth:owner,data:{uid:'customer',role}}), /Only the configured owner/);
 });
-test('self-demotion and self-disable cannot lock out the active administrator',async()=>{
-  const f=fixture();
-  await assert.rejects(f.setUserRole({auth:{uid:'root'},data:{uid:'root',role:'Customer'}}),/your own/);
-  await assert.rejects(f.setUserDisabled({auth:{uid:'root'},data:{uid:'root',disabled:true}}),/your own/);
+test('owner can disable other users but cannot demote or disable their own account',async()=>{
+ const f=fixture();await f.setUserDisabled({auth:owner,data:{uid:'staff',disabled:true}});
+ assert.equal(f.users.get('staff').disabled,true);
+ await assert.rejects(f.setUserRole({auth:owner,data:{uid:'root',role:'Customer'}}), /your own/);
+ await assert.rejects(f.setUserDisabled({auth:owner,data:{uid:'root',disabled:true}}), /your own/);
 });
-
-test('editor role permits editorial membership without administrator claims',async()=>{
- const f=fixture();await f.setUserRole({auth:{uid:'root'},data:{uid:'customer',role:'Editor'}});
- assert.equal(f.docs.get('admins/customer').active,true);
- assert.equal(f.docs.get('admins/customer').role,'Editor');
- assert.equal(f.users.get('customer').customClaims.admin,false);
- await assert.rejects(f.setUserRole({auth:{uid:'customer'},data:{uid:'staff',role:'Customer'}}),/Administrator access required/);
- await f.setUserDisabled({auth:{uid:'root'},data:{uid:'customer',disabled:true}});
- assert.equal(f.docs.get('admins/customer').active,false);
+test('client identity check requires the exact verified Google owner',()=>{
+ const source=fs.readFileSync(new URL('../lib/admin-identity.ts',import.meta.url),'utf8');
+ const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;
+ const mod={exports:{}};new Function('module','exports',code)(mod,mod.exports);
+ const check=mod.exports.isOwnerToken;
+ assert.equal(check({signInProvider:'google.com',claims:owner.token}),true);
+ for(const claims of [{...owner.token,email:'other@gmail.com'},{...owner.token,email_verified:false},{}]) assert.equal(check({signInProvider:'google.com',claims}),false);
+ assert.equal(check({signInProvider:'password',claims:owner.token}),false);
 });

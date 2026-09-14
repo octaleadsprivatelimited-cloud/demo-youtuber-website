@@ -1,4 +1,5 @@
 'use client';
+import { migratePartnersToBrands } from '@/services/brand-migration';
 import { LocalizedElement } from '@/components/LocalizedElement';
 
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
@@ -33,6 +34,7 @@ export function AdminCrud({ section }: { section: AdminSection }) {
     const id = ++requestId.current;
     setLoading(true); setError('');
     try {
+      if (section.collection === 'brands') await migratePartnersToBrands();
       const records = await listAdminRecords(section.collection);
       const sourceNames=[...new Set(section.fields.flatMap(field=>field.source?[field.source]:[]))];
       const related=await Promise.all(sourceNames.map(async name=>[name,await listAdminRecords(name)] as const));

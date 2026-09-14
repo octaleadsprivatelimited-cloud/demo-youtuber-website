@@ -1,4 +1,5 @@
 'use client';
+import { AdminLogout } from './AdminLogout';
 import { LanguageButton } from '@/components/LanguageProvider';
 import { LocalizedElement } from '@/components/LocalizedElement';
 
@@ -8,7 +9,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAdmin } from '@/hooks/useAdmin';
 import { SetupNotice } from '@/components/SetupNotice';
-import { isFirebaseConfigured, isLocalDemo, db } from '@/lib/firebase/client';
+import { isFirebaseConfigured } from '@/lib/firebase/client';
 import { adminNavigationGroups } from '@/config/admin-navigation';
 
 export function AdminShell({ children }: { children: ReactNode }) {
@@ -16,16 +17,15 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const currentPath = usePathname();
   const path=['/admin/banners','/admin/advertisements'].includes(currentPath)?'/admin/promotions':currentPath;
   const [menuOpen, setMenuOpen] = useState(false);
-  const demo = isLocalDemo && !db;
   useEffect(() => {
     const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setMenuOpen(false); };
     window.addEventListener('keydown', close);
     return () => window.removeEventListener('keydown', close);
   }, []);
-  if (!demo && !isFirebaseConfigured) return <main className="crm-page"><SetupNotice/></main>;
-  if (!demo && access.loading) return <LocalizedElement as="div" className="detail-loading">Checking admin access…</LocalizedElement>;
-  if (!demo && !access.user) return <main className="admin-gate"><LocalizedElement as="h1">Admin sign-in required</LocalizedElement><Link href="/login">Sign in →</Link></main>;
-  if (!demo && !access.isAdmin && !(access.isEditor && path === '/admin/expert-reviews')) return <main className="admin-gate"><LocalizedElement as="h1">Access restricted</LocalizedElement><LocalizedElement as="p">This section is restricted to administrators. Editorial team members can manage reviews.</LocalizedElement><Link href="/admin/expert-reviews">Editorial reviews</Link><Link href="/">Return to website</Link></main>;
+  if (!isFirebaseConfigured) return <main className="crm-page"><SetupNotice/></main>;
+  if (access.loading) return <LocalizedElement as="div" className="detail-loading">Checking admin access…</LocalizedElement>;
+  if (!access.user) return <main className="admin-gate"><LocalizedElement as="h1">Admin sign-in required</LocalizedElement><Link href="/login">Sign in →</Link></main>;
+  if (!access.isAdmin && !(access.isEditor && path === '/admin/expert-reviews')) return <main className="admin-gate"><LocalizedElement as="h1">Access restricted</LocalizedElement><LocalizedElement as="p">This section is restricted to administrators. Editorial team members can manage reviews.</LocalizedElement><Link href="/admin/expert-reviews">Editorial reviews</Link><Link href="/">Return to website</Link></main>;
 
   function navLink(href: string, label: string) {
     return <Link key={href} className={path === href ? 'active' : ''} href={href}
@@ -46,8 +46,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </LocalizedElement>)}
         <LocalizedElement as="div" className="admin-nav-website">{navLink('/', 'View website ↗')}</LocalizedElement>
       </nav>
-      <LocalizedElement as="div"><LocalizedElement as="span">{demo ? 'Local preview' : 'Signed in as'}</LocalizedElement><LocalizedElement as="strong">{demo ? 'Demo administrator' : access.user?.email}</LocalizedElement><LocalizedElement as="small">{demo ? 'Local development only' : access.role}</LocalizedElement></LocalizedElement>
+      <LocalizedElement as="div"><LocalizedElement as="span">Signed in as</LocalizedElement><LocalizedElement as="strong">{access.user?.email}</LocalizedElement><LocalizedElement as="small">{access.role}</LocalizedElement></LocalizedElement>
+      <AdminLogout />
     </aside>
-    <section className="crm-main" key={path}>{demo && <LocalizedElement as="div" className="demo-bar">Local workspace · content and uploads are saved on this computer</LocalizedElement>}{children}</section>
+    <section className="crm-main" key={path}>{children}</section>
   </main>;
 }

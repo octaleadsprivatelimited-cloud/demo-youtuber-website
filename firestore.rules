@@ -5,16 +5,12 @@ service cloud.firestore {
     function owns(userId) { return signedIn() && request.auth.uid == userId; }
     function isAdmin() {
       return signedIn()
-        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
-        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true
-        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['Admin','Super Admin'];
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'rakeshpatel0944@gmail.com';
     }
 
-    function isEditor() {
-      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
-        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true
-        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'Editor';
-    }
+    function isEditor() { return false; }
     function validEditorialReview() {
       let d = request.resource.data;
       return d.status in ['draft', 'published', 'archived']
@@ -42,7 +38,7 @@ service cloud.firestore {
     match /equipment/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /equipmentCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /dealers/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /admins/{userId} { allow read: if owns(userId); allow write: if isAdmin() && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == 'Super Admin'; }
+    match /admins/{userId} { allow read: if isAdmin(); allow write: if false; }
     match /leads/{id} {
       allow create: if request.resource.data.status == 'New'
         && request.resource.data.assignedTo == null
@@ -80,6 +76,22 @@ service cloud.firestore {
     match /newsletterSubscribers/{id} { allow create: if request.resource.data.email is string; allow read, update, delete: if isAdmin(); }
     match /contactMessages/{id} { allow create: if request.resource.data.email is string && request.resource.data.message is string; allow read, update, delete: if isAdmin(); }
     match /notifications/{id} { allow read: if signedIn() && resource.data.userId == request.auth.uid; allow write: if isAdmin(); }
+    // Uploaded site images are public; only approved staff can create them.
+    match /media/{id} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if (isAdmin() || (isEditor() && request.resource.data.folder == 'expertReviews'))
+        && request.resource.data.keys().hasOnly(['data', 'contentType', 'size', 'folder', 'createdAt'])
+        && request.resource.data.data is string
+        && request.resource.data.data.size() > 0 && request.resource.data.data.size() <= 819200
+        && request.resource.data.contentType in ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+        && request.resource.data.size is int
+        && request.resource.data.size > 0 && request.resource.data.size <= 614400
+        && request.resource.data.folder is string && request.resource.data.folder.size() <= 100
+        && request.resource.data.createdAt == request.time;
+      allow update: if false;
+      allow delete: if isAdmin() || (isEditor() && resource.data.folder == 'expertReviews');
+    }
     match /{document=**} { allow read, write: if false; }
   }
 }

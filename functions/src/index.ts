@@ -3,8 +3,12 @@ import {getAuth} from 'firebase-admin/auth';
 import {getFirestore} from 'firebase-admin/firestore';
 import {HttpsError,onCall} from 'firebase-functions/v2/https';
 initializeApp();
-async function callerRole(uid:string){const snap=await getFirestore().doc(`admins/${uid}`).get();return snap.exists&&snap.data()?.active?snap.data()?.role:null;}
-async function requireAdmin(uid?:string){if(!uid)throw new HttpsError('unauthenticated','Sign in required.');const role=await callerRole(uid);if(!['Admin','Super Admin'].includes(role))throw new HttpsError('permission-denied','Administrator access required.');return role;}
+async function requireAdmin(uid?:string,provider?:string,email?:string,verified?:boolean){
+  if(!uid)throw new HttpsError('unauthenticated','Sign in required.');
+  if(provider!=='google.com')throw new HttpsError('permission-denied','Google sign-in required.');
+  if(email!=='rakeshpatel0944@gmail.com'||verified!==true)throw new HttpsError('permission-denied','Administrator access required.');
+  return 'Super Admin';
+}
 async function requireTargetAccess(callerUid:string,callerRole:string,uid:string){
   if(uid===callerUid)throw new HttpsError('failed-precondition','You cannot change your own role or account state.');
   const target=await getAuth().getUser(uid);
@@ -14,18 +18,19 @@ async function requireTargetAccess(callerUid:string,callerRole:string,uid:string
   return target;
 }
 export const setUserRole=onCall(async request=>{
-  const caller=await requireAdmin(request.auth?.uid);const {uid,role}=request.data as {uid?:string;role?:string};
+  const caller=await requireAdmin(request.auth?.uid,request.auth?.token.firebase?.sign_in_provider,request.auth?.token.email,request.auth?.token.email_verified);const {uid,role}=request.data as {uid?:string;role?:string};
+  if(role !== 'Customer')throw new HttpsError('permission-denied','Only the configured owner can have staff access.');
   if(!uid||!['Customer','Editor','Admin','Super Admin'].includes(role??''))throw new HttpsError('invalid-argument','Valid uid and role are required.');
-  if((role==='Admin'||role==='Super Admin')&&caller!=='Super Admin')throw new HttpsError('permission-denied','Only a Super Admin can assign administrator roles.');
-  const target=await requireTargetAccess(request.auth!.uid,caller,uid);const isAdmin=role==='Admin'||role==='Super Admin';
-  await getAuth().setCustomUserClaims(uid,{...target.customClaims,admin:isAdmin,superAdmin:role==='Super Admin',role});
+
+  const target=await requireTargetAccess(request.auth!.uid,caller,uid);const isAdmin=false;
+  await getAuth().setCustomUserClaims(uid,{...target.customClaims,admin:isAdmin,superAdmin:false,role});
   const batch=getFirestore().batch();
   batch.set(getFirestore().doc('users/'+uid),{role,updatedAt:new Date()},{merge:true});
   batch.set(getFirestore().doc('admins/'+uid),{role,active:['Editor','Admin','Super Admin'].includes(role!)&&!target.disabled,updatedAt:new Date()},{merge:true});
   await batch.commit();await getAuth().revokeRefreshTokens(uid);return {ok:true};
 });
 export const setUserDisabled=onCall(async request=>{
-  const caller=await requireAdmin(request.auth?.uid);const {uid,disabled}=request.data as {uid?:string;disabled?:boolean};
+  const caller=await requireAdmin(request.auth?.uid,request.auth?.token.firebase?.sign_in_provider,request.auth?.token.email,request.auth?.token.email_verified);const {uid,disabled}=request.data as {uid?:string;disabled?:boolean};
   if(!uid||typeof disabled!=='boolean')throw new HttpsError('invalid-argument','Valid uid and disabled state are required.');
   const target=await requireTargetAccess(request.auth!.uid,caller,uid);
   const profile=await getFirestore().doc('admins/'+uid).get();const role=profile.data()?.role??target.customClaims?.role??'Customer';
@@ -35,4 +40,4 @@ export const setUserDisabled=onCall(async request=>{
   batch.set(getFirestore().doc('admins/'+uid),{role,active:!disabled&&['Editor','Admin','Super Admin'].includes(role),updatedAt:new Date()},{merge:true});
   await batch.commit();await getAuth().revokeRefreshTokens(uid);return {ok:true};
 });
-export const syncYouTubeVideos=onCall(async request=>{await requireAdmin(request.auth?.uid);const apiKey=process.env.YOUTUBE_API_KEY;const channelId=process.env.YOUTUBE_CHANNEL_ID;if(!apiKey||!channelId)throw new HttpsError('failed-precondition','Configure YOUTUBE_API_KEY and YOUTUBE_CHANNEL_ID.');const url=new URL('https://www.googleapis.com/youtube/v3/search');url.search=new URLSearchParams({part:'snippet',channelId,maxResults:'25',order:'date',type:'video',key:apiKey}).toString();const response=await fetch(url);if(!response.ok)throw new HttpsError('internal','YouTube Data API request failed.');const payload=await response.json()as{items?:Array<{id:{videoId:string};snippet:{title:string;description:string;publishedAt:string;thumbnails?:{high?:{url:string}}}}>};for(const item of payload.items??[]){const slug=item.snippet.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');await getFirestore().doc(`videos/${item.id.videoId}`).set({title:item.snippet.title,slug,description:item.snippet.description,youtubeVideoId:item.id.videoId,thumbnail:item.snippet.thumbnails?.high?.url??'',publishedAt:new Date(item.snippet.publishedAt),status:'draft',source:'youtube',updatedAt:new Date()},{merge:true});}return{ok:true,synced:payload.items?.length??0};});
+export const syncYouTubeVideos=onCall(async request=>{await requireAdmin(request.auth?.uid,request.auth?.token.firebase?.sign_in_provider,request.auth?.token.email,request.auth?.token.email_verified);const apiKey=process.env.YOUTUBE_API_KEY;const channelId=process.env.YOUTUBE_CHANNEL_ID;if(!apiKey||!channelId)throw new HttpsError('failed-precondition','Configure YOUTUBE_API_KEY and YOUTUBE_CHANNEL_ID.');const url=new URL('https://www.googleapis.com/youtube/v3/search');url.search=new URLSearchParams({part:'snippet',channelId,maxResults:'25',order:'date',type:'video',key:apiKey}).toString();const response=await fetch(url);if(!response.ok)throw new HttpsError('internal','YouTube Data API request failed.');const payload=await response.json()as{items?:Array<{id:{videoId:string};snippet:{title:string;description:string;publishedAt:string;thumbnails?:{high?:{url:string}}}}>};for(const item of payload.items??[]){const slug=item.snippet.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');await getFirestore().doc(`videos/${item.id.videoId}`).set({title:item.snippet.title,slug,description:item.snippet.description,youtubeVideoId:item.id.videoId,thumbnail:item.snippet.thumbnails?.high?.url??'',publishedAt:new Date(item.snippet.publishedAt),status:'draft',source:'youtube',updatedAt:new Date()},{merge:true});}return{ok:true,synced:payload.items?.length??0};});

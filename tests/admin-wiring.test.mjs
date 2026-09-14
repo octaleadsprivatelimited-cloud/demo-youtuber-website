@@ -1,4 +1,5 @@
 import test, {after} from 'node:test';
+import {createLegacyCmsFixture} from './legacy-cms-fixture.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,7 +7,8 @@ import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import ts from 'typescript';
 
-// Execute the actual services against isolated collections on the running local CMS.
+// Execute legacy service contracts against an isolated in-memory transport.
+// Firebase service branches below use dedicated Firestore adapters.
 // No existing project content is read or overwritten by these fixtures.
 const root=fileURLToPath(new URL('..',import.meta.url));
 const require=createRequire(import.meta.url);
@@ -14,7 +16,8 @@ const modules=new Map();
 const base=process.env.LOCAL_CMS_TEST_URL||'http://localhost:3000';
 const prefix='qa-'+crypto.randomUUID().slice(0,8)+'-';
 const collections=new Set();
-const nativeFetch=globalThis.fetch;
+const originalFetch=globalThis.fetch;
+const nativeFetch=createLegacyCmsFixture();
 const windowTarget=new EventTarget();
 globalThis.window=Object.assign(windowTarget,{setInterval,clearInterval});
 globalThis.document={hidden:false};
@@ -60,7 +63,7 @@ after(async()=>{
     const current=await(await nativeFetch(url)).json();
     await nativeFetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({records:[],revision:current.revision})});
   }
-  globalThis.fetch=nativeFetch;
+  globalThis.fetch=originalFetch;
 });
 
 test('catalog: real brand references, prices, finder filters, comparison, pagination and deletion guard',async()=>{
@@ -312,7 +315,7 @@ test('every content module supports reopening, repeated partial edits and cleari
   ['dealers',{title:'Editable dealer'},{phone:'9876543210',address:'Dealer address',city:'Pune'},{phone:'',address:'',city:''}],
   ['banners',{title:'Editable campaign'},{image:'/campaign.png',ctaLabel:'Explore',ctaUrl:'/tractors'},{image:'',ctaLabel:'',ctaUrl:''}],
   ['hero-slides',{title:'Editable slide'},{image:'/slide.png',order:4},{image:'',order:''}],
-  ['partners',{title:'Editable partner'},{image:'/partner.png',order:5},{image:'',order:''}],
+  ['partners',{title:'Editable partner',image:'/initial-partner.png'},{image:'/partner.png',order:5},{order:''}],
   ['advertisements',{title:'Editable advertisement'},{image:'/ad.png',destinationUrl:'/brands'},{image:'',destinationUrl:''}],
   ['seo',{title:'Editable metadata',path:'/qa-edit'},{description:'Meta text',image:'/meta.png'},{description:'',image:''}],
   ['settings',{key:'tagline'},{value:'Site tagline'},{value:''}],

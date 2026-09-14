@@ -1,7 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, documentId, getCountFromServer, getDoc, getDocs, limit, orderBy, query, runTransaction, serverTimestamp, startAfter, type QueryDocumentSnapshot } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { db, storage, isLocalDemo } from '@/lib/firebase/client';
-import { localRequest, readLocal, writeLocal } from '@/lib/local-demo';
+import { db, isLocalDemo } from '@/lib/firebase/client';
+import { readLocal, writeLocal } from '@/lib/local-demo';
 import { adminSections } from '@/config/admin-sections';
 import { prepareAdminRecord } from '@/lib/admin-records';
 import { prepareAdminForm, sameAdminRecord } from '@/lib/admin-form';
@@ -110,19 +109,14 @@ export async function removeAdminRecord(name: string, id: string) {
   await deleteDoc(doc(needDb(), name, id));
 }
 export async function uploadAdminImage(file: File, folder: string) {
-  if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type)) throw new Error('Use a JPG, PNG, WebP, or GIF image.');
-  if (!file.size || file.size > 8 * 1024 * 1024) throw new Error('Choose an image smaller than 8 MB.');
-  if (isLocalDemo && !storage) {
-    const form = new FormData(); form.set('file', file);
-    const result = await localRequest('/api/local-media', { method: 'POST', body: form });
-    return String(result.url);
-  }
-  if (!storage) throw new Error('Firebase Storage is not configured.');
-  const clean = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
-  const target = ref(storage, 'admin/' + folder + '/' + crypto.randomUUID() + '-' + clean);
-  await uploadBytes(target, file, { contentType: file.type });
-  return getDownloadURL(target);
+  const { encodeFirestoreImage } = await import('@/lib/firestore-media');
+  const image = await encodeFirestoreImage(file);
+  const saved = await addDoc(collection(needDb(), 'media'), {
+    ...image, folder, createdAt: serverTimestamp(),
+  });
+  return '/api/media/' + saved.id;
 }
+
 export async function getAdminCounts(names: string[]) {
   if (isLocalDemo && !db) return Object.fromEntries(await Promise.all(names.map(async name => [name, (await readLocal(name)).length])));
   return Object.fromEntries(await Promise.all(names.map(async name => [name, (await getCountFromServer(collection(needDb(), name))).data().count])));
