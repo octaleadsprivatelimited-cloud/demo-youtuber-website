@@ -1,8 +1,9 @@
+import { firebaseConfig } from '@/lib/firebase/config';
 import { IMAGE_TYPES, MAX_IMAGE_BYTES } from '@/lib/firestore-media';
 export async function GET(_request: Request, {params}: {params: Promise<{id: string}>}) {
   const {id} = await params;
   if (!/^[a-zA-Z0-9]{20}$/.test(id)) return new Response('Not found', {status: 404});
-  const project = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+  const project = firebaseConfig.projectId;
   if (!project) return new Response('Firebase is not configured', {status: 503});
   try {
     // Public Firestore reads are checked by the same rules as the browser SDK.

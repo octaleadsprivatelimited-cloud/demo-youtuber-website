@@ -6,7 +6,7 @@ export type HeroSlide = { id: string; title?: string; image?: string; order?: nu
 export function subscribeHeroSlides(callback: (slides: HeroSlide[]) => void, onError?: (error: Error) => void) {
   if (!db) { 
     callback([
-      { id: '1', title: 'Find the right tractor', image: '/hero/tractor-hero-cinematic.png', order: 1, backgroundColor: '#000000', status: 'published' }
+      { id: '1', title: 'Find the right tractor', image: '/hero/tractor-hero-cinematic.png', order: 1, backgroundColor: '#ffffff', status: 'published' }
     ]); 
     return () => {}; 
   }

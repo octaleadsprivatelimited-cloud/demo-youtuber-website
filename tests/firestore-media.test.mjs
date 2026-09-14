@@ -21,12 +21,12 @@ test('Firestore image uploads reject oversized, empty, spoofed and unsupported i
   for (const file of [new File([new Uint8Array(media.MAX_IMAGE_BYTES+1)],'large.jpg',{type:'image/jpeg'}), new File([],'empty.jpg',{type:'image/jpeg'}), new File(['invalid'],'bad.png',{type:'image/png'}), new File(['<svg/>'],'bad.svg',{type:'image/svg+xml'})]) await assert.rejects(media.encodeFirestoreImage(file));
 });
 test('image route returns original bytes, rejects invalid ids, and handles missing media', async () => {
-  const {GET} = load('app/api/media/[id]/route.ts', {'@/lib/firestore-media': media});
+  const {GET} = load('app/api/media/[id]/route.ts', {'@/lib/firestore-media': media, '@/lib/firebase/config': {firebaseConfig: {projectId: 'test-project'}}});
   const originalFetch=globalThis.fetch;
   const project=process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
   process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID='test-project';
   try {
-    globalThis.fetch=async()=>Response.json({fields:{data:{stringValue:'/9g='},contentType:{stringValue:'image/jpeg'},size:{integerValue:'2'}}});
+    globalThis.fetch=async(url)=>{ assert.match(url, /projects\/test-project\//); return Response.json({fields:{data:{stringValue:'/9g='},contentType:{stringValue:'image/jpeg'},size:{integerValue:'2'}}}); };
     const response=await GET(new Request('http://localhost'), {params:Promise.resolve({id:'abcdefghijklmnopqrst'})});
     assert.equal(response.status,200); assert.equal(response.headers.get('content-type'),'image/jpeg');
     assert.deepEqual(new Uint8Array(await response.arrayBuffer()),new Uint8Array([255,216]));
@@ -48,4 +48,21 @@ test('large images are compressed, preserve aspect ratio and release decoded res
   assert.equal(encoded.contentType,'image/webp');assert.equal(encoded.size,400000);
   assert.equal(canvas.width,2400);assert.equal(canvas.height,1200);assert.equal(closed,true);
  } finally {globalThis.createImageBitmap=oldBitmap;globalThis.document=oldDocument;}
+});
+
+
+test('deployment without Firebase env uses the configured website project', () => {
+  const keys = ['API_KEY', 'AUTH_DOMAIN', 'PROJECT_ID', 'MESSAGING_SENDER_ID', 'APP_ID'].map(key => 'NEXT_PUBLIC_FIREBASE_' + key);
+  const previous = keys.map(key => process.env[key]);
+  try {
+    keys.forEach(key => { process.env[key] = ''; });
+    const {firebaseConfig} = load('lib/firebase/config.ts');
+    assert.equal(firebaseConfig.projectId, 'rj-tractor-techs');
+    assert.equal(firebaseConfig.authDomain, 'rj-tractor-techs.firebaseapp.com');
+    assert.ok(firebaseConfig.apiKey && firebaseConfig.appId && firebaseConfig.messagingSenderId);
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = 'explicit-project';
+    assert.equal(load('lib/firebase/config.ts').firebaseConfig.projectId, 'explicit-project');
+  } finally {
+    keys.forEach((key, index) => { if (previous[index] === undefined) delete process.env[key]; else process.env[key] = previous[index]; });
+  }
 });

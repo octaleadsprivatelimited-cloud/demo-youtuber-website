@@ -4,22 +4,11 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
-const requiredFirebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-const firebaseConfig = {
-  ...requiredFirebaseConfig,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
-};
+import { firebaseConfig } from './config';
 
 // Firebase is the backend in every environment; never grant demo admin access.
 export const isLocalDemo = false;
-export const hasFirebaseCredentials = Object.values(requiredFirebaseConfig).every(Boolean);
+export const hasFirebaseCredentials = [firebaseConfig.apiKey, firebaseConfig.authDomain, firebaseConfig.projectId, firebaseConfig.messagingSenderId, firebaseConfig.appId].every(Boolean);
 export const isFirebaseConfigured = hasFirebaseCredentials;
 export const firebaseApp = hasFirebaseCredentials ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : null;
 export const auth = firebaseApp ? getAuth(firebaseApp) : null;
