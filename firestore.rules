@@ -63,12 +63,11 @@ service cloud.firestore {
     match /partners/{id} { allow read: if resource.data.status in ['published','approved'] || isAdmin(); allow write: if isAdmin(); }
     match /banners/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /advertisements/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /seo/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /settings/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
+    match /seo/{id} { allow read: if true; allow write: if false; }
+    match /settings/{id} { allow read: if true; allow write: if false; }
     match /homepageSections/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
     match /users/{userId} {
-      allow read: if owns(userId) || isAdmin();
-      allow create, update, delete: if isAdmin();
+      allow read, write: if false;
     }
     match /comparisons/{id} { allow read, create, update, delete: if signedIn() && request.resource.data.userId == request.auth.uid; }
     match /newsletterSubscribers/{id} { allow create: if request.resource.data.email is string; allow read, update, delete: if isAdmin(); }

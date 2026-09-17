@@ -4,6 +4,7 @@ import { LocalizedElement } from '@/components/LocalizedElement';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { LanguageButton } from './LanguageProvider';
+import { HeaderSearch } from './HeaderSearch';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const navigation = [['Reviews', '/reviews'], ['New tractors', '/new-tractors'], ['Used tractors', '/tractors?condition=used'], ['Brands', '/brands'], ['Farm equipment', '/equipment'], ['Compare', '/compare'], ['EMI calculator', '/emi-calculator'], ['Showrooms', '/dealers'], ['News & updates', '/news'], ['Videos', '/videos']];
@@ -29,6 +30,9 @@ export function HomepageHeader() {
             <LocalizedElement as="strong">{(settings.websiteName || 'RJ Tractor Techs').replace(/^RJ\s+/, '')}</LocalizedElement>
           </>
         )}
+      </LocalizedElement>
+      <LocalizedElement as="div" className="ref-home-search">
+        <HeaderSearch wide />
       </LocalizedElement>
       <LocalizedElement as="div" className="ref-home-collaborate"><LocalizedElement as="a" href="/contact">Collaborate</LocalizedElement></LocalizedElement>
       <nav className="ref-home-navigation" aria-label="Main navigation">{navigation.map(([label, href]) => <LocalizedElement as="a" href={href} key={href}>{label}</LocalizedElement>)}</nav>

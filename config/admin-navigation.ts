@@ -28,10 +28,6 @@ export const adminNavigationGroups: { id: string; label: string; items: AdminNav
     id: 'enquiries', label: 'Enquiries & audience',
     items: [{ href: '/admin/leads', label: 'Lead CRM', collection: 'leads', dashboard: true }, section('contact-messages')],
   },
-  {
-    id: 'administration', label: 'Site administration',
-    items: [{ href: '/admin/analytics', label: 'Analytics' }, section('seo'), { href: '/admin/users', label: 'Users', collection: 'users', dashboard: true }, section('settings')],
-  },
 ];
 
 export const adminDashboardItems = adminNavigationGroups

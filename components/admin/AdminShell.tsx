@@ -11,8 +11,10 @@ import { useAdmin } from '@/hooks/useAdmin';
 import { SetupNotice } from '@/components/SetupNotice';
 import { isFirebaseConfigured } from '@/lib/firebase/client';
 import { adminNavigationGroups } from '@/config/admin-navigation';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 export function AdminShell({ children }: { children: ReactNode }) {
+  const settings = useSiteSettings();
   const access = useAdmin();
   const currentPath = usePathname();
   const path=['/admin/banners','/admin/advertisements'].includes(currentPath)?'/admin/promotions':currentPath;
@@ -37,7 +39,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
     {menuOpen && <LocalizedElement as="button" className="admin-nav-backdrop" type="button" aria-label="Close admin navigation" onClick={() => setMenuOpen(false)}/>}
     <aside className="crm-sidebar">
       <LanguageButton/>
-      <Link className="brand" href="/" onClick={() => setMenuOpen(false)}><LocalizedElement as="span" className="brand-mark">RJ</LocalizedElement><LocalizedElement as="span" className="brand-copy"><LocalizedElement as="strong">Admin</LocalizedElement><LocalizedElement as="small">TRACTOR TECHS</LocalizedElement></LocalizedElement></Link>
+      <Link className="brand admin-brand" href="/" onClick={() => setMenuOpen(false)}>
+        {settings.logo
+          ? <LocalizedElement as="img" src={settings.logo} alt={settings.websiteName || 'RJ Tractor Techs'} className="admin-brand-logo" />
+          : <><LocalizedElement as="span" className="brand-mark">RJ</LocalizedElement><LocalizedElement as="span" className="brand-copy"><LocalizedElement as="strong">{(settings.websiteName || 'RJ Tractor Techs').replace(/^RJ\s+/,'')}</LocalizedElement></LocalizedElement></>
+        }
+        <LocalizedElement as="span" className="admin-brand-badge">Admin</LocalizedElement>
+      </Link>
       <nav id="admin-navigation" aria-label="Admin navigation">
         {!access.isEditor && navLink('/admin', 'Overview')}
         {adminNavigationGroups.filter(group => !access.isEditor || group.id === 'content').map(group => <LocalizedElement as="div" className="admin-nav-group" key={group.id} role="group" aria-labelledby={'admin-nav-' + group.id}>

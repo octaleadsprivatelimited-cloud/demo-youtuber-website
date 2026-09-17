@@ -328,18 +328,18 @@
   }
 }
 @media(prefers-reduced-motion:reduce){.reference-home .home-scroll-reveal,.reference-home .home-scroll-reveal .home-scroll-item{opacity:1;transform:none;transition:none}}
-.reference-home .ref-home-header-inner { display: grid; grid-template-columns: 190px minmax(180px,1fr) auto; grid-template-rows: 78px 46px; min-height: 124px; gap: 0 28px; max-width: 1400px; padding-inline: 40px; }
-.reference-home .ref-home-brand { grid-column: 1; grid-row: 1; }
+.reference-home .ref-home-header-inner { display: grid; grid-template-columns: auto minmax(220px,1fr) auto auto; grid-template-rows: 78px 46px; min-height: 124px; gap: 0 20px; max-width: 1400px; padding-inline: 40px; align-items: center; }
+.reference-home .ref-home-brand { grid-column: 1; grid-row: 1; display: flex; align-items: center; }
 .reference-home .ref-home-brand strong { color:#fff; font-size: 18px; letter-spacing:-.45px; }
 .reference-home .ref-home-brand-mark { color:#ffb2aa; font-size:36px; }
-.reference-home .ref-home-search { grid-column: 2; grid-row: 1; min-width: 0; }
-.reference-home .ref-home-collaborate { grid-column:2; grid-row:1; display:flex; align-items:center; justify-content:flex-end; min-width:0; }
-.reference-home .ref-home-collaborate a { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:9px 22px; border-radius:5px; background:#c72c35; color:#fff; font-size:13px; font-weight:750; letter-spacing:.01em; white-space:nowrap; }
+.reference-home .ref-home-search { grid-column: 2; grid-row: 1; display: flex; align-items: center; min-width: 0; max-width: 480px; }
+.reference-home .ref-home-collaborate { grid-column: 3; grid-row: 1; display:flex; align-items:center; justify-content:flex-end; min-width:0; }
+.reference-home .ref-home-collaborate a { display:inline-flex; align-items:center; justify-content:center; min-height:42px; padding:9px 22px; border-radius:999px; background:#c72c35; color:#fff; font-size:13px; font-weight:750; letter-spacing:.01em; white-space:nowrap; }
 .reference-home .ref-home-collaborate a:hover { background:#ab2029; }
-.reference-home .ref-home-search .site-search-trigger-wide { display: flex; align-items: center; gap: 14px; width: 100%; height: 44px; padding: 0 18px; border: 1px solid transparent; border-radius: 7px; background: #f2f3f6; color: #546172; text-align: left; }
-.reference-home .site-search-trigger-label { color: #72777e; font-size: 13px; font-weight: 400; }
-.reference-home .ref-home-search .site-search-trigger-wide:hover { border-color: #bdc8d3; }
-.reference-home .ref-home-header-actions { grid-column: 3; grid-row: 1; gap: 16px; }
+.reference-home .ref-home-search .site-search-trigger-wide { display: flex; align-items: center; gap: 12px; width: 100%; height: 44px; padding: 0 20px; border: 1.5px solid #e1e4e8; border-radius: 999px; background: #ffffff; color: #495057; text-align: left; transition: border-color .2s ease, box-shadow .2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+.reference-home .site-search-trigger-label { color: #6c757d; font-size: 13.5px; font-weight: 500; }
+.reference-home .ref-home-search .site-search-trigger-wide:hover { border-color: #c72c35; box-shadow: 0 3px 10px rgba(199,44,53,0.12); }
+.reference-home .ref-home-header-actions { grid-column: 4; grid-row: 1; display: flex; align-items: center; gap: 16px; }
 .ref-home-header-primary,.ref-home-account { display: inline-flex; justify-content: center; align-items: center; min-height: 38px; padding: 9px 22px; border: 1px solid #103d68; border-radius: 25px; color: #103d68; background: #fff; white-space: nowrap; font-size: 13px; font-weight: 650; }
 .reference-home .ref-home-header-primary { border-color:#e45b51; background:#c93229; color:#fff; }
 .reference-home .ref-home-header-primary:hover { background:#e04438; }
@@ -363,7 +363,7 @@
 .reference-home .home-brand-cards p,.reference-home .home-brand-cards > a > .home-arrow { display: none; }
 
 @media (max-width: 1100px) {
-  .reference-home .ref-home-header-inner { grid-template-columns: 195px minmax(170px,1fr) auto; gap: 0 22px; padding-inline: 28px; }
+  .reference-home .ref-home-header-inner { grid-template-columns: auto minmax(180px,1fr) auto auto; gap: 0 14px; padding-inline: 24px; }
   .reference-home .ref-home-header-primary { display: none; }
   .reference-home .ref-home-navigation { gap: 12px; }
   .reference-home .ref-home-navigation a { font-size: 10px; }
@@ -371,16 +371,16 @@
 }
 @media (max-width: 760px) {
   .reference-home .ref-home-header { background:#0b2c52; }
-  .reference-home .ref-home-header-inner { display: flex; min-height: 62px; padding-inline: 14px; gap: 8px; }
+  .reference-home .ref-home-header-inner { display: flex; align-items: center; min-height: 62px; padding-inline: 14px; gap: 8px; }
   .reference-home .ref-home-brand { flex:0 0 auto; gap:6px; }
   .reference-home .ref-home-brand strong { font-size: 15px; letter-spacing:-.3px; }
   .reference-home .ref-home-brand-mark { font-size:27px; letter-spacing:-3px; padding-right:3px; }
   .reference-home .ref-home-brand-image { width:34px; height:34px; }
-  .reference-home .ref-home-search { margin-left:auto; flex:1 1 auto; min-width:0; }
-  .reference-home .ref-home-collaborate { margin-left:auto; flex:0 0 auto; }
+  .reference-home .ref-home-search { flex:1 1 auto; min-width:0; max-width: none; margin-left: 4px; }
+  .reference-home .ref-home-collaborate { flex:0 0 auto; display: none; }
   .reference-home .ref-home-collaborate a { min-height:36px; padding:7px 10px; font-size:10px; }
-  .reference-home .ref-home-search .site-search-trigger-wide { width:100%; height:36px; justify-content:flex-start; gap:8px; padding:0 10px; border:1px solid #d9e0e8; background:#fff; border-radius:5px; }
-  .reference-home .site-search-trigger-label { display:block; overflow:hidden; color:#687483; font-size:10px; white-space:nowrap; text-overflow:ellipsis; }
+  .reference-home .ref-home-search .site-search-trigger-wide { width:100%; height:38px; justify-content:flex-start; gap:8px; padding:0 14px; border:1.5px solid #d9e0e8; background:#fff; border-radius:999px; }
+  .reference-home .site-search-trigger-label { display:block; overflow:hidden; color:#687483; font-size:11px; white-space:nowrap; text-overflow:ellipsis; }
   .reference-home .ref-home-account,.reference-home .ref-home-navigation { display: none; }
   .reference-home .ref-home-header-actions { flex:none; gap:7px; }
   .reference-home .ref-home-menu-toggle { width:36px; height:36px; border-radius:5px; }

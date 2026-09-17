@@ -101,3 +101,9 @@
 .admin-gate { max-width:720px; margin:60px auto; padding:24px; }
 .admin-gate > button { min-height:44px; padding:10px 16px; cursor:pointer; }
 
+/* Admin panel logo */
+.admin-workspace .crm-sidebar .admin-brand { display:flex; align-items:center; gap:10px; padding:0 8px 20px; border-bottom:1px solid #e5e9ef; text-decoration:none; }
+.admin-workspace .crm-sidebar .admin-brand-logo { width:auto; height:38px; max-width:140px; object-fit:contain; display:block; }
+.admin-workspace .crm-sidebar .admin-brand-badge { font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#b72f23; background:#fff0ed; border:1px solid #f3c8c1; border-radius:5px; padding:3px 7px; flex-shrink:0; }
+.admin-gate > button { min-height:44px; padding:10px 16px; cursor:pointer; }
+

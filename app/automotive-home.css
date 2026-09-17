@@ -57,8 +57,8 @@
 .reference-home .ref-home-navigation a:hover { color: var(--auto-red); }
 .reference-home .ref-home-account { border-color: #d4d7da; color: #35393d; border-radius: 5px; }
 .reference-home .ref-home-account:hover { background: #f3f4f5; }
-.reference-home .ref-home-header-primary { background: var(--auto-red); border-color: var(--auto-red); border-radius: 5px; }
-.reference-home .ref-home-search .site-search-trigger-wide { background: #f5f6f7; border-color: #e1e3e5; border-radius: 5px; }
+.reference-home .ref-home-search .site-search-trigger-wide { background: #f8f9fa; border: 1.5px solid #dce1e6; border-radius: 999px; }
+.reference-home .ref-home-search .site-search-trigger-wide:hover { background: #ffffff; border-color: var(--auto-red); }
 .reference-home .ref-home-hero-scene { background: #f3f4f5; }
 .reference-home .ref-home-hero-scene::before { display: none; }
 .reference-home .ref-home-hero-inner { background: transparent; }
