@@ -1,8 +1,13 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function owns(userId) { return signedIn() && request.auth.uid == userId; }
+
+    // ─── Identity helpers ─────────────────────────────────────────────────────
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // Only the single verified site owner via Google Sign-In
     function isAdmin() {
       return signedIn()
         && request.auth.token.firebase.sign_in_provider == 'google.com'
@@ -10,7 +15,10 @@ service cloud.firestore {
         && request.auth.token.email == 'rakeshpatel0944@gmail.com';
     }
 
+    // Editorial reviewers (disabled – kept as no-op for future use)
     function isEditor() { return false; }
+
+    // ─── Editorial review validation ──────────────────────────────────────────
     function validEditorialReview() {
       let d = request.resource.data;
       return d.status in ['draft', 'published', 'archived']
@@ -29,17 +37,94 @@ service cloud.firestore {
         ));
     }
 
-    match /tractors/{id} { allow read: if resource.data.status == 'published' || isAdmin() || isEditor(); allow write: if isAdmin(); }
-    match /brands/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /expertReviews/{id} { allow read: if resource.data.status == 'published' || isAdmin() || isEditor(); allow create, update: if (isAdmin() || isEditor()) && validEditorialReview(); allow delete: if isAdmin() || isEditor(); }
-    match /articles/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /articleCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /videos/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /equipment/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /equipmentCategories/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /dealers/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /admins/{userId} { allow read: if isAdmin(); allow write: if false; }
+    // ─── Public catalog ───────────────────────────────────────────────────────
+    match /tractors/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin() || isEditor();
+      allow write: if isAdmin();
+    }
+    match /brands/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /equipment/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /equipmentCategories/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /dealers/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ─── Editorial content ────────────────────────────────────────────────────
+    match /expertReviews/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin() || isEditor();
+      allow create, update: if (isAdmin() || isEditor()) && validEditorialReview();
+      allow delete: if isAdmin() || isEditor();
+    }
+    match /articles/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /articleCategories/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /videos/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ─── Homepage & site layout ───────────────────────────────────────────────
+    match /heroSlides/{id} {
+      allow read: if resource.data.status in ['published', 'approved'] || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /partners/{id} {
+      allow read: if resource.data.status in ['published', 'approved'] || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /banners/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /advertisements/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+    match /homepageSections/{id} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ─── Site configuration (read-only publicly, no public writes) ────────────
+    // seo and settings are now only readable, not writable via client
+    match /seo/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ─── Admin-only collections ───────────────────────────────────────────────
+    match /admins/{userId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Users collection is completely private (managed server-side only)
+    match /users/{userId} {
+      allow read, write: if false;
+    }
+
+    // ─── Enquiries / leads ────────────────────────────────────────────────────
     match /leads/{id} {
+      // Anyone can submit an enquiry but cannot pre-fill admin fields
       allow create: if request.resource.data.status == 'New'
         && request.resource.data.assignedTo == null
         && request.resource.data.notes == ''
@@ -49,47 +134,65 @@ service cloud.firestore {
         && request.resource.data.phone.size() >= 8;
       allow read, update, delete: if isAdmin();
     }
-    match /reviews/{id} {
-      allow read: if resource.data.status == 'approved' || isAdmin() || (signedIn() && resource.data.userId == request.auth.uid);
-      allow create: if false;
-      allow update, delete: if isAdmin();
+    match /contactMessages/{id} {
+      allow create: if request.resource.data.email is string
+        && request.resource.data.message is string
+        && request.resource.data.message.size() >= 5;
+      allow read, update, delete: if isAdmin();
     }
+    match /newsletterSubscribers/{id} {
+      allow create: if request.resource.data.email is string
+        && request.resource.data.email.size() >= 5;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ─── Signed-in user features ──────────────────────────────────────────────
     match /favorites/{id} {
       allow read, delete: if signedIn() && request.auth.uid == resource.data.userId;
       allow create: if signedIn() && request.auth.uid == request.resource.data.userId;
-      allow update: if signedIn() && request.auth.uid == resource.data.userId && request.auth.uid == request.resource.data.userId;
+      allow update: if signedIn()
+        && request.auth.uid == resource.data.userId
+        && request.auth.uid == request.resource.data.userId;
     }
-    match /heroSlides/{id} { allow read: if resource.data.status in ['published','approved'] || isAdmin(); allow write: if isAdmin(); }
-    match /partners/{id} { allow read: if resource.data.status in ['published','approved'] || isAdmin(); allow write: if isAdmin(); }
-    match /banners/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /advertisements/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /seo/{id} { allow read: if true; allow write: if false; }
-    match /settings/{id} { allow read: if true; allow write: if false; }
-    match /homepageSections/{id} { allow read: if resource.data.status == 'published' || isAdmin(); allow write: if isAdmin(); }
-    match /users/{userId} {
-      allow read, write: if false;
+    match /comparisons/{id} {
+      allow read, create, update, delete: if signedIn()
+        && request.resource.data.userId == request.auth.uid;
     }
-    match /comparisons/{id} { allow read, create, update, delete: if signedIn() && request.resource.data.userId == request.auth.uid; }
-    match /newsletterSubscribers/{id} { allow create: if request.resource.data.email is string; allow read, update, delete: if isAdmin(); }
-    match /contactMessages/{id} { allow create: if request.resource.data.email is string && request.resource.data.message is string; allow read, update, delete: if isAdmin(); }
-    match /notifications/{id} { allow read: if signedIn() && resource.data.userId == request.auth.uid; allow write: if isAdmin(); }
-    // Uploaded site images are public; only approved staff can create them.
+    match /reviews/{id} {
+      allow read: if resource.data.status == 'approved'
+        || isAdmin()
+        || (signedIn() && resource.data.userId == request.auth.uid);
+      allow create: if false;
+      allow update, delete: if isAdmin();
+    }
+    match /notifications/{id} {
+      allow read: if signedIn() && resource.data.userId == request.auth.uid;
+      allow write: if isAdmin();
+    }
+
+    // ─── Media storage (images via Firestore base64 store) ────────────────────
     match /media/{id} {
       allow get: if true;
       allow list: if isAdmin();
       allow create: if (isAdmin() || (isEditor() && request.resource.data.folder == 'expertReviews'))
         && request.resource.data.keys().hasOnly(['data', 'contentType', 'size', 'folder', 'createdAt'])
         && request.resource.data.data is string
-        && request.resource.data.data.size() > 0 && request.resource.data.data.size() <= 819200
+        && request.resource.data.data.size() > 0
+        && request.resource.data.data.size() <= 819200
         && request.resource.data.contentType in ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
         && request.resource.data.size is int
-        && request.resource.data.size > 0 && request.resource.data.size <= 614400
-        && request.resource.data.folder is string && request.resource.data.folder.size() <= 100
+        && request.resource.data.size > 0
+        && request.resource.data.size <= 614400
+        && request.resource.data.folder is string
+        && request.resource.data.folder.size() <= 100
         && request.resource.data.createdAt == request.time;
       allow update: if false;
       allow delete: if isAdmin() || (isEditor() && resource.data.folder == 'expertReviews');
     }
-    match /{document=**} { allow read, write: if false; }
+
+    // ─── Deny everything else ─────────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }
-
