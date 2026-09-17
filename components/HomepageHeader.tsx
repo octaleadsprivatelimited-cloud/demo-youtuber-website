@@ -21,8 +21,14 @@ export function HomepageHeader() {
   return <header className="ref-home-header">
     <LocalizedElement as="div" className="ref-home-header-inner">
       <LocalizedElement as="a" className="ref-home-brand" href="/" aria-label={settings.websiteName || 'RJ Tractor Techs'}>
-        {settings.logo ? <LocalizedElement as="img" src={settings.logo} alt="" className="ref-home-brand-image"/> : <LocalizedElement as="span" className="ref-home-brand-mark">RJ</LocalizedElement>}
-        <LocalizedElement as="strong">{(settings.websiteName || 'RJ Tractor Techs').replace(/^RJ\s+/, '')}</LocalizedElement>
+        {settings.logo ? (
+          <LocalizedElement as="img" src={settings.logo} alt={settings.websiteName || 'RJ Tractor Techs'} className="ref-home-brand-image"/>
+        ) : (
+          <>
+            <LocalizedElement as="span" className="ref-home-brand-mark">RJ</LocalizedElement>
+            <LocalizedElement as="strong">{(settings.websiteName || 'RJ Tractor Techs').replace(/^RJ\s+/, '')}</LocalizedElement>
+          </>
+        )}
       </LocalizedElement>
       <LocalizedElement as="div" className="ref-home-collaborate"><LocalizedElement as="a" href="/contact">Collaborate</LocalizedElement></LocalizedElement>
       <nav className="ref-home-navigation" aria-label="Main navigation">{navigation.map(([label, href]) => <LocalizedElement as="a" href={href} key={href}>{label}</LocalizedElement>)}</nav>

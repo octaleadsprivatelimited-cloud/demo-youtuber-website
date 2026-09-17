@@ -13,6 +13,44 @@
 .reference-home .ref-home-header { background: #fff; border-bottom: 1px solid #dedfe1; box-shadow: 0 2px 8px #00000008; }
 .reference-home .ref-home-brand strong { color: #24272b; }
 .reference-home .ref-home-brand-mark { color: var(--auto-red); }
+.reference-home .ref-home-brand-image { width: auto; height: 52px; max-height: 52px; max-width: 220px; object-fit: contain; }
+.reference-home .home-footer .brand,
+.public-site footer .brand,
+.public-site .footer-brand-link { display: inline-flex; align-items: center; width: auto; max-width: 100%; text-decoration: none; }
+.reference-home .home-footer .brand-mark,
+.reference-home .home-footer .brand-mark:has(img),
+.reference-home .home-footer .footer-logo-mark,
+.public-site .brand-mark:has(img),
+.public-site footer .brand-mark,
+.public-site footer .footer-logo-mark {
+  background: #ffffff !important;
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+}
+.reference-home .home-footer .brand-mark img,
+.reference-home .home-footer .footer-brand-image,
+.public-site .brand-mark img,
+.public-site footer .brand-mark img,
+.public-site footer .footer-brand-image {
+  width: auto !important;
+  height: 44px !important;
+  max-height: 44px !important;
+  max-width: 190px !important;
+  object-fit: contain !important;
+  display: block !important;
+  filter: none !important;
+}
 .reference-home .ref-home-header-inner { grid-template-rows: 72px 44px; min-height: 116px; }
 .reference-home .ref-home-navigation { border-top: 1px solid #eceeef; }
 .reference-home .ref-home-navigation a { color: #35393d; font-size: 12px; }
@@ -34,7 +72,8 @@
 .reference-home .ref-home-power-rail { background: #fff; border-top: 1px solid #dedfe1; }
 .reference-home .ref-home-power-rail a { color: #34393d; font-size: 14px; border-color: #e1e3e5; }
 .reference-home .ref-home-power-rail a:hover { background: #f0f5f5; color: var(--auto-link); }
-.reference-home > main > section:not(.ref-home-hero) { border-top: 1px solid #e1e3e5; border-bottom: 0; }
+.reference-home > main > section { border-bottom: 1px solid #e1e3e5; }
+.reference-home > main > section:not(.ref-home-hero) { border-top: 1px solid #e1e3e5; }
 .reference-home > main > :is(.home-introduction,.home-brands,.home-editorial,.home-partners) { background: #fff; }
 .reference-home > main > :is(.showcase-reference,.home-compare,.home-videos,.home-channel) { background: #f3f4f5; }
 .reference-home > main > .editorial-section { max-width: none; padding-inline: max(24px,calc((100% - 1240px)/2)); background: #fff; }
@@ -71,10 +110,89 @@
 .reference-home .home-v2.home-video-library .home-video-card h3 { color: #24272b; font-size: 16px; }
 .reference-home .home-v2.home-video-library .home-video-card > p { color: #62676d; font-size: 12px; }
 .reference-home .home-v2.home-video-library .home-video-card > .home-text-link { color: var(--auto-link); font-size: 14px; min-height: 40px; }
-.reference-home > .home-footer { background: #252a30; }
-.reference-home > .home-footer::after { display: none; }
+.reference-home > .home-footer,
+.public-site .reference-home > .home-footer,
+.public-site footer {
+  background: #161b22 !important;
+  color: #f0f3f6 !important;
+  border-top: 4px solid #c72c35 !important;
+}
+.reference-home > .home-footer::after { display: none !important; }
+.reference-home .home-footer footer,
+.public-site footer {
+  background: transparent !important;
+  color: #f0f3f6 !important;
+}
+.reference-home .home-footer .footer-main h4,
+.public-site footer .footer-main h4 {
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 16px !important;
+}
 .reference-home .home-footer .footer-main > div > a:not(.brand),
-.reference-home .home-footer .footer-brand p { font-size: 14px; }
+.public-site footer .footer-main > div > a:not(.brand) {
+  color: #a8b3bf !important;
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+  transition: color 0.15s ease !important;
+}
+.reference-home .home-footer .footer-main > div > a:not(.brand):hover,
+.public-site footer .footer-main > div > a:not(.brand):hover {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+.reference-home .home-footer .footer-brand p,
+.public-site footer .footer-brand p {
+  color: #b0bac5 !important;
+  font-size: 13px !important;
+  line-height: 1.7 !important;
+  margin-top: 14px !important;
+}
+.reference-home .home-footer .footer-brand > a,
+.public-site footer .footer-brand > a {
+  color: #d2d9e0 !important;
+  font-size: 13px !important;
+}
+.reference-home .home-footer .footer-brand > a:hover,
+.public-site footer .footer-brand > a:hover {
+  color: #ffffff !important;
+}
+.reference-home .home-footer .footer-bottom,
+.public-site footer .footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #8c96a3 !important;
+}
+.reference-home .home-footer .footer-bottom a,
+.public-site footer .footer-bottom a {
+  color: #c0cad4 !important;
+}
+.reference-home .home-footer .footer-bottom a:hover,
+.public-site footer .footer-bottom a:hover {
+  color: #ffffff !important;
+}
+.reference-home .home-footer .footer-socials a,
+.public-site footer .footer-socials a {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  transition: background 0.2s ease, transform 0.2s ease !important;
+}
+.reference-home .home-footer .footer-socials a:hover,
+.public-site footer .footer-socials a:hover {
+  background: #c72c35 !important;
+  transform: translateY(-2px) !important;
+}
+.reference-home .home-footer .footer-socials img,
+.public-site footer .footer-socials img {
+  filter: brightness(0) invert(1) !important;
+}
 .reference-home :is(a,button,input,select):focus-visible { outline: 3px solid #007b85; outline-offset: 3px; }
 
 @media (max-width: 760px) {

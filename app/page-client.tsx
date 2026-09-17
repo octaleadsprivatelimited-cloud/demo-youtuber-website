@@ -22,6 +22,7 @@ import { subscribeHeroSlides, type HeroSlide } from '@/services/hero-slides';
 import { subscribePartners, type Partner } from '@/services/partners';
 import { usePublicRecords } from '@/hooks/usePublicRecords';
 import { resolveHomepageSections } from '@/config/homepage-sections';
+import { useChannelVideos } from '@/hooks/useChannelVideos';
 import '@/app/reference-home.css';
 import '@/app/automotive-home.css';
 
@@ -33,9 +34,11 @@ export default function Home() {
     useTractorCatalog();
   const { items: brandRecords } = usePublicRecords('brands');
   const { items: articles } = usePublicRecords('articles');
-  const { items: videos } = usePublicRecords('videos');
+  const { items: videoRecords } = usePublicRecords('videos');
   const { items: sectionRecords } = usePublicRecords('homepageSections');
+  const { videos: channelVideos } = useChannelVideos();
   const settings = useSiteSettings();
+  const videos = (videoRecords.length ? videoRecords : channelVideos) as unknown as import('@/services/site-data').SiteRecord[];
   const brands = brandRecords.map((row) => ({ ...row, name: String(row.name ?? row.title ?? ''), slug: String(row.slug), logo: String(row.logo ?? '') }));
   const youtube = settings.youtube || 'https://www.youtube.com/@Rjtractortechs';
 

@@ -8,20 +8,34 @@ import { SetupNotice } from '@/components/SetupNotice';
 import { FavouriteButton } from '@/components/FavouriteButton';
 import { isFirebaseConfigured } from '@/lib/firebase/client';
 import { listVideos, type Video } from '@/services/media';
+import { useChannelVideos } from '@/hooks/useChannelVideos';
 
 export default function VideosPage() {
   const settings = { youtube: 'https://www.youtube.com/@Rjtractortechs' };
+  const { videos: channelVideos, loading: channelLoading } = useChannelVideos();
   const [items, setItems] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(isFirebaseConfigured);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!isFirebaseConfigured) return;
-    listVideos()
-      .then(setItems)
-      .catch((reason) => setError(reason instanceof Error ? reason.message : 'Unable to load videos.'))
-      .finally(() => setLoading(false));
-  }, []);
+    if (isFirebaseConfigured) {
+      listVideos()
+        .then((records) => {
+          if (records.length) {
+            setItems(records);
+          } else {
+            setItems(channelVideos as unknown as Video[]);
+          }
+        })
+        .catch(() => {
+          setItems(channelVideos as unknown as Video[]);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setItems(channelVideos as unknown as Video[]);
+      setLoading(channelLoading);
+    }
+  }, [channelVideos, channelLoading]);
 
   return (
     <PublicShell>

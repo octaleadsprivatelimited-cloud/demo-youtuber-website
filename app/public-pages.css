@@ -151,32 +151,9 @@
 }
 
 /* Corporate chrome for all public routes; admin pages are outside .public-site. */
-.public-site .topbar {
-  background:#0b2c52;
-  color:rgba(255,255,255,.78);
-  border-bottom:1px solid rgba(255,255,255,.12);
-}
-.public-site .topbar a { color:#ffd9a6; }
-.public-site .site-header {
-  background:#c93229;
-  border-bottom-color:#a9231c;
-  box-shadow:0 4px 14px rgba(42,18,15,.16);
-  backdrop-filter:none;
-}
-.public-site .site-header .brand-copy strong,
-.public-site .site-header .brand-copy small,
-.public-site .desktop-nav a { color:#fff; }
-.public-site .site-header .brand-mark { background:#0b2c52; color:#fff; }
-.public-site .desktop-nav a { opacity:.9; }
-.public-site .desktop-nav a:hover,
-.public-site .desktop-nav a.active { color:#ffe0aa; opacity:1; }
-.public-site .header-actions :is(button,.round-action) {
-  border-color:rgba(255,255,255,.48);
-  background:#fff;
-  color:#0b2c52;
-}
-.public-site .mobile-nav { background:#0b2c52; border-top:1px solid rgba(255,255,255,.16); }
-.public-site .mobile-nav a { color:#fff; border-bottom-color:rgba(255,255,255,.14); }
+.public-site .topbar { display: none; }
+.public-site .site-header { display: none; }
+.public-site .mobile-nav { display: none; }
 .public-site footer {
   background:#0b2c52;
   color:#fff;

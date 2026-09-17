@@ -1,0 +1,556 @@
+/* Minimalist UI Enhancements: Clean Typography, Breathable Spacing, Elegant Borders & Subtle Micro-interactions */
+
+:root {
+  --color-slate-950: #020617;
+  --color-slate-900: #0f172a;
+  --color-slate-800: #1e293b;
+  --color-slate-700: #334155;
+  --color-slate-600: #475569;
+  --color-slate-500: #64748b;
+  --color-slate-400: #94a3b8;
+  --color-slate-200: #e2e8f0;
+  --color-slate-100: #f1f5f9;
+  --color-slate-50: #f8fafc;
+  --color-accent-red: #c72c35;
+  --color-brand-blue: #0f345a;
+  --minimal-border: 1px solid #e8ecf1;
+  --minimal-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.03);
+  --minimal-shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --minimal-shadow-hover: 0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.02);
+  --minimal-radius-sm: 8px;
+  --minimal-radius-md: 12px;
+  --minimal-radius-lg: 16px;
+}
+
+/* Base resets & typography smoothing */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.012em;
+  color: var(--color-slate-800);
+  background-color: #ffffff;
+}
+
+/* Minimalist Site Header & Navigation */
+.reference-home .ref-home-header {
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: var(--minimal-border) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.reference-home .ref-home-header-inner {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  min-height: 74px !important;
+  max-width: 1360px !important;
+  margin: 0 auto !important;
+  padding: 0 36px !important;
+  gap: 20px !important;
+}
+
+.reference-home .ref-home-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  text-decoration: none !important;
+}
+
+.reference-home .ref-home-brand strong {
+  font-weight: 750 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--color-slate-900) !important;
+  font-size: 20px !important;
+}
+
+.reference-home .ref-home-brand-mark {
+  font-weight: 800 !important;
+  color: var(--color-accent-red) !important;
+  font-size: 26px !important;
+}
+
+.reference-home .ref-home-navigation {
+  display: flex !important;
+  align-items: center !important;
+  gap: 24px !important;
+  border-top: none !important;
+}
+
+.reference-home .ref-home-navigation a {
+  font-weight: 500 !important;
+  font-size: 13.5px !important;
+  color: var(--color-slate-600) !important;
+  transition: color 0.15s ease, transform 0.15s ease;
+  letter-spacing: -0.01em;
+  padding: 8px 4px !important;
+  text-transform: none !important;
+  border: none !important;
+}
+
+.reference-home .ref-home-navigation a:hover {
+  color: var(--color-slate-900) !important;
+}
+
+.reference-home .ref-home-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.reference-home .ref-home-collaborate a {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--color-slate-600) !important;
+  background: transparent !important;
+  padding: 8px 14px !important;
+  border-radius: var(--minimal-radius-sm) !important;
+  transition: all 0.15s ease !important;
+}
+
+.reference-home .ref-home-collaborate a:hover {
+  color: var(--color-slate-900) !important;
+  background: var(--color-slate-100) !important;
+}
+
+.reference-home .ref-home-header-primary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--minimal-radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  padding: 9px 18px !important;
+  background: var(--color-slate-900) !important;
+  border: 1px solid var(--color-slate-900) !important;
+  color: #ffffff !important;
+  box-shadow: var(--minimal-shadow-sm) !important;
+  transition: all 0.2s ease !important;
+}
+
+.reference-home .ref-home-header-primary:hover {
+  background: var(--color-accent-red) !important;
+  border-color: var(--color-accent-red) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(199, 44, 53, 0.2) !important;
+}
+
+/* Minimalist Hero Section */
+.reference-home .ref-home-hero-scene {
+  background: #ffffff !important;
+}
+
+.reference-home .ref-home-hero-inner {
+  padding: 56px 40px 52px max(32px, calc((100vw - 1280px) / 2)) !important;
+}
+
+.reference-home .ref-home-eyebrow {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--color-accent-red) !important;
+  margin-bottom: 14px !important;
+}
+
+.reference-home .ref-home-hero-copy h1 {
+  font-weight: 750 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.12 !important;
+  color: var(--color-slate-900) !important;
+}
+
+.reference-home .ref-home-hero-description {
+  font-size: 16px !important;
+  line-height: 1.65 !important;
+  color: var(--color-slate-500) !important;
+  font-weight: 400 !important;
+  margin-top: 14px !important;
+}
+
+.reference-home .ref-home-hero-search {
+  border: 1px solid #d9e1e8 !important;
+  border-radius: var(--minimal-radius-md) !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
+  background: #ffffff !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 4px 4px 4px 14px !important;
+}
+
+.reference-home .ref-home-hero-search:focus-within {
+  border-color: var(--color-brand-blue) !important;
+  box-shadow: 0 6px 24px rgba(15, 52, 90, 0.08) !important;
+}
+
+.reference-home .ref-home-hero-search input {
+  font-size: 14.5px !important;
+  color: var(--color-slate-900) !important;
+}
+
+.reference-home .ref-home-hero-search input::placeholder {
+  color: var(--color-slate-400) !important;
+}
+
+.reference-home .ref-home-hero-search button {
+  border-radius: var(--minimal-radius-sm) !important;
+  font-weight: 600 !important;
+  padding: 10px 22px !important;
+  background: var(--color-slate-900) !important;
+  border: none !important;
+  color: #fff !important;
+  transition: all 0.2s ease !important;
+}
+
+.reference-home .ref-home-hero-search button:hover {
+  background: var(--color-accent-red) !important;
+}
+
+.reference-home .ref-home-hero-actions .ref-home-link {
+  color: var(--color-slate-700) !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.reference-home .ref-home-hero-actions .ref-home-link:hover {
+  color: var(--color-accent-red) !important;
+  transform: translateX(2px);
+}
+
+/* Minimalist Power Rail */
+.reference-home .ref-home-power-rail {
+  background: var(--color-slate-900) !important;
+  border-top: none !important;
+}
+
+.reference-home .ref-home-power-rail a {
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.01em !important;
+  min-height: 64px !important;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.reference-home .ref-home-power-rail a:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
+}
+
+/* Section Rhythm & Minimalist Headings */
+.reference-home > main > section:not(.ref-home-hero):not(.home-partners) {
+  padding-block: 64px !important;
+}
+
+.reference-home .home-v2 h2,
+.reference-home .showcase-heading h2 {
+  font-size: clamp(26px, 2.6vw, 34px) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--color-slate-900) !important;
+}
+
+.reference-home .home-v2 .home-section-heading .home-eyebrow {
+  color: var(--color-accent-red) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase;
+}
+
+.reference-home .home-section-heading .home-description {
+  color: var(--color-slate-500) !important;
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+}
+
+.reference-home .home-v2 .home-section-heading > .home-text-link,
+.reference-home .home-v2.home-editorial .home-section-heading > a,
+.reference-home .home-v2.home-video-library .home-section-heading > a {
+  font-weight: 600 !important;
+  border-bottom: 1.5px solid var(--color-slate-200) !important;
+  color: var(--color-slate-700) !important;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.reference-home .home-v2 .home-section-heading > .home-text-link:hover,
+.reference-home .home-v2.home-editorial .home-section-heading > a:hover,
+.reference-home .home-v2.home-video-library .home-section-heading > a:hover {
+  color: var(--color-accent-red) !important;
+  border-color: var(--color-accent-red) !important;
+}
+
+/* Minimalist Clean Cards: Subtle borders, gentle shadows, smooth hover */
+.reference-home :is(.showcase-tractor-card, .home-compare-card, .editorial-card, .home-video-empty),
+.reference-home .home-v2.home-editorial .home-reading-grid > a,
+.reference-home .home-v2.home-video-library .home-video-card,
+.reference-home .home-tool,
+.reference-home .home-v2 .home-brand-cards > a {
+  border: var(--minimal-border) !important;
+  border-radius: var(--minimal-radius-md) !important;
+  background: #ffffff !important;
+  box-shadow: var(--minimal-shadow-sm) !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease !important;
+}
+
+.reference-home :is(.showcase-tractor-card, .editorial-card):hover,
+.reference-home .home-v2.home-editorial .home-reading-grid > a:hover,
+.reference-home .home-v2.home-video-library .home-video-card:hover,
+.reference-home .home-tool:hover,
+.reference-home .home-v2 .home-brand-cards > a:hover {
+  transform: translateY(-3px) !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: var(--minimal-shadow-hover) !important;
+}
+
+/* Research Tool Cards */
+.reference-home > main > .home-introduction {
+  background: #fbfcfd !important;
+}
+
+.reference-home .home-step {
+  background: var(--color-slate-100) !important;
+  color: var(--color-slate-800) !important;
+  border-radius: var(--minimal-radius-sm) !important;
+  font-weight: 700 !important;
+}
+
+.reference-home .home-tool h3 {
+  color: var(--color-slate-900) !important;
+  font-weight: 650 !important;
+}
+
+.reference-home .home-tool p {
+  color: var(--color-slate-500) !important;
+}
+
+/* Tractor Showcase Tabs: Sleek Pill Toggle */
+.reference-home .showcase-reference .showcase-tabs {
+  background: var(--color-slate-100) !important;
+  border: 1px solid var(--color-slate-200) !important;
+  border-radius: 9999px !important;
+  padding: 4px !important;
+  gap: 2px !important;
+}
+
+.reference-home .showcase-reference .showcase-tabs button {
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: var(--color-slate-600) !important;
+  padding: 7px 18px !important;
+  min-height: 36px !important;
+  transition: all 0.2s ease !important;
+}
+
+.reference-home .showcase-reference .showcase-tabs button:hover {
+  color: var(--color-slate-900) !important;
+}
+
+.reference-home .showcase-reference .showcase-tabs button[aria-selected="true"] {
+  background: #ffffff !important;
+  color: var(--color-slate-900) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Tractor Cards in Showcase */
+.reference-home .showcase-reference .showcase-tractor-photo {
+  background: #f8fafc !important;
+  aspect-ratio: 1.35 !important;
+  padding: 16px !important;
+}
+
+.reference-home .showcase-reference .showcase-tractor-body h3 {
+  font-weight: 650 !important;
+  color: var(--color-slate-900) !important;
+  font-size: 15px !important;
+}
+
+.reference-home .showcase-reference .showcase-specs > span {
+  background: var(--color-slate-50) !important;
+  border: 1px solid var(--color-slate-200) !important;
+  color: var(--color-slate-600) !important;
+  border-radius: 6px !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+}
+
+.reference-home .showcase-reference .showcase-detail {
+  border: 1px solid var(--color-slate-200) !important;
+  background: #ffffff !important;
+  color: var(--color-slate-800) !important;
+  border-radius: var(--minimal-radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: 12.5px !important;
+  transition: all 0.15s ease !important;
+}
+
+.reference-home .showcase-reference .showcase-detail:hover {
+  border-color: var(--color-accent-red) !important;
+  color: var(--color-accent-red) !important;
+  background: #fff8f7 !important;
+}
+
+/* Brand Cards */
+.reference-home > main > .home-brands {
+  background: #ffffff !important;
+}
+
+.reference-home .home-v2 .home-brand-cards > a {
+  background: #ffffff !important;
+  border: var(--minimal-border) !important;
+  border-radius: var(--minimal-radius-sm) !important;
+}
+
+.reference-home .home-v2 .home-brand-cards h3 {
+  font-weight: 600 !important;
+  color: var(--color-slate-800) !important;
+}
+
+/* Compare Section */
+.reference-home > main > .home-compare {
+  background: var(--color-slate-900) !important;
+}
+
+.reference-home .home-compare-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: var(--minimal-radius-md) !important;
+  backdrop-filter: blur(8px);
+}
+
+.reference-home .home-compare-card:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Minimalist Editorial & Video Sections */
+.reference-home > main > .editorial-section {
+  background: #fafbfc !important;
+}
+
+.reference-home .home-v2.home-editorial .home-reading-grid > a {
+  border-top: 3px solid var(--color-slate-900) !important;
+}
+
+.reference-home .home-v2.home-editorial .home-reading-number {
+  background: var(--color-slate-100) !important;
+  border-radius: var(--minimal-radius-sm) !important;
+}
+
+.reference-home > main > .home-videos {
+  background: #f8fafc !important;
+}
+
+.reference-home .home-video-play {
+  background: var(--color-slate-900) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.reference-home .home-video-card:hover .home-video-play {
+  transform: scale(1.08);
+  background: var(--color-accent-red) !important;
+}
+
+/* Minimalist Footer */
+.reference-home > .home-footer {
+  border-top: 1px solid var(--color-slate-200) !important;
+  background: var(--color-slate-900) !important;
+}
+
+.reference-home .home-footer footer {
+  color: var(--color-slate-400) !important;
+}
+
+.reference-home .home-footer h4 {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.02em;
+}
+
+.reference-home .home-footer .footer-main > div > a:not(.brand) {
+  color: var(--color-slate-400) !important;
+  transition: color 0.15s ease;
+}
+
+.reference-home .home-footer .footer-main > div > a:not(.brand):hover {
+  color: #ffffff !important;
+}
+
+.reference-home .home-footer .footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--color-slate-500) !important;
+}
+
+/* Public Pages Minimalist Elevation & Clean Structure */
+.public-site {
+  --page-line: #e8ecf1 !important;
+  --page-muted: #64748b !important;
+  --page-ink: #0f172a !important;
+}
+
+.public-site :is(.page-hero, .catalog-hero) {
+  background: #fcfdfe !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.public-site :is(.page-hero, .catalog-hero) h1 {
+  font-weight: 750 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--color-slate-900) !important;
+}
+
+.public-site :is(.article-grid, .review-grid, .video-grid, .equipment-grid, .dealer-grid) > article {
+  border: var(--minimal-border) !important;
+  border-radius: var(--minimal-radius-md) !important;
+  background: #ffffff !important;
+  box-shadow: var(--minimal-shadow-sm) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+.public-site :is(.article-grid, .review-grid, .video-grid, .equipment-grid, .dealer-grid) > article:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: var(--minimal-shadow-hover) !important;
+  border-color: #cbd5e1 !important;
+}
+
+.public-site .filters {
+  border: var(--minimal-border) !important;
+  border-radius: var(--minimal-radius-md) !important;
+  background: #ffffff !important;
+  box-shadow: var(--minimal-shadow-sm) !important;
+}
+
+.public-site :is(input:not([type=range]):not([type=checkbox]), select, textarea) {
+  border: 1px solid #d9e1e8 !important;
+  border-radius: var(--minimal-radius-sm) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.public-site :is(input:not([type=range]):not([type=checkbox]), select, textarea):focus {
+  border-color: var(--color-brand-blue) !important;
+  box-shadow: 0 0 0 3px rgba(15, 52, 90, 0.08) !important;
+  outline: none !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .reference-home .ref-home-header-inner {
+    padding: 0 20px !important;
+    min-height: 64px !important;
+  }
+  .reference-home .ref-home-navigation {
+    display: none !important;
+  }
+  .reference-home .ref-home-collaborate {
+    display: none !important;
+  }
+}

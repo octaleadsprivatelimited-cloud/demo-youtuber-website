@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: 'RJ Tractor Techs | Tractor Reviews, Specs & Farming Information',
   description: 'Explore tractor specifications, prices, expert reviews, comparisons, new launches and practical farming information.',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     title: 'RJ Tractor Techs',
     description: 'Tractor Reviews, Specs & Farming Information',

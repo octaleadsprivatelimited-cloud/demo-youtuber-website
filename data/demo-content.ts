@@ -1,5 +1,5 @@
 import type { Tractor } from '@/types/content';
-import type { Article, Dealer, Equipment } from '@/services/media';
+import type { Article, Dealer, Equipment, Video } from '@/services/media';
 import type { ExpertReview } from '@/services/phase-three';
 
 // Removable preview records. Real published CMS records always take priority.
@@ -13,3 +13,6 @@ export const demoArticles:Article[]=[...stories,...stories].map(([title,excerpt,
 export const demoEquipment:Equipment[]=['Rotavator','Cultivator','Disc Harrow','Seed Drill'].map((name,i)=>({id:`demo-equipment-${i+1}`,slug:name.toLowerCase().replaceAll(' ','-'),name,categoryName:'Farm Implements',categorySlug:'farm-implements',brandName:'Demo Equipment',description:`A practical ${name.toLowerCase()} preview record for the equipment catalog.`,image:images[i],status:'published',specifications:{Compatibility:'35–60 HP',Warranty:'1 year'}}));
 export const demoDealers:Dealer[]=['Hyderabad','Vijayawada','Warangal','Bengaluru'].map((city,i)=>({id:`demo-dealer-${i+1}`,slug:`rj-tractor-centre-${city.toLowerCase()}`,name:`RJ Tractor Centre — ${city}`,brand:'Multi-brand',phone:`+91 90000 0000${i}`,address:`${i+1}, Agricultural Market Road`,city,district:city,state:i===3?'Karnataka':'Telangana',services:['Sales','Service','Spares'],verified:true,status:'published'}));
 export const demoReviews:ExpertReview[]=demoTractors.slice(0,4).map((tractor,i)=>({id:`demo-review-${i+1}`,slug:`${tractor.slug}-expert-review`,title:`${tractor.name} expert review`,excerpt:`A practical look at performance, comfort and ownership for the ${tractor.name}.`,body:'This removable demonstration review shows how published editorial content will appear.',authorName:'RJ Tractor Techs',coverImage:tractor.image,tractorId:tractor.id,tractorName:tractor.name,verdict:'A balanced option for mixed farm work.',score:8+i*.2,pros:['Useful power delivery','Simple controls'],cons:['Compare local service support'],status:'published'}));
+
+export const demoVideos: Video[] = [];
+
