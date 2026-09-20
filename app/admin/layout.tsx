@@ -2,6 +2,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { auth, db, isFirebaseConfigured } from '@/lib/firebase/client';
+import { firebaseConfig } from '@/lib/firebase/config';
 import { useAdmin } from '@/hooks/useAdmin';
 import { AdminLogout } from '@/components/admin/AdminLogout';
 import { SetupNotice } from '@/components/SetupNotice';
@@ -22,7 +23,7 @@ export default function AdminLayout({children}: {children: ReactNode}) {
         const user = auth?.currentUser;
         if (!user || user.uid !== uid || !db) throw new Error('Please sign in again.');
         const token = await user.getIdToken();
-        const response = await fetch(`https://firestore.googleapis.com/v1/projects/${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/databases/(default)/documents/tractors?pageSize=1`, {headers:{Authorization:'Bearer '+token}, signal:AbortSignal.timeout(20000)});
+        const response = await fetch(`https://firestore.googleapis.com/v1/projects/${encodeURIComponent(firebaseConfig.projectId)}/databases/(default)/documents/tractors?pageSize=1`, {headers:{Authorization:'Bearer '+token}, signal:AbortSignal.timeout(20000)});
         if (!response.ok) throw Object.assign(new Error('Firestore access failed'), {code:response.status === 403 ? 'permission-denied' : 'unavailable'});
         if (!cancelled) setCheck({uid: user.uid, error: null});
       } catch (error) {

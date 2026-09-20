@@ -24,11 +24,11 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
-  // If a non-admin signs in, immediately revoke session so no public user data is retained
+  // Reject non-owner admin sessions; Firebase Auth may still retain an account record.
   useEffect(() => {
     if (user && !access.loading && !access.isAdmin && !access.isEditor) {
-      setError('Access restricted: Only the verified site owner can sign in. No user data is stored.');
-      void logOut();
+      setError('Access restricted: Only rakeshpatel0944@gmail.com can access the admin panel.');
+      void logOut().catch(() => setError('Access denied. Unable to sign out; please try again.'));
     }
   }, [user, access.loading, access.isAdmin, access.isEditor, logOut]);
 
@@ -50,7 +50,7 @@ export default function LoginPage() {
           <LocalizedElement as="p">ADMINISTRATION ACCESS</LocalizedElement>
           <LocalizedElement as="h1">Admin Sign In</LocalizedElement>
           <LocalizedElement as="span">
-            Authentication is restricted solely to the verified site owner. Public user registration and accounts are disabled.
+            Admin access requires Google sign-in with rakeshpatel0944@gmail.com.
           </LocalizedElement>
         </section>
         <div className="auth-card google-auth-card">

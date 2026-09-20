@@ -15,6 +15,11 @@ service cloud.firestore {
         && request.auth.token.email == 'rakeshpatel0944@gmail.com';
     }
 
+    function validEmail(email) {
+      return email is string && email.size() <= 254
+        && email.matches('[^ @]+@[^ @]+[.][^ @]+');
+    }
+
     // Editorial reviewers (disabled – kept as no-op for future use)
     function isEditor() { return false; }
 
@@ -101,14 +106,14 @@ service cloud.firestore {
     }
 
     // ─── Site configuration (read-only publicly, no public writes) ────────────
-    // seo and settings are now only readable, not writable via client
+    // Only published configuration is public; only the owner can edit it.
     match /seo/{id} {
-      allow read: if true;
-      allow write: if false;
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
     }
     match /settings/{id} {
-      allow read: if true;
-      allow write: if false;
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow write: if isAdmin();
     }
 
     // ─── Admin-only collections ───────────────────────────────────────────────
@@ -117,32 +122,52 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    // Users collection is completely private (managed server-side only)
+    // Owner may inspect accounts; mutations are managed by callable functions.
     match /users/{userId} {
-      allow read, write: if false;
+      allow read: if isAdmin();
+      allow write: if false;
     }
 
     // ─── Enquiries / leads ────────────────────────────────────────────────────
     match /leads/{id} {
       // Anyone can submit an enquiry but cannot pre-fill admin fields
-      allow create: if request.resource.data.status == 'New'
+      allow create: if request.resource.data.keys().hasOnly(['name', 'phone', 'email', 'city', 'state', 'tractorId', 'tractorName', 'dealerId', 'message', 'source', 'userId', 'status', 'assignedTo', 'notes', 'createdAt', 'updatedAt'])
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && (!('userId' in request.resource.data) || (signedIn() && request.resource.data.userId == request.auth.uid))
+        && request.resource.data.get('message', '') is string
+        && request.resource.data.get('message', '').size() <= 10000
+        && request.resource.data.status == 'New'
         && request.resource.data.assignedTo == null
         && request.resource.data.notes == ''
         && request.resource.data.name is string
         && request.resource.data.name.size() >= 2
+        && request.resource.data.name.size() <= 200
         && request.resource.data.phone is string
-        && request.resource.data.phone.size() >= 8;
+        && request.resource.data.phone.size() >= 8
+        && request.resource.data.phone.size() <= 30;
       allow read, update, delete: if isAdmin();
     }
     match /contactMessages/{id} {
-      allow create: if request.resource.data.email is string
+      allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'message', 'status', 'createdAt'])
+        && request.resource.data.status == 'New'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2
+        && request.resource.data.name.size() <= 200
+        && validEmail(request.resource.data.email)
+        && request.resource.data.get('phone', '') is string
+        && request.resource.data.get('phone', '').size() <= 30
         && request.resource.data.message is string
-        && request.resource.data.message.size() >= 5;
+        && request.resource.data.message.size() >= 5
+        && request.resource.data.message.size() <= 10000;
       allow read, update, delete: if isAdmin();
     }
     match /newsletterSubscribers/{id} {
-      allow create: if request.resource.data.email is string
-        && request.resource.data.email.size() >= 5;
+      allow create: if request.resource.data.keys().hasOnly(['email', 'status', 'createdAt'])
+        && request.resource.data.status == 'active'
+        && request.resource.data.createdAt == request.time
+        && validEmail(request.resource.data.email);
       allow read, update, delete: if isAdmin();
     }
 
@@ -155,7 +180,10 @@ service cloud.firestore {
         && request.auth.uid == request.resource.data.userId;
     }
     match /comparisons/{id} {
-      allow read, create, update, delete: if signedIn()
+      allow read, delete: if signedIn() && resource.data.userId == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if signedIn()
+        && resource.data.userId == request.auth.uid
         && request.resource.data.userId == request.auth.uid;
     }
     match /reviews/{id} {

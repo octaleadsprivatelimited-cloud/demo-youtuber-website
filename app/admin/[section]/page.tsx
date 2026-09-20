@@ -9,7 +9,6 @@ import {adminSections} from '@/config/admin-sections';
 export default function AdminSectionPage(){
   const {section:key}=useParams<{section:string}>();
   if(['promotions','banners','advertisements'].includes(key))return <AdminShell><PromotionsAdmin key={key} initialType={key==='advertisements'?'advertisements':'banners'}/></AdminShell>;
-  if (['seo', 'settings'].includes(key)) return <AdminShell><LocalizedElement as="div" className="empty-state"><LocalizedElement as="h1">Section removed</LocalizedElement><LocalizedElement as="a" href="/admin">Return to dashboard</LocalizedElement></LocalizedElement></AdminShell>;
   const section=adminSections[key];
   return <AdminShell>{section?<AdminCrud key={key} section={section}/>:<LocalizedElement as="div" className="empty-state"><LocalizedElement as="h1">Section not found</LocalizedElement><LocalizedElement as="a" href="/admin">Return to dashboard</LocalizedElement></LocalizedElement>}</AdminShell>;
 }

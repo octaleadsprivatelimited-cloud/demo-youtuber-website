@@ -26,9 +26,11 @@ export const adminNavigationGroups: { id: string; label: string; items: AdminNav
   },
   {
     id: 'enquiries', label: 'Enquiries & audience',
-    items: [{ href: '/admin/leads', label: 'Lead CRM', collection: 'leads', dashboard: true }, section('contact-messages')],
+    items: [{ href: '/admin/leads', label: 'Lead CRM', collection: 'leads', dashboard: true }, section('contact-messages'), section('subscribers')],
   },
 ];
+
+adminNavigationGroups.push({id:'configuration',label:'Website configuration',items:[section('settings'),section('seo')]});
 
 export const adminDashboardItems = adminNavigationGroups
   .flatMap(group => group.items)

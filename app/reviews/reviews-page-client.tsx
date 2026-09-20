@@ -33,7 +33,7 @@ export default function ReviewsPage() {
         <header className="page-hero">
           <LocalizedElement as="p">RJ TRACTOR TECHS EDITORIAL</LocalizedElement>
           <LocalizedElement as="h1">Find your next tractor.<br />Read the full review.</LocalizedElement>
-          <LocalizedElement as="span">Our editorial team's verdicts, scores and practical buying advice, with the assessment method explained in every review.</LocalizedElement>
+          <LocalizedElement as="span">Our editorial team&apos;s verdicts, scores and practical buying advice, with the assessment method explained in every review.</LocalizedElement>
         </header>
         <section className="editorial-section">
           <LocalizedElement as="div" className="editorial-filters">

@@ -162,7 +162,7 @@ test('new hero uses the saved image, clears removed slides and keeps functional 
  assert.ok(live.includes('src="/saved-hero.jpg"'));
  assert.ok(live.includes('Search tractor, brand or model'));assert.ok(live.includes('Under 40 HP'));
  const removed=render(HomepageHero,{...props,slides:[]});
- assert.ok(!removed.includes('/saved-hero.jpg'));assert.ok(removed.includes('src="/hero/tractor-hero-cinematic.png"'));
+ assert.ok(!removed.includes('/saved-hero.jpg'));assert.ok(!removed.includes('src="/hero/tractor-hero-cinematic.png"'));
  assert.ok(removed.includes('Find the tractor that fits your work.'));
  const edited=render(HomepageHero,{...props,slides:[{id:'1',image:'/updated-hero.jpg'}]});
  assert.ok(edited.includes('/updated-hero.jpg'));assert.ok(!edited.includes('/saved-hero.jpg'));
@@ -194,7 +194,7 @@ test('the partner strip, video carousel and tractor section stay together below 
  const defaults=resolveHomepageSections([]);assert.deepEqual(defaults.slice(0,4).map(item=>item.key),['hero','partners','videos','tractors']);assert.ok(!defaults.some(item=>item.key==='youtube'));
  assert.ok(!resolveHomepageSections([{id:'y',key:'youtube',visible:true,title:'Should not return'}]).some(item=>item.key==='youtube'));
  const overridden=resolveHomepageSections([{id:'t',key:'tractors',order:99,title:'Our tractors'},{id:'i',key:'introduction',order:3},{id:'p',key:'partners',visible:false}]);
- assert.deepEqual(overridden.slice(0,3).map(item=>item.key),['hero','videos','tractors']);assert.equal(overridden.filter(item=>item.key==='tractors').length,1);assert.equal(overridden.find(item=>item.key==='tractors').title,'Our tractors');assert.ok(!overridden.some(item=>item.key==='partners'));
+ assert.equal(overridden.at(-1).key,'tractors');assert.equal(overridden[0].key,'hero');assert.equal(overridden.filter(item=>item.key==='tractors').length,1);assert.equal(overridden.find(item=>item.key==='tractors').title,'Our tractors');assert.ok(!overridden.some(item=>item.key==='partners'));
  const noTractors=resolveHomepageSections([{id:'t',key:'tractors',visible:false}]);assert.deepEqual(noTractors.slice(0,3).map(item=>item.key),['hero','partners','videos']);assert.ok(!noTractors.some(item=>item.key==='tractors'));
 });
 
@@ -260,4 +260,17 @@ test('partner carousel starts moving on mount when reduced motion is disabled',(
   if(previousWindow)Object.defineProperty(globalThis,'window',previousWindow);else delete globalThis.window;
   if(previousObserver)Object.defineProperty(globalThis,'ResizeObserver',previousObserver);else delete globalThis.ResizeObserver;
  }
+});
+
+
+test('hero renders CMS copy, safe buttons, image framing and blank-image removal',()=>{
+ const {HomepageHero}=loadShowcase('components/HomepageHero.tsx');
+ const slide={id:'custom',title:'Admin label',heading:'Harvest offer',description:'Saved supporting text',image:'/saved.png',imageAlt:'Tractor in a field',imageFit:'contain',imagePosition:'right',backgroundColor:'#abcdef',ctaLabel:'View offer',ctaUrl:'/tractors?offer=1',secondaryCtaLabel:'Contact owner',secondaryCtaUrl:'/contact'};
+ const props={title:'Default heading',slides:[slide],index:0,onSlide:()=>{}};
+ const html=render(HomepageHero,props);
+ for(const text of ['Harvest offer','Saved supporting text','Tractor in a field','object-fit:contain','object-position:right','href="/tractors?offer=1"','View offer','Contact owner'])assert.ok(html.includes(text),text);
+ assert.ok(!html.includes('Default heading'));
+ const cleared=render(HomepageHero,{...props,slides:[{...slide,image:'',description:'',ctaLabel:'',ctaUrl:'',secondaryCtaLabel:'',secondaryCtaUrl:''}]});
+ assert.ok(!cleared.includes('/saved.png'));assert.ok(!cleared.includes('Saved supporting text'));assert.ok(!cleared.includes('View offer'));
+ const unsafe=render(HomepageHero,{...props,slides:[{...slide,ctaUrl:'javascript:alert(1)'}]});assert.ok(!unsafe.includes('javascript:'));
 });

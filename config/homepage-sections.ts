@@ -13,13 +13,10 @@ export const homepageSections = [
 export function resolveHomepageSections(records: { id: string; [key: string]: unknown }[]) {
   const resolved = homepageSections.map((section, index) => {
     const override = records.find(row => row.key === section.key);
-    return { ...section, title: String(override?.title || section.title), order: Number(override?.order ?? index + 1), visible: typeof override?.visible === 'boolean' ? override.visible : section.visible };
+    return { ...section, title: String(override?.title || section.title), order: Number(override?.order ?? ({hero:1,partners:2,videos:3,tractors:4,reviews:5,brands:6,compare:7,articles:8,promotions:9,introduction:10}[section.key] ?? index + 1)), visible: typeof override?.visible === 'boolean' ? override.visible : section.visible };
   }).filter(section => section.visible).sort((a, b) => a.order - b.order);
-  const videos = resolved.find(section => section.key === 'videos');
-  const partners = resolved.find(section => section.key === 'partners');
-  const tractors = resolved.find(section => section.key === 'tractors');
-  const sections = resolved.filter(section => !['videos', 'partners', 'tractors'].includes(section.key));
-  const pinned = [partners, videos, tractors].filter((section): section is NonNullable<typeof section> => Boolean(section));
-  if (pinned.length) sections.splice(sections.findIndex(section => section.key === 'hero') + 1, 0, ...pinned);
-  return sections;
+  // Retain the established layout until the owner explicitly configures ordering.
+  if (records.some(record => Number(record.order) > 0)) return resolved;
+  const pinnedKeys = ['hero', 'partners', 'videos', 'tractors'];
+  return [...pinnedKeys.flatMap(key => resolved.filter(section => section.key === key)), ...resolved.filter(section => !pinnedKeys.includes(section.key))];
 }

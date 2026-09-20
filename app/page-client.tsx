@@ -29,6 +29,7 @@ import '@/app/automotive-home.css';
 export default function Home() {
   const [heroSlides, setHeroSlides] = useState<HeroSlide[]>([]);
   const [heroIndex, setHeroIndex] = useState(0);
+  const [heroPaused, setHeroPaused] = useState(false);
   const [partners, setPartners] = useState<Partner[]>([]);
   const { items: tractors, loading: tractorsLoading, error: tractorsError, retry: retryTractors } =
     useTractorCatalog();
@@ -48,13 +49,13 @@ export default function Home() {
   }), []);
   useEffect(() => subscribePartners(setPartners), []);
   useEffect(() => {
-    if (heroSlides.length < 2) return;
-    const timer = window.setInterval(
+    if (heroSlides.length < 2 || heroPaused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setTimeout(
       () => setHeroIndex((index) => (index + 1) % heroSlides.length),
-      3000,
+      Math.min(30, Math.max(3, Number(heroSlides[heroIndex]?.duration) || 3)) * 1000,
     );
-    return () => window.clearInterval(timer);
-  }, [heroSlides.length]);
+    return () => window.clearTimeout(timer);
+  }, [heroSlides, heroIndex, heroPaused]);
 
   useEffect(() => {
     const root = document.querySelector<HTMLElement>('.reference-home > main');
@@ -92,7 +93,7 @@ export default function Home() {
   }, []);
 
   function renderSection(key: string, title: string) {
-    if (key === 'hero') return <HomepageHero title={title} slides={heroSlides} index={heroIndex} onSlide={setHeroIndex} brands={brands} />;
+    if (key === 'hero') return <HomepageHero title={title} slides={heroSlides} index={heroIndex} onSlide={setHeroIndex} paused={heroPaused} onPause={() => setHeroPaused(value => !value)} brands={brands} />;
     if (key === 'tractors') return <TractorShowcase title={title} tractors={tractors} loading={tractorsLoading} error={tractorsError} onRetry={retryTractors} design="reference" />;
     if (key === 'reviews') return <EditorialReviews title={title} />;
     if (key === 'compare') return <HomeCompare title={title} />;

@@ -5,3 +5,5 @@ allowBuilds:
   workerd: true
   '@firebase/util': true
   protobufjs: true
+minimumReleaseAgeExclude:
+  - '@cloudflare/workers-types@5.20260920.1'

@@ -27,7 +27,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   if (!isFirebaseConfigured) return <main className="crm-page"><SetupNotice/></main>;
   if (access.loading) return <LocalizedElement as="div" className="detail-loading">Checking admin access…</LocalizedElement>;
   if (!access.user) return <main className="admin-gate"><LocalizedElement as="h1">Admin sign-in required</LocalizedElement><Link href="/login">Sign in →</Link></main>;
-  if (!access.isAdmin && !(access.isEditor && path === '/admin/expert-reviews')) return <main className="admin-gate"><LocalizedElement as="h1">Access restricted</LocalizedElement><LocalizedElement as="p">This section is restricted to administrators. Editorial team members can manage reviews.</LocalizedElement><Link href="/admin/expert-reviews">Editorial reviews</Link><Link href="/">Return to website</Link></main>;
+  if (!access.isAdmin) return <main className="admin-gate"><LocalizedElement as="h1">Access restricted</LocalizedElement><LocalizedElement as="p">Only the verified owner, rakeshpatel0944@gmail.com, can access this admin panel.</LocalizedElement><AdminLogout /><Link href="/">Return to website</Link></main>;
 
   function navLink(href: string, label: string) {
     return <Link key={href} className={path === href ? 'active' : ''} href={href}

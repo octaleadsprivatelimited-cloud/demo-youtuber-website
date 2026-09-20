@@ -6,7 +6,7 @@ export function slugify(value: unknown) {
 export function prepareAdminRecord(collection: string, input: Record<string, unknown>) {
   const data: Record<string, unknown> = Object.fromEntries(Object.entries(input).filter(([key, value]) => !['id', 'createdAt', 'updatedAt'].includes(key) && value !== undefined));
   for (const [key, value] of Object.entries(data)) if (typeof value === 'string' && !key.toLowerCase().includes('image')) data[key] = value.trim();
-  if (collection !== 'contactMessages' && collection !== 'expertReviews') data.status = collection === 'reviews' ? (['pending','approved','rejected'].includes(String(data.status))?data.status:'approved') : collection === 'newsletterSubscribers' ? data.status || 'active' : 'published';
+  if (collection !== 'contactMessages' && collection !== 'expertReviews') data.status = collection === 'reviews' ? (['pending','approved','rejected'].includes(String(data.status))?data.status:'approved') : collection === 'newsletterSubscribers' ? data.status || 'active' : (['draft','published','archived','approved'].includes(String(data.status)) ? data.status : 'published');
   if (!['settings', 'homepageSections', 'contactMessages', 'newsletterSubscribers'].includes(collection) && !data.slug && (data.title || data.model || data.name)) data.slug = slugify(data.title || data.model || data.name);
   if (['heroSlides', 'partners'].includes(collection)) {
     if (!String(data.title ?? '').trim()) throw new Error('Please enter a name.');
@@ -14,6 +14,13 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
     data.order = Number(data.order);
     if (collection === 'heroSlides' && data.backgroundColor && !/^#[0-9a-f]{6}$/i.test(String(data.backgroundColor))) throw new Error('Use a six-digit colour such as #ffffff.');
   }
+  if (collection === 'heroSlides') {
+    if (data.duration !== '' && data.duration != null && (!Number.isFinite(Number(data.duration)) || Number(data.duration) < 3 || Number(data.duration) > 30)) throw new Error('Slide duration must be between 3 and 30 seconds.');
+    for (const [label, url] of [['ctaLabel','ctaUrl'],['secondaryCtaLabel','secondaryCtaUrl']]) {
+      if (Boolean(data[label]) !== Boolean(data[url])) throw new Error('Enter both button text and its link, or clear both.');
+    }
+  }
+  if (collection === 'settings' && ['youtube','instagram','facebook'].includes(String(data.key)) && data.value && !/^https?:\/\//i.test(String(data.value))) throw new Error('Social links must start with https:// or http://.');
   if (collection === 'partners' && !String(data.image ?? '').trim()) throw new Error('Please upload a partner logo before saving.');
   if (['brands', 'equipment', 'dealers'].includes(collection)) data.name = data.title ?? data.name;
   if (collection === 'tractors') {
@@ -56,7 +63,7 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
   }
   if(collection==='reviews'&&(!Number.isInteger(Number(data.rating))||Number(data.rating)<1||Number(data.rating)>5))throw new Error('Review rating must be a whole number from 1 to 5.');
   if(collection==='expertReviews'&&data.score!==''&&data.score!==undefined&&(Number(data.score)<0||Number(data.score)>10))throw new Error('Review score must be between 0 and 10.');
-  for(const key of ['ctaUrl','destinationUrl']){
+  for(const key of ['ctaUrl','secondaryCtaUrl','destinationUrl']){
     if(data[key]&&!/^(https?:\/\/|\/(?!\/))/i.test(String(data[key])))throw new Error('Use a website URL starting with https:// or a local path starting with /.');
   }
   if(collection==='seo'&&!/^\/(?!\/)[^?#]*$/.test(String(data.path??'')))throw new Error('Enter a page path such as /tractors.');

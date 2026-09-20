@@ -1407,3 +1407,5 @@ footer .footer-bottom .footer-copyright a.footer-developer-credit { display: inl
 footer .footer-bottom .footer-copyright a.footer-developer-credit strong { font-weight: 800; }
 footer .footer-bottom .footer-copyright a.footer-developer-credit:hover { color: #fff0dc; text-decoration: underline; text-underline-offset: 3px; }
 footer .footer-bottom .footer-copyright a.footer-developer-credit:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+
+.reference-home .ref-home-slide-controls .hero-playback-toggle { width: 36px; height: 36px; border: 1px solid #dce1e8; border-radius: 50%; background: #fff; color: #0b2c52; font-size: 14px; display: grid; place-items: center; padding: 0; }

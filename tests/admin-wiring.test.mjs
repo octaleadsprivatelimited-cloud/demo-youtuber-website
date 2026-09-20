@@ -134,7 +134,7 @@ test('homepage visibility, settings, SEO and promotions save without duplicate k
   await admin.saveAdminRecord('advertisements',undefined,{title:'Sponsor',placement:'homepage',destinationUrl:'https://example.test'});
   assert.equal((await site.listPublicRecords('banners')).length,1);assert.equal((await site.listPublicRecords('advertisements')).length,1);
   const links=navigation.flatMap(group=>group.items.map(item=>item.href));assert.equal(new Set(links).size,links.length);
-  assert.ok(links.includes('/admin/promotions'));assert.ok(!links.includes('/admin/banners'));assert.ok(!links.includes('/admin/advertisements'));assert.ok(!links.includes('/admin/subscribers'));
+  assert.ok(links.includes('/admin/promotions'));assert.ok(!links.includes('/admin/banners'));assert.ok(!links.includes('/admin/advertisements'));assert.ok(links.includes('/admin/subscribers'));assert.ok(links.includes('/admin/settings'));assert.ok(links.includes('/admin/seo'));
   for(const key of ['reviews']){
     assert.ok(!links.includes('/admin/'+key));
     assert.equal(sections[key],undefined);
@@ -444,4 +444,24 @@ test('homepage tractor flags can be added and re-edited and update the public ca
  const updated=await reviews.getTractorsByIds([id]);assert.equal(selectShowcaseTractors(updated,'popular').length,0);assert.equal(selectShowcaseTractors(updated,'latest').length,0);assert.equal(selectShowcaseTractors(updated,'upcoming').length,1);
  await admin.saveAdminRecord('tractors',id,{upcoming:false},saved);assert.equal(selectShowcaseTractors(await reviews.getTractorsByIds([id]),'latest').length,1);
  await admin.removeAdminRecord('tractors',id);await admin.removeAdminRecord('brands',brandId);
+});
+
+
+test('hero draft, publish, edit, archive and delete preserve owner controls',async()=>{
+ const input={title:'Owner controlled slide',order:2,status:'draft',image:'/hero-one.png',heading:'Owner headline',description:'Owner description',ctaLabel:'Browse',ctaUrl:'/tractors',duration:7,imageFit:'contain',imagePosition:'left'};
+ const id=await admin.saveAdminRecord('heroSlides',undefined,input);
+ assert.ok(!(await site.listPublicRecords('heroSlides')).some(row=>row.id===id));
+ await admin.saveAdminRecord('heroSlides',id,{status:'published'});
+ let row=(await site.listPublicRecords('heroSlides')).find(row=>row.id===id);
+ assert.equal(row.heading,input.heading);assert.equal(row.duration,7);assert.equal(row.imageFit,'contain');
+ await admin.saveAdminRecord('heroSlides',id,{image:'/hero-two.png',description:'',ctaLabel:'',ctaUrl:''});
+ row=await admin.getAdminRecord('heroSlides',id);assert.equal(row.image,'/hero-two.png');assert.equal(row.description,'');assert.equal(row.ctaUrl,'');assert.equal(row.heading,input.heading);
+ await assert.rejects(admin.saveAdminRecord('heroSlides',id,{duration:1}),/3 and 30/);
+ await assert.rejects(admin.saveAdminRecord('heroSlides',id,{ctaLabel:'Broken'}),/both button/);
+ await assert.rejects(admin.saveAdminRecord('heroSlides',id,{ctaLabel:'Unsafe',ctaUrl:'javascript:alert(1)'}),/website URL/);
+ await admin.saveAdminRecord('heroSlides',id,{status:'archived'});
+ assert.ok(!(await site.listPublicRecords('heroSlides')).some(row=>row.id===id));
+ await admin.saveAdminRecord('heroSlides',id,{heading:'Still archived'});
+ assert.equal((await admin.getAdminRecord('heroSlides',id)).status,'archived');
+ await admin.removeAdminRecord('heroSlides',id);assert.equal(await admin.getAdminRecord('heroSlides',id),null);
 });

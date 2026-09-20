@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Local-only migration snapshot
 data/local-firestore-import.json
+
+# Firebase emulator logs
+*-debug.log

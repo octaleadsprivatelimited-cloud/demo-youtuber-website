@@ -3,7 +3,7 @@ import { LocalizedElement } from '@/components/LocalizedElement';
 
 import { useId, useState } from 'react';
 import { tractorBaseFields, tractorSpecGroups, tractorSpecFields, tractorSpecificationSources, type TractorSpecField } from '@/config/tractor-specifications';
-import type { AdminField } from '@/config/admin-sections';
+import { adminSections, type AdminField } from '@/config/admin-sections';
 import type { AdminRecord } from '@/services/admin';
 import { parseTractorSpecificationCsv, tractorSpecificationTemplate } from '@/lib/tractor-specification-csv';
 import { specificationLabel } from '@/lib/tractor-specifications';
@@ -45,7 +45,7 @@ export function TractorFields({ form, sources, disabled, onChange, onImport, onB
   }
   return <LocalizedElement as="div" className="tractor-spec-editor" onInvalidCapture={event => { const details = (event.target as HTMLElement).closest('details'); if (details) details.open = true; }}>
     <LocalizedElement as="p" className="tractor-spec-intro">Only Brand and Model are required. All specifications, prices and images are optional. You can edit or clear them after saving. Blank specifications appear as “Not provided” on the website. Popular and Upcoming control the homepage tabs. Available new models appear in Latest automatically. Enable In demand only when appropriate.</LocalizedElement>
-    <LocalizedElement as="div" className="cms-fields">{tractorBaseFields.map(fieldInput)}{fieldInput({key:'descriptionTe',label:'Overview — Telugu (optional)',type:'textarea'})}</LocalizedElement>
+    <LocalizedElement as="div" className="cms-fields">{tractorBaseFields.map(fieldInput)}{adminSections.tractors.fields.filter(field => field.key === 'status').map(fieldInput)}{fieldInput({key:'descriptionTe',label:'Overview — Telugu (optional)',type:'textarea'})}</LocalizedElement>
     <section className="tractor-csv-import" aria-label="Upload tractor specifications"><LocalizedElement as="div"><LocalizedElement as="h3">Upload specifications</LocalizedElement><LocalizedElement as="p">Use a two-column CSV for this tractor. Preview it before applying. Blank values are ignored.</LocalizedElement></LocalizedElement><LocalizedElement as="div" className="tractor-import-actions"><LocalizedElement as="a" download="tractor-specifications-template.csv" href={'data:text/csv;charset=utf-8,' + encodeURIComponent(tractorSpecificationTemplate())}>Download CSV template ↓</LocalizedElement><LocalizedElement as="label">Choose CSV<LocalizedElement as="input" type="file" accept=".csv,text/csv" disabled={disabled} onChange={event => { void read(event.target.files?.[0]); event.target.value = ''; }} /></LocalizedElement></LocalizedElement>
       {importError && <LocalizedElement as="p" className="cms-error" role="alert">{importError}</LocalizedElement>}
       {notice && <LocalizedElement as="p" className="cms-notice" role="status">{notice}</LocalizedElement>}

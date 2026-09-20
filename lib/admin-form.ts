@@ -24,7 +24,12 @@ export function prepareAdminForm(section: AdminSection, item?: Row | null, items
     if (field.key === 'order' && !item) next.order = Math.max(0, ...items.map(row => Number(row.order) || 0)) + 1;
     if (next[field.key] == null) next[field.key] = field.type === 'boolean' ? field.key === 'visible' : '';
   }
-  if (section.collection === 'expertReviews' && !next.status) next.status = 'draft';
+  if (section.fields.some(field => field.key === 'status') && !next.status) next.status = section.collection === 'expertReviews' ? 'draft' : 'published';
+  if (section.collection === 'heroSlides') {
+    if (!next.imageFit) next.imageFit = 'cover';
+    if (!next.imagePosition) next.imagePosition = 'center';
+    if (!next.duration) next.duration = 3;
+  }
   if (!item) {
     if (section.collection === 'homepageSections') next.visible = true;
   }
