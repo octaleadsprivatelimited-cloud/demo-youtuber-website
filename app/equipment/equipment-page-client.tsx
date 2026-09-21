@@ -71,7 +71,7 @@ export default function EquipmentPage() {
           ) : (
             <LocalizedElement as="div" className="equipment-grid">
               {shown.map((item) => (
-                <article key={item.id}>
+                <article key={item.id} className="detail-card"><LocalizedElement as="a" className="card-detail-link" href={"/equipment/"+item.categorySlug+"/"+item.slug} aria-label={"View " + item.name}/>
                   <LocalizedElement as="div" style={item.image ? { backgroundImage: `url(${item.image})` } : undefined} />
                   <section>
                     <LocalizedElement as="p">

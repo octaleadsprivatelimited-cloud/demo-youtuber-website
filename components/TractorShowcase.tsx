@@ -9,7 +9,7 @@ import '@/app/tractor-showcase.css';
 export function ShowcaseTractorCard({ tractor, design = 'default' }: { tractor: Tractor; design?: 'default' | 'reference' }) {
   const [failedImage, setFailedImage] = useState('');
   const href = '/tractor/' + encodeURIComponent(tractor.brandSlug) + '/' + encodeURIComponent(tractor.slug);
-  return <article className="showcase-tractor-card">
+  return <article className="showcase-tractor-card detail-card"><LocalizedElement as="a" className="card-detail-link" href={href} aria-label={"View " + tractor.name}/>
     <LocalizedElement as="a" href={href} className="showcase-tractor-photo" aria-label={'View ' + tractor.name}>
       {tractor.image && tractor.image !== failedImage ? <LocalizedElement as="img" src={tractor.image} alt={tractor.name} loading="lazy" width={480} height={280} onError={() => setFailedImage(tractor.image || '')}/> : <LocalizedElement as="span">Image not added</LocalizedElement>}
     </LocalizedElement>

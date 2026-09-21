@@ -111,7 +111,7 @@ const showcaseBase={id:'one',name:'Actual tractor',slug:'actual-tractor',brandSl
 test('reference tractor section renders five cards, real specifications and correct price links',()=>{
  const tractors=Array.from({length:7},(_,index)=>({...showcaseBase,id:String(index),name:'Tractor '+index,slug:'tractor-'+index,inDemand:index===0}));
  const html=render(TractorShowcase,{title:'Tractors in 2026',tractors});
- assert.ok(html.includes('Tractors in 2026'));assert.equal((html.match(/class="showcase-tractor-card"/g)||[]).length,5);
+ assert.ok(html.includes('Tractors in 2026'));assert.equal((html.match(/class="showcase-tractor-card detail-card"/g)||[]).length,5);
  assert.equal((html.match(/role="tab"/g)||[]).length,3);assert.ok(html.includes('aria-selected="true"'));
  assert.ok(html.includes('47 HP'));assert.ok(html.includes('2979 CC'));
  assert.ok(html.includes('/tractor/actual-brand/tractor-0#price'));assert.ok(html.includes('View All Popular Tractors'));
@@ -129,7 +129,7 @@ test('showcase tabs use saved classifications, exclude unpublished and used mode
 test('selected homepage design renders five CMS cards with working specification links',()=>{
  const tractors=Array.from({length:6},(_,index)=>({...showcaseBase,id:String(index),slug:'tractor-'+index,name:'Saved tractor '+index}));
  const html=render(TractorShowcase,{title:'Tractors in 2026',tractors,design:'reference'});
- assert.equal((html.match(/class="showcase-tractor-card"/g)||[]).length,5);
+ assert.equal((html.match(/class="showcase-tractor-card detail-card"/g)||[]).length,5);
  assert.ok(html.includes('View specifications'));
  assert.ok(html.includes('href="/tractor/actual-brand/tractor-3"'));
  assert.ok(html.includes('Saved tractor 4'));assert.ok(!html.includes('Saved tractor 5'));
@@ -183,9 +183,9 @@ test('homepage hero search submits the catalog search contract',()=>{
 });
 
 test('showcase has honest empty, loading and error states without fabricated specifications or badges',()=>{
- const empty=render(TractorShowcase,{title:'Tractors',tractors:[]});assert.ok(empty.includes('No popular tractors listed yet.'));assert.ok(!empty.includes('class="showcase-tractor-card"'));
+ const empty=render(TractorShowcase,{title:'Tractors',tractors:[]});assert.ok(empty.includes('No popular tractors listed yet.'));assert.ok(!empty.includes('class="showcase-tractor-card detail-card"'));
  const loading=render(TractorShowcase,{title:'Tractors',tractors:[],loading:true});assert.ok(loading.includes('Loading tractors'));assert.ok(!loading.includes('No popular'));
- const error=render(TractorShowcase,{title:'Tractors',tractors:[showcaseBase],error:'Unavailable',onRetry:()=>{}});assert.ok(error.includes('Try again'));assert.ok(!error.includes('class="showcase-tractor-card"'));
+ const error=render(TractorShowcase,{title:'Tractors',tractors:[showcaseBase],error:'Unavailable',onRetry:()=>{}});assert.ok(error.includes('Try again'));assert.ok(!error.includes('class="showcase-tractor-card detail-card"'));
  const missing=render(ShowcaseTractorCard,{tractor:{...showcaseBase,hp:0,engineCapacityCc:'',image:'',inDemand:false}});assert.ok(missing.includes('HP not listed'));assert.ok(missing.includes('CC not listed'));assert.ok(missing.includes('Image not added'));assert.ok(!missing.includes('class="showcase-demand"'));
 });
 

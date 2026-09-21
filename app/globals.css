@@ -1185,3 +1185,9 @@ body::before { content:''; position:fixed; z-index:-1; inset:0; pointer-events:n
 }
 
 .category-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}.category-links a{border:1px solid #dce1e7;border-radius:18px;padding:6px 14px;background:white;color:#253448;}.owner-reviews article{padding:18px 0;border-bottom:1px solid #e2e8f0;}.brand-mark img{width:100%;height:100%;object-fit:contain;}
+
+/* Make the whole product card a native link while retaining independent actions. */
+.detail-card { position: relative; isolation: isolate; }
+.detail-card > a.card-detail-link { position: absolute; inset: 0; z-index: 1; border: 0; margin: 0; padding: 0; background: transparent; }
+.detail-card a:not(.card-detail-link), .detail-card button { position: relative; z-index: 2; }
+.detail-card > a.card-detail-link:focus-visible { outline: 3px solid var(--accent, #c4352b); outline-offset: -3px; border-radius: inherit; }

@@ -6,7 +6,7 @@ import { tractorPrice } from '@/lib/tractor-specifications';
 
 
 export function TractorCard({ tractor, duplicate=false }: { tractor: Tractor; duplicate?:boolean }) {
-  return <article className="tractor-card" aria-hidden={duplicate||undefined} inert={duplicate||undefined}>
+  return <article className="tractor-card detail-card" aria-hidden={duplicate||undefined} inert={duplicate||undefined}><LocalizedElement as="a" className="card-detail-link" href={`/tractor/${tractor.brandSlug}/${tractor.slug}`} aria-label={"View " + tractor.name}/>
     <LocalizedElement as="div" className="card-image" style={tractor.image ? { backgroundImage: `url(${tractor.image})` } : undefined}>
       <LocalizedElement as="span">{tractor.featured ? 'FEATURED' : tractor.driveType ?? 'TRACTOR'}</LocalizedElement><FavouriteButton compact itemId={tractor.id} itemType="tractor" title={tractor.name} href={`/tractor/${tractor.brandSlug}/${tractor.slug}`} image={tractor.image} />
     </LocalizedElement>
