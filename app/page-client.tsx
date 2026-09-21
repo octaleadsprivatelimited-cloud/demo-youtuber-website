@@ -115,7 +115,7 @@ export default function Home() {
       <main>{resolveHomepageSections(sectionRecords).map((section) => (
         <HomeSection key={section.key}>{renderSection(section.key, section.title)}</HomeSection>
       ))}</main>
-      <LocalizedElement as="div" className="home-v2 home-footer">
+      <LocalizedElement as="div" className="rj-footer-shell">
         <SiteFooter />
       </LocalizedElement>
     </LocalizedElement>
