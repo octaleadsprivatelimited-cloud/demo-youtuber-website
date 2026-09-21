@@ -60,6 +60,7 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
     const raw=String(data.youtubeId ?? data.youtubeVideoId ?? '').trim();
     const videoId=youtubeVideoId(raw);
     if ((collection==='videos' || raw) && !videoId) throw new Error('Enter a valid YouTube video URL or 11-character ID.');
+    if (collection==='videos' && data.youtubeVideoId && data.youtubeVideoId!==videoId && /^https:\/\/(?:i\.ytimg\.com|img\.youtube\.com)\/vi\//.test(String(data.thumbnail ?? ''))) data.thumbnail='';
     data.youtubeVideoId=videoId; data.youtubeId=videoId;
   }
   if(collection==='reviews'&&(!Number.isInteger(Number(data.rating))||Number(data.rating)<1||Number(data.rating)>5))throw new Error('Review rating must be a whole number from 1 to 5.');

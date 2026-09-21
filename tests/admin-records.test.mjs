@@ -174,3 +174,8 @@ test('tractor videos are optional, support YouTube URLs, and can be removed', ()
   assert.throws(()=>prepareAdminRecord('tractors',{youtubeId:'https://example.com/abcdefghijk'}),/valid YouTube/);
   assert.throws(()=>prepareAdminRecord('videos',{title:'Missing video',youtubeId:''}),/valid YouTube/);
 });
+test('replacing a YouTube video drops its old automatic thumbnail but keeps custom uploads',()=>{
+ const data={title:'Changed',youtubeVideoId:'abcdefghijk',youtubeId:'12345678901',thumbnail:'https://i.ytimg.com/vi/abcdefghijk/hqdefault.jpg'};
+ assert.equal(prepareAdminRecord('videos',data).thumbnail,'');
+ assert.equal(prepareAdminRecord('videos',{...data,thumbnail:'/api/media/custom'}).thumbnail,'/api/media/custom');
+});

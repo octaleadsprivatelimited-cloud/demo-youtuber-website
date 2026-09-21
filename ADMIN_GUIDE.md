@@ -65,3 +65,9 @@ Deleting a video removes its database record and switches video display to **Pub
 Set `NEXT_PUBLIC_SITE_URL=https://www.rjtractortechs.com` in production. Empty, invalid or localhost values fall back to this production origin. `/sitemap.xml` includes public static pages and published CMS detail records; it refreshes on a five-minute revalidation interval and uses saved timestamps for content modification dates. Drafts and private/search pages are excluded. `/robots.txt` points to the absolute sitemap and permits uploaded images while blocking private areas.
 
 Published SEO records supply server-rendered title, description and social-image overrides on static public pages and tractor/article/video/review detail pages. Admin, account and login routes have no-index protection. After deployment, submit `https://www.rjtractortechs.com/sitemap.xml` to Google Search Console and inspect representative URLs; indexing remains Google's decision.
+
+### Homepage video slider
+
+Open **Homepage & promotions → Homepage videos** (`/admin/videos`). When the site is using the channel feed, its current videos are shown with thumbnails and **Edit this video** buttons. **Make current videos editable** saves the feed selection to the library; clicking **Edit this video** also preserves the current selection and opens that video's editor directly. Imports never overwrite existing edits or archived records.
+
+Use **New record** for another YouTube link. Edit the title, thumbnail, URL/ID, **Show in homepage video slider**, **Homepage display order** (lowest first), and publication status. The slider shows the first ten eligible published videos. Turning off homepage visibility keeps the video in the video library. Saving any video switches the site to the managed library, so the automatic feed cannot override the selection. Changing a video URL clears its old automatic YouTube thumbnail; custom uploaded thumbnails remain until explicitly removed or replaced.

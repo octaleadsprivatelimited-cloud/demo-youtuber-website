@@ -95,7 +95,7 @@ export function HomeArticles({ title, articles }: { title: string; articles: Sit
 
 export function HomeVideos({ title, videos, channelUrl }: { title: string; videos: SiteRecord[]; channelUrl?: string }) {
   if (!videos.length && !channelUrl) return null;
-  if (!videos.length) return <section className="home-v2 home-videos"><LocalizedElement as="div" className="home-container"><Heading eyebrow="WATCH & LEARN" title={title} description="Tractor walkthroughs, practical demonstrations and stories from the field." href="/videos" action="Video library"/>
+  if (!videos.filter(video => video.showOnHomepage !== false).length) return <section className="home-v2 home-videos"><LocalizedElement as="div" className="home-container"><Heading eyebrow="WATCH & LEARN" title={title} description="Tractor walkthroughs, practical demonstrations and stories from the field." href="/videos" action="Video library"/>
     <LocalizedElement as="div" className="home-video-empty"><LocalizedElement as="div" className="home-video-empty-image"><LocalizedElement as="img" src="/hero/mahindra-575-di-xp-plus.webp" alt="Red tractor in a field" loading="lazy" width={600} height={400}/></LocalizedElement><LocalizedElement as="div" className="home-video-empty-copy"><LocalizedElement as="img" className="home-youtube-icon" src="/icons/tabler/brand-youtube.svg" alt="" width={46} height={46}/><LocalizedElement as="h3">A closer look at the machines that matter.</LocalizedElement><LocalizedElement as="p">No videos have been added to the library yet. Visit our YouTube channel for tractor reviews and field demonstrations.</LocalizedElement><LocalizedElement as="a" className="home-button" href={channelUrl} target="_blank" rel="noreferrer">Explore the channel <Arrow/></LocalizedElement></LocalizedElement></LocalizedElement>
   </LocalizedElement></section>;
   return <RecentVideoCarousel title={title} videos={videos} channelUrl={channelUrl}/>;
@@ -115,7 +115,7 @@ function videoThumbnail(item: SiteRecord) {
 }
 
 export function RecentVideoCarousel({ title = 'Recent videos on YouTube', videos, channelUrl }: { title?: string; videos: SiteRecord[]; channelUrl?: string }) {
-  const recent = [...videos].sort((a, b) => videoTime(b) - videoTime(a)).slice(0, 10);
+  const recent = videos.filter(video => video.showOnHomepage !== false).sort((a, b) => (Number(a.order) || Number.MAX_SAFE_INTEGER) - (Number(b.order) || Number.MAX_SAFE_INTEGER) || videoTime(b) - videoTime(a)).slice(0, 10);
   const pages = Array.from({ length: Math.ceil(recent.length / 2) }, (_, index) => recent.slice(index * 2, index * 2 + 2));
   const [page, setPage] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);

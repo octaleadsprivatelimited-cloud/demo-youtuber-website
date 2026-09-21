@@ -291,3 +291,10 @@ test('tractor product embed is absent without a video and uses only its saved ID
  assert.ok(html.includes('https://www.youtube-nocookie.com/embed/abcdefghijk'));
  assert.ok(html.includes('https://www.youtube.com/watch?v=abcdefghijk'));
 });
+
+test('homepage video slider respects owner ordering and visibility',()=>{
+ const html=render(HomeVideos,{title:'Owner videos',videos:[{id:'late',slug:'late',title:'Later video',order:8},{id:'hidden',slug:'hidden',title:'Hidden video',order:1,showOnHomepage:false},{id:'first',slug:'first',title:'First video',order:2}]});
+ assert.ok(!html.includes('/videos/hidden'));
+ assert.ok(html.indexOf('/videos/first')<html.indexOf('/videos/late'));
+ assert.ok(html.includes('Owner videos'));
+});

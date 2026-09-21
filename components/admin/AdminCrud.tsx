@@ -11,13 +11,13 @@ import { TractorFields } from './TractorFields';
 import { prepareAdminForm, adminFormChanges, adminSelectOptions } from '@/lib/admin-form';
 
 const recordName = (item: AdminRecord) => String(item.title ?? item.model ?? item.name ?? item.email ?? item.key ?? item.tractorName ?? 'Untitled');
-export function AdminCrud({ section }: { section: AdminSection }) {
+export function AdminCrud({ section, initialRecord }: { section: AdminSection; initialRecord?: AdminRecord }) {
   const [items, setItems] = useState<AdminRecord[]>([]);
-  const [editing, setEditing] = useState<AdminRecord | null>(null);
-  const [form, setForm] = useState<Record<string, unknown>>({});
-  const [initialForm, setInitialForm] = useState<Record<string, unknown>>({});
+  const [editing, setEditing] = useState<AdminRecord | null>(initialRecord ?? null);
+  const [form, setForm] = useState<Record<string, unknown>>(() => initialRecord ? prepareAdminForm(section, initialRecord, [], {}) : {});
+  const [initialForm, setInitialForm] = useState<Record<string, unknown>>(() => initialRecord ? prepareAdminForm(section, initialRecord, [], {}) : {});
   const [opening, setOpening] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(Boolean(initialRecord));
   const [deleting, setDeleting] = useState<AdminRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

@@ -23,7 +23,7 @@ export function prepareAdminForm(section: AdminSection, item?: Row | null, items
       if (match) next[field.key] = match.id;
     }
     if (field.key === 'order' && !item) next.order = Math.max(0, ...items.map(row => Number(row.order) || 0)) + 1;
-    if (next[field.key] == null) next[field.key] = field.type === 'boolean' ? field.key === 'visible' : '';
+    if (next[field.key] == null) next[field.key] = field.type === 'boolean' ? (field.key === 'visible' || field.key === 'showOnHomepage') : '';
   }
   if (section.fields.some(field => field.key === 'status') && !next.status) next.status = section.collection === 'expertReviews' ? 'draft' : 'published';
   if (section.collection === 'heroSlides') {

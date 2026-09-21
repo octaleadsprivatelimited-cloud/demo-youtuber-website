@@ -34,7 +34,7 @@ export async function commitAdminContent(db: Firestore, name: string, id: string
     const removed = [...mediaIds(existing)].filter(key=>!retained.has(key));
     const referenced = new Set<string>();
     let videoSetting: {id:string; [key:string]:unknown} | undefined;
-    if (removed.length || (name==='videos' && !saved)) {
+    if (removed.length || name==='videos') {
       const names = [...new Set(Object.values(adminSections).map(section=>section.collection))];
       for (const collectionName of names) {
         const snapshot = await getDocs(collection(db,collectionName));
@@ -55,8 +55,8 @@ export async function commitAdminContent(db: Firestore, name: string, id: string
     if (saved) transaction.set(target,saved,{merge:true});
     else transaction.delete(target);
     for (const key of removed) if (!referenced.has(key)) transaction.delete(doc(db,'media',key));
-    // Do not let a deleted library video reappear from the automatic channel feed.
-    if (name==='videos' && !saved) transaction.set(doc(db,'settings',videoSetting?.id || '_managedVideoSource'),{key:'videoSource',value:'library',status:'published',updatedAt:serverTimestamp()},{merge:true});
+    // Every video edit opts into the managed library, including an empty library.
+    if (name==='videos') transaction.set(doc(db,'settings',videoSetting?.id || '_managedVideoSource'),{key:'videoSource',value:'library',status:'published',updatedAt:serverTimestamp()},{merge:true});
     transaction.set(lock,{key:MEDIA_LOCK_ID,status:'draft',updatedAt:serverTimestamp()});
   });
   return target.id;

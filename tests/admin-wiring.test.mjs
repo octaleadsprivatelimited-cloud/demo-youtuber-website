@@ -471,3 +471,17 @@ test('hero draft, publish, edit, archive and delete preserve owner controls',asy
  assert.equal((await admin.getAdminRecord('heroSlides',id)).status,'archived');
  await admin.removeAdminRecord('heroSlides',id);assert.equal(await admin.getAdminRecord('heroSlides',id),null);
 });
+
+test('channel videos become editable records without overwriting later owner edits',async()=>{
+ const {manageChannelVideos}=load('services/video-library-admin.ts');
+ const feed=[{id:'feed-one',title:'Channel one',slug:prefix+'channel-one',youtubeVideoId:'abcdefghij1',thumbnail:'https://i.ytimg.com/vi/abcdefghij1/hqdefault.jpg',status:'published'},{id:'feed-two',title:'Channel two',slug:prefix+'channel-two',youtubeVideoId:'abcdefghij2',status:'published'}];
+ const rows=await manageChannelVideos(feed);
+ const first=rows.find(row=>row.slug===feed[0].slug);
+ assert.ok(first);
+ await admin.saveAdminRecord('videos',first.id,{title:'Owner title',youtubeId:'abcdefghij3',showOnHomepage:false,order:8});
+ await manageChannelVideos(feed);
+ const saved=await admin.getAdminRecord('videos',first.id);
+ assert.equal(saved.title,'Owner title');assert.equal(saved.youtubeVideoId,'abcdefghij3');assert.equal(saved.showOnHomepage,false);assert.equal(saved.order,8);
+ assert.equal((await admin.listAdminRecords('videos')).filter(row=>row.slug===feed[0].slug).length,1);
+ assert.equal((await admin.listAdminRecords('settings')).find(row=>row.key==='videoSource').value,'library');
+});
