@@ -27,7 +27,7 @@ export function AdminImageField({ label, value, folder, disabled, onChange, onBu
     {value && <LocalizedElement as="div" className="cms-image-preview">{failedSource === value ? <LocalizedElement as="p">Image unavailable. Choose a replacement.</LocalizedElement> :
       <LocalizedElement as="img" key={value} src={value} alt={label + ' preview'} onError={() => setFailedSource(value)}/>}</LocalizedElement>}
     <LocalizedElement as="div" className="cms-upload"><LocalizedElement as="strong">{uploading ? 'Optimizing and uploading…' : value ? 'Replace image' : 'Choose an image'}</LocalizedElement>
-      <LocalizedElement as="span">JPG, PNG, WebP or GIF · up to 20 MB · automatically compressed</LocalizedElement>
+      <LocalizedElement as="span">JPG, PNG, WebP or GIF · under 1 MB (1,000,000 bytes) · automatically compressed</LocalizedElement>
       <LocalizedElement as="input" id={id} type="file" accept="image/jpeg,image/png,image/webp,image/gif" disabled={disabled || uploading}
         onChange={event => { void choose(event.target.files?.[0]); event.target.value = ''; }}/></LocalizedElement>
     <small>Large animated images are saved as a still image.</small>

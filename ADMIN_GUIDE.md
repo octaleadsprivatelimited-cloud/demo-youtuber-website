@@ -5,7 +5,7 @@ Sign in at http://localhost:3000/login with the verified Google account `rakeshp
 ## 1. Hero images and slider
 
 1. Open **Homepage & promotions → Hero slides → Add slide**.
-2. Enter an internal slide name. Upload an image; wait for its preview before saving. JPG, PNG, WebP and GIF are supported and large images are compressed.
+2. Enter an internal slide name. Upload an image; wait for its preview before saving. JPG, PNG, WebP and GIF are supported. Files must be strictly under 1 MB (1,000,000 bytes); larger files are rejected before upload. Accepted images above 600 KiB are compressed for Firestore.
 3. Set display order, background colour, headline, description and image accessibility description. Choose **Fill and crop** or **Show complete image**, then the image focus.
 4. Set the duration to 3–30 seconds. Enter both text and a link for each optional button. Links can be local paths such as `/tractors` or full HTTPS URLs.
 5. Select **Draft** to keep it private or **Published** to show it. Save, then use **Preview homepage**.
@@ -23,7 +23,7 @@ Open **Homepage**. Add or edit a record for a section using its Section dropdown
 ## 4. Catalog and editorial content
 
 - **Tractors:** choose a brand, model, image, prices and specifications; CSV imports can be previewed before applying. Popular/latest/upcoming flags control the relevant homepage tabs. Drafts and archived models stay private.
-- **Equipment / Dealers:** edit the fields shown in the public directory and detail pages.
+- **Equipment / Dealers:** edit the fields shown in the public directory and detail pages. Dealer controls include logo upload, email, WhatsApp, postal code and services (one per line).
 - **Articles / Categories:** maintain news, guides, category assignments, images and content.
 - **Editorial reviews:** link a published tractor and complete the publication requirements. Incomplete work can remain a draft.
 - **Videos:** save a YouTube URL or ID, thumbnail and description. Published videos are used on the homepage; if none are published the existing channel feed remains the fallback.
@@ -40,4 +40,4 @@ Use **Lead CRM** for enquiry details, status, notes and assignments. **Contact i
 
 ## Verification performed
 
-TypeScript, production build, 46 unit tests and 27 integration tests pass. Tests cover hero save/edit/publish/archive/delete, cleared image/copy fields, safe links, homepage ordering, content relationships, media encoding and legacy endpoint lockdown. Live authenticated admin UI and real Firebase uploads still require the owner's Google sign-in; no live test content has been created.
+TypeScript, production build, 47 unit tests, 27 integration tests and 5 Firestore emulator tests pass. Tests cover hero save/edit/publish/archive/delete, cleared image/copy fields, safe links, homepage ordering, content relationships, media encoding and legacy endpoint lockdown. The emulator tests also execute the real Firebase service paths for module CRUD, draft/published/archived visibility, image upload/replacement/removal and image delivery through the API route, plus inbox and lead updates. Live authenticated browser verification still requires the owner's Google sign-in; no production test content has been created.

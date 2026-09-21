@@ -1,9 +1,12 @@
+// Uploads must be strictly below 1 MB (1,000,000 bytes). Stored images have a
+// smaller limit because base64 must also fit in one Firestore document.
+export const MAX_UPLOAD_BYTES = 1_000_000;
 export const MAX_IMAGE_BYTES = 600 * 1024;
 export const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 export async function compressFirestoreImage(file: File): Promise<Blob> {
   if (!IMAGE_TYPES.includes(file.type)) throw new Error('Use a JPG, PNG, WebP, or GIF image.');
   if (!file.size) throw new Error('Choose a non-empty image.');
-  if (file.size > 20 * 1024 * 1024) throw new Error('Choose an image smaller than 20 MB.');
+  if (file.size >= MAX_UPLOAD_BYTES) throw new Error('Choose an image under 1 MB (1,000,000 bytes).');
   if (file.size <= MAX_IMAGE_BYTES) return file;
   const bitmap = await createImageBitmap(file).catch(() => { throw new Error('This image could not be opened. Choose another image.'); });
   try {

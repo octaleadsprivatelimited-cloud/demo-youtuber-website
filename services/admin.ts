@@ -98,7 +98,7 @@ export async function saveAdminRecord(name: string, id: string | undefined, inpu
   return (await addDoc(collection(needDb(), name), { ...payload, createdAt: serverTimestamp() })).id;
 }
 export async function removeAdminRecord(name: string, id: string) {
-  const relation=name==='brands'?['tractors','brandId']:name==='articleCategories'?['articles','categoryId']:null;
+  const relation=name==='brands'?['tractors','brandId']:name==='articleCategories'?['articles','categoryId']:name==='tractors'?['expertReviews','tractorId']:null;
   if(relation&&(await listAdminRecords(relation[0])).some(row=>row[relation[1]]===id))throw new Error('This record is still in use. Reassign its related content before deleting it.');
 
   if (isLocalDemo && !db) {

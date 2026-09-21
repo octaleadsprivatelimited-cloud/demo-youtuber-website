@@ -44,7 +44,7 @@ test('large images are compressed, preserve aspect ratio and release decoded res
  globalThis.createImageBitmap=async()=>({width:4000,height:2000,close(){closed=true;}});
  globalThis.document={createElement:()=>canvas};
  try {
-  const encoded=await media.encodeFirestoreImage(new File([new Uint8Array(2000000)],'large.png',{type:'image/png'}));
+  const encoded=await media.encodeFirestoreImage(new File([new Uint8Array(media.MAX_UPLOAD_BYTES - 1)],'large.png',{type:'image/png'}));
   assert.equal(encoded.contentType,'image/webp');assert.equal(encoded.size,400000);
   assert.equal(canvas.width,2400);assert.equal(canvas.height,1200);assert.equal(closed,true);
  } finally {globalThis.createImageBitmap=oldBitmap;globalThis.document=oldDocument;}
@@ -65,4 +65,17 @@ test('deployment without Firebase env uses the configured website project', () =
   } finally {
     keys.forEach((key, index) => { if (previous[index] === undefined) delete process.env[key]; else process.env[key] = previous[index]; });
   }
+});
+
+
+test('files at or above 1 MB are rejected before decoding or compression', async () => {
+ const previous=globalThis.createImageBitmap;
+ let decoded=false;
+ globalThis.createImageBitmap=async()=>{decoded=true;throw new Error('Must not decode');};
+ try {
+  for(const size of [1_000_000,1_000_001,1_048_576,20_000_000]) {
+   await assert.rejects(media.encodeFirestoreImage(new File([new Uint8Array(size)],'oversized.jpg',{type:'image/jpeg'})),/under 1 MB/);
+  }
+  assert.equal(decoded,false);
+ } finally {globalThis.createImageBitmap=previous;}
 });

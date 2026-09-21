@@ -17,7 +17,7 @@ Google sign-in reference: https://firebase.google.com/docs/auth/web/google-signi
 
 ## Firestore-only image uploads
 
-Images are stored in separate `media` documents as base64, with a 600 KiB raw file limit. The app serves them through `/api/media/ID`. Publish `firestore.rules`, including the media section. Deploy `firestore.indexes.json` to disable indexing for the media data field (or add a single-field exemption for collection group `media`, field `data`, with all indexes disabled in the console). No Firebase Storage setup or Storage rules are required. Existing external image URLs remain unchanged; no previous media has been migrated automatically. Google sign-in still uses Firebase Authentication.
+Images are stored in separate `media` documents as base64, with a 600 KiB stored image limit and a strict original upload limit below 1 MB (1,000,000 bytes). The app serves them through `/api/media/ID`. Publish `firestore.rules`, including the media section. Deploy `firestore.indexes.json` to disable indexing for the media data field (or add a single-field exemption for collection group `media`, field `data`, with all indexes disabled in the console). No Firebase Storage setup or Storage rules are required. Existing external image URLs remain unchanged; no previous media has been migrated automatically. Google sign-in still uses Firebase Authentication.
 
 ## Security regression checks
 
