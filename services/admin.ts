@@ -1,6 +1,7 @@
-import { addDoc, collection, deleteDoc, doc, documentId, getCountFromServer, getDoc, getDocs, limit, orderBy, query, runTransaction, serverTimestamp, startAfter, type QueryDocumentSnapshot } from 'firebase/firestore';
+import { addDoc, collection, doc, documentId, getCountFromServer, getDoc, getDocs, limit, orderBy, query, serverTimestamp, startAfter, type QueryDocumentSnapshot } from 'firebase/firestore';
 import { db, isLocalDemo } from '@/lib/firebase/client';
 import { readLocal, writeLocal } from '@/lib/local-demo';
+import { commitAdminContent, MEDIA_LOCK_ID } from './admin-media';
 import { adminSections } from '@/config/admin-sections';
 import { prepareAdminRecord } from '@/lib/admin-records';
 import { prepareAdminForm, sameAdminRecord } from '@/lib/admin-form';
@@ -18,7 +19,7 @@ export async function listAdminRecords(name: string): Promise<AdminRecord[]> {
     if (snapshot.docs.length < 200) break;
     cursor = snapshot.docs.at(-1);
   } while (cursor);
-  return items;
+  return name === 'settings' ? items.filter(item => item.id !== MEDIA_LOCK_ID) : items;
 }
 export async function getAdminRecord(name: string, id: string): Promise<AdminRecord | null> {
   if (isLocalDemo && !db) return (await readLocal<AdminRecord>(name)).find(item => item.id === id) ?? null;
@@ -85,17 +86,7 @@ export async function saveAdminRecord(name: string, id: string | undefined, inpu
     return key;
   }
   const payload = { ...clean, publishedAt: name === 'expertReviews' ? (clean.status === 'published' ? (existing?.status === 'published' ? existing.publishedAt ?? serverTimestamp() : serverTimestamp()) : existing?.publishedAt ?? null) : clean.publishedAt ?? serverTimestamp(), updatedAt: serverTimestamp() };
-  if (id) {
-    const target = doc(needDb(), name, id);
-    await runTransaction(needDb(), async transaction => {
-      const current = await transaction.get(target);
-      if (!current.exists()) throw new Error('This record was removed. Refresh the list before editing.');
-      if (!sameAdminRecord({ ...current.data(), id: current.id }, existing)) throw new Error(conflictMessage);
-      transaction.update(target, payload);
-    });
-    return id;
-  }
-  return (await addDoc(collection(needDb(), name), { ...payload, createdAt: serverTimestamp() })).id;
+  return commitAdminContent(needDb(), name, id, { ...payload, ...(!id ? {createdAt:serverTimestamp()} : {}) }, existing);
 }
 export async function removeAdminRecord(name: string, id: string) {
   const relation=name==='brands'?['tractors','brandId']:name==='articleCategories'?['articles','categoryId']:name==='tractors'?['expertReviews','tractorId']:null;
@@ -106,7 +97,9 @@ export async function removeAdminRecord(name: string, id: string) {
     await writeLocal(name, items.filter(item => item.id !== id));
     return;
   }
-  await deleteDoc(doc(needDb(), name, id));
+  const existing = await getAdminRecord(name,id);
+  if (!existing) return;
+  await commitAdminContent(needDb(),name,id,null,existing);
 }
 export async function uploadAdminImage(file: File, folder: string) {
   const { encodeFirestoreImage } = await import('@/lib/firestore-media');

@@ -103,6 +103,7 @@ test('all admin modules use real Firestore CRUD, publication and image upload un
   const response=await GET(new Request('http://localhost'+image),{params:Promise.resolve({id})});
   assert.equal(response.status,200);
   assert.equal(response.headers.get('content-type'),'image/webp');
+  assert.equal(response.headers.get('cache-control'),'no-store, max-age=0');
   assert.deepEqual(Buffer.from(await response.arrayBuffer()),bytes);
  } finally {globalThis.fetch=originalFetch;}
  const stored=await assertSucceeds(getDoc(doc(env.unauthenticatedContext().firestore(),'media',id)));
@@ -110,6 +111,7 @@ test('all admin modules use real Firestore CRUD, publication and image upload un
  await assertFails(setDoc(doc(dbFor('other'),'media','forbidden'),{...stored.data(),createdAt:serverTimestamp()}));
  await assertFails(setDoc(doc(owner,'media','too-large'),{...stored.data(),size:1_000_000,createdAt:serverTimestamp()}));
  await assert.rejects(admin.uploadAdminImage(new File([new Uint8Array(1_000_000)],'large.jpg',{type:'image/jpeg'}),'heroSlides'),/under 1 MB/);
+ await setDoc(doc(owner,'heroSlides','media-test-hold'),{status:'draft',image,otherImage:replacement});
  const cases=[
   ['brands',{title:'Emulator brand',logo:image}],
   ['equipment',{title:'Emulator implement',image}],
@@ -159,6 +161,34 @@ test('all admin modules use real Firestore CRUD, publication and image upload un
  await admin.removeAdminRecord('expertReviews',reviewId);
  await admin.removeAdminRecord('tractors',tractorId);
  for(const [name,recordId] of ids){await admin.removeAdminRecord(name,recordId);assert.equal(await admin.getAdminRecord(name,recordId),null);}
+ await admin.removeAdminRecord('heroSlides','media-test-hold');
+ assert.equal((await getDoc(doc(owner,'media',id))).exists(),false);
+ assert.equal((await getDoc(doc(owner,'media',replacement.split('/').at(-1)))).exists(),false);
+ const staged=load('lib/staged-media.ts');
+ const beforeStaging=(await getDocs(collection(owner,'media'))).size;
+ const cancelled=await staged.stageAdminImage(new File([bytes],'cancel.webp',{type:'image/webp'}));
+ assert.equal((await getDocs(collection(owner,'media'))).size,beforeStaging);
+ staged.releaseStagedImage(cancelled);
+ assert.equal(staged.stagedImage(cancelled),undefined);
+ const draftImage=await staged.stageAdminImage(new File([bytes],'saved.webp',{type:'image/webp'}));
+ const draftId=await admin.saveAdminRecord('equipment',undefined,{title:'Staged image test',image:draftImage,status:'published'});
+ const savedImage=(await admin.getAdminRecord('equipment',draftId)).image;
+ assert.match(savedImage,/^\/api\/media\/[a-zA-Z0-9]{20}$/);
+ staged.releaseStagedImage(draftImage);
+ const sharedId=await admin.saveAdminRecord('dealers',undefined,{title:'Shared image test',logo:savedImage,status:'draft'});
+ await admin.removeAdminRecord('equipment',draftId);
+ assert.equal((await getDoc(doc(owner,'media',savedImage.split('/').at(-1)))).exists(),true);
+ await admin.removeAdminRecord('dealers',sharedId);
+ assert.equal((await getDoc(doc(owner,'media',savedImage.split('/').at(-1)))).exists(),false);
+ await assert.rejects(admin.saveAdminRecord('equipment',undefined,{title:'Stale image',image:savedImage}),/image was deleted/);
+ globalThis.fetch=(url,options)=>originalFetch('http://'+process.env.FIRESTORE_EMULATOR_HOST+new URL(url).pathname,options);
+ try {
+  const deleted=await GET(new Request('http://localhost'+savedImage),{params:Promise.resolve({id:savedImage.split('/').at(-1)})});
+  assert.equal(deleted.status,404);
+ } finally {globalThis.fetch=originalFetch;}
+ const sources=(await admin.listAdminRecords('settings')).filter(row=>row.key==='videoSource');
+ assert.equal(sources[0].value,'library');
+ assert.ok(!(await admin.listAdminRecords('settings')).some(row=>row.id==='_mediaMutationLock'));
  for(const [name,input,patch] of [
   ['leads',{name:'Test owner',phone:'9876543210',city:'Test',state:'Test',source:'contact',status:'New',notes:'',assignedTo:null,createdAt:serverTimestamp(),updatedAt:serverTimestamp()},{status:'Contacted',notes:'Follow up'}],
   ['contactMessages',{name:'Test',email:'test@example.com',message:'Test enquiry',status:'New',createdAt:serverTimestamp()},{message:'Edited enquiry'}],

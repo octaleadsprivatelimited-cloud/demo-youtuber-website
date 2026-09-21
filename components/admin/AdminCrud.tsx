@@ -80,7 +80,7 @@ export function AdminCrud({ section }: { section: AdminSection }) {
     setSaving(true); setFormError('');
     try {
       await removeAdminRecord(section.collection, deleting.id);
-      setDeleting(null); setNotice('Record deleted.'); await load();
+      setDeleting(null); setNotice('Record and unused uploads permanently deleted.'); await load();
     } catch (reason) { setFormError(reason instanceof Error ? reason.message : 'Unable to delete.'); }
     finally { setSaving(false); }
   }
@@ -132,7 +132,7 @@ export function AdminCrud({ section }: { section: AdminSection }) {
       </form>
     </AdminDialog>}
     {deleting && <AdminDialog title="Delete record?" busy={busy} onClose={() => setDeleting(null)}>
-      <LocalizedElement as="div" className="cms-form"><LocalizedElement as="p">Remove “{recordName(deleting)}”? This will remove it from the website.</LocalizedElement>
+      <LocalizedElement as="div" className="cms-form"><LocalizedElement as="p">Remove “{recordName(deleting)}”? This permanently deletes the record and uploads no longer used by other content. This cannot be undone.</LocalizedElement>
         {formError && <LocalizedElement as="div" className="cms-error" role="alert">{formError}</LocalizedElement>}
         <LocalizedElement as="div" className="cms-form-footer"><LocalizedElement as="button" disabled={busy} onClick={() => setDeleting(null)}>Cancel</LocalizedElement><LocalizedElement as="button" className="cms-primary" disabled={busy} onClick={() => void remove()}>{busy ? 'Deleting…' : 'Confirm delete'}</LocalizedElement></LocalizedElement>
       </LocalizedElement>

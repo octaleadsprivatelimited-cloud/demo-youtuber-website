@@ -51,3 +51,11 @@ Each tractor has an optional **Product YouTube video URL or ID** field. Paste a 
 In **Dealers**, upload a **Dealer logo / homepage image**, set its homepage logo order and publish the dealer. Enable **Our dealers** in homepage controls; each logo links to its dealer page. Uploads must remain below 1 MB.
 
 Promotion destinations accept full HTTP/HTTPS URLs, bare domains (converted to HTTPS), or website paths beginning with `/`. A promotion without a destination does not redirect visitors to a default page.
+
+## Permanent deletion
+
+**Delete** permanently removes the record and any uploaded images that no other CMS record references. Removing or replacing an image takes effect when you **Save**; the old unused upload is deleted in the same transaction. Draft and archived records count as references, so shared images are preserved until their final reference is removed. Failed transactions leave the existing record and its images intact.
+
+Selected images stay in the browser until Save. Cancelling a form does not upload them. Deleted image URLs return 404; new image responses are not cached. Copies already downloaded or cached before this change cannot be recalled.
+
+Deleting a video removes its database record and switches video display to **Published library only**, preventing channel-feed fallback from restoring the deleted video. External YouTube videos and externally hosted images belong to their hosting service; deleting their links here does not delete the originals there. This change applies to deletions and edits made through the updated admin panel, not direct Firebase-console edits or a retrospective purge of old orphan uploads.

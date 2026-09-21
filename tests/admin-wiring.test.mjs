@@ -410,7 +410,7 @@ test('Firebase admin lists older records beyond 100 and transaction edits preser
   getDoc:async target=>snapshot(target.id),
   runTransaction:async(_db,handler)=>{
    if(mutateBeforeTransaction){rows.set('204',{...rows.get('204'),description:'Other administrator changed this'});mutateBeforeTransaction=false;}
-   return handler({get:async target=>snapshot(target.id),update:(target,payload)=>rows.set(target.id,{...rows.get(target.id),...payload})});
+   return handler({get:async target=>snapshot(target.id),set:(target,payload)=>{if(target.name==='equipment')rows.set(target.id,{...rows.get(target.id),...payload});}});
   },
  };
  const testModule={exports:{}};
@@ -418,6 +418,12 @@ test('Firebase admin lists older records beyond 100 and transaction edits preser
  new Function('require','module','exports',compiled)(name=>{
   if(name==='firebase/firestore')return firestore;
   if(name==='firebase/storage')return {};
+  if(name==='./admin-media'){
+   const mod={exports:{}};
+   const code=ts.transpileModule(fs.readFileSync(path.join(root,'services/admin-media.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+   new Function('require','module','exports',code)(key=>key==='firebase/firestore'?firestore:load(key.slice(2)+'.ts'),mod,mod.exports);
+   return mod.exports;
+  }
   if(name==='@/lib/firebase/client')return {db:{},storage:null,isLocalDemo:false};
   if(name.startsWith('@/'))return load(name.slice(2)+'.ts');
   throw new Error('Unexpected dependency '+name);
