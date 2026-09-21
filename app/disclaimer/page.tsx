@@ -1,9 +1,10 @@
+import { withSeoOverride } from '@/lib/seo-metadata';
 
 import { LocalizedElement } from '@/components/LocalizedElement';
 import type { Metadata } from 'next';
 import { InfoPage } from '@/components/InfoPage';
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: 'Disclaimer | RJ Tractor Techs',
   description:
     'Understand how to interpret prices, specifications and editorial content published on RJ Tractor Techs.',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     canonical: '/disclaimer',
   },
 };
+export async function generateMetadata() { return withSeoOverride('/disclaimer', pageMetadata); }
 
 export default function Page() {
   return (

@@ -1,9 +1,10 @@
+import { withSeoOverride } from '@/lib/seo-metadata';
 
 import { LocalizedElement } from '@/components/LocalizedElement';
 import type { Metadata } from 'next';
 import { InfoPage } from '@/components/InfoPage';
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: 'Cookie Policy | RJ Tractor Techs',
   description:
     'Learn how RJ Tractor Techs uses browser storage and analytics data in this tractor research website.',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     canonical: '/cookie-policy',
   },
 };
+export async function generateMetadata() { return withSeoOverride('/cookie-policy', pageMetadata); }
 
 export default function Page() {
   return (

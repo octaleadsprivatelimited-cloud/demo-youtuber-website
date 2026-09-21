@@ -59,3 +59,9 @@ Promotion destinations accept full HTTP/HTTPS URLs, bare domains (converted to H
 Selected images stay in the browser until Save. Cancelling a form does not upload them. Deleted image URLs return 404; new image responses are not cached. Copies already downloaded or cached before this change cannot be recalled.
 
 Deleting a video removes its database record and switches video display to **Published library only**, preventing channel-feed fallback from restoring the deleted video. External YouTube videos and externally hosted images belong to their hosting service; deleting their links here does not delete the originals there. This change applies to deletions and edits made through the updated admin panel, not direct Firebase-console edits or a retrospective purge of old orphan uploads.
+
+## SEO and sitemap
+
+Set `NEXT_PUBLIC_SITE_URL=https://www.rjtractortechs.com` in production. Empty, invalid or localhost values fall back to this production origin. `/sitemap.xml` includes public static pages and published CMS detail records; it refreshes on a five-minute revalidation interval and uses saved timestamps for content modification dates. Drafts and private/search pages are excluded. `/robots.txt` points to the absolute sitemap and permits uploaded images while blocking private areas.
+
+Published SEO records supply server-rendered title, description and social-image overrides on static public pages and tractor/article/video/review detail pages. Admin, account and login routes have no-index protection. After deployment, submit `https://www.rjtractortechs.com/sitemap.xml` to Google Search Console and inspect representative URLs; indexing remains Google's decision.

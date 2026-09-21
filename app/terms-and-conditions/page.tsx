@@ -1,9 +1,10 @@
+import { withSeoOverride } from '@/lib/seo-metadata';
 
 import { LocalizedElement } from '@/components/LocalizedElement';
 import type { Metadata } from 'next';
 import { InfoPage } from '@/components/InfoPage';
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: 'Terms and Conditions | RJ Tractor Techs',
   description:
     'Read the platform terms for using RJ Tractor Techs and how to use published tractor research content.',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     canonical: '/terms-and-conditions',
   },
 };
+export async function generateMetadata() { return withSeoOverride('/terms-and-conditions', pageMetadata); }
 
 export default function Page() {
   return (

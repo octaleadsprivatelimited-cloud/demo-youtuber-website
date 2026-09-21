@@ -1,9 +1,10 @@
+import { withSeoOverride } from '@/lib/seo-metadata';
 
 import { LocalizedElement } from '@/components/LocalizedElement';
 import type { Metadata } from 'next';
 import { InfoPage } from '@/components/InfoPage';
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: 'Privacy Policy | RJ Tractor Techs',
   description:
     'Learn how user information submitted through the website is stored, used and protected.',
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     canonical: '/privacy-policy',
   },
 };
+export async function generateMetadata() { return withSeoOverride('/privacy-policy', pageMetadata); }
 
 export default function Page() {
   return (

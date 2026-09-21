@@ -1,17 +1,19 @@
 import type { MetadataRoute } from 'next';
+import { siteOrigin } from '@/lib/site-url';
 
 export default function robots(): MetadataRoute.Robots {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rjtractortechs.com';
+  const base = siteOrigin();
   return {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow: ['/', '/api/media/'],
         disallow: [
-          '/admin/',
-          '/account/',
+          '/admin',
+          '/account',
           '/api/',
           '/login',
+          '/search',
         ],
       },
     ],

@@ -1,7 +1,8 @@
+import { withSeoOverride } from '@/lib/seo-metadata';
 import type { Metadata } from 'next';
 import { ArticleIndex } from '@/components/ArticleIndex';
 
-export const metadata: Metadata = {
+const pageMetadata: Metadata = {
   title: 'Articles | RJ Tractor Techs',
   description:
     'Read tractor stories, buying guides and practical farming insights from our editorial newsroom.',
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
     canonical: '/articles',
   },
 };
+export async function generateMetadata() { return withSeoOverride('/articles', pageMetadata); }
 
 export default function ArticlesPage() {
   return <ArticleIndex type="article" />;

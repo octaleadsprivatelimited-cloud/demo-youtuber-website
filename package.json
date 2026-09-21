@@ -12,7 +12,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test:unit": "node --test tests/editorial-reviews.test.mjs tests/admin-records.test.mjs tests/admin-access.test.mjs tests/homepage-sections.test.mjs tests/firestore-media.test.mjs",
+    "test:unit": "node --test tests/editorial-reviews.test.mjs tests/admin-records.test.mjs tests/admin-access.test.mjs tests/homepage-sections.test.mjs tests/firestore-media.test.mjs tests/seo.test.mjs",
     "test:integration": "node --test tests/editorial-workflow.test.mjs tests/local-cms.test.mjs tests/admin-wiring.test.mjs",
     "test:language": "node --test tests/language.test.mjs",
     "test:rules": "node scripts/test-firestore-rules.mjs"
