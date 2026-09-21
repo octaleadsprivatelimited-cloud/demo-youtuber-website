@@ -26,3 +26,7 @@ Run `npm run test:rules` with the Firebase CLI and Java 21 installed. This uses 
 The September 2026 security fix deploys owner-only Firestore rules to `rj-tractor-techs`. Only the verified Google session for `rakeshpatel0944@gmail.com` can administer content. Role claims and `admins` documents cannot grant another account access. Settings and SEO are public only when published. Public forms remain anonymous and need a separate rate-limiting/App Check rollout if spam prevention is required.
 
 Local checks: `npm run typecheck`, `npm run lint`, `npm run test:unit`, `npm run test:language`, `npm run test:rules`, and `npm run build`. Run `npm run test:integration` while localhost:3000 is running. A real Google owner sign-in must still be verified interactively; emulator tokens do not prove the OAuth flow.
+
+## Vercel build configuration
+
+The website pins Node.js to `22.x` and Vercel runs pnpm `11.19.0` with `--frozen-lockfile`, matching `packageManager` and `pnpm-lock.yaml`. Dependency build scripts use the explicit allowlist in `pnpm-workspace.yaml`. Next.js checks application TypeScript normally; the legacy Vite/Cloudflare preview configuration is excluded from that check because Vercel does not use it. Firebase Functions retain their separate TypeScript build.
