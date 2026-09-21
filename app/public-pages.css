@@ -154,22 +154,22 @@
 .public-site .topbar { display: none; }
 .public-site .site-header { display: none; }
 .public-site .mobile-nav { display: none; }
-.public-site footer {
+.public-site footer:not(#rj-footer) {
   background:#0b2c52;
   color:#fff;
   border-top:5px solid #c93229;
 }
-.public-site footer .brand-copy strong,
-.public-site footer .footer-main h4 { color:#fff; }
-.public-site footer .brand-copy small,
-.public-site footer .footer-brand p,
-.public-site footer .footer-main>div>a:not(.brand),
-.public-site footer .footer-bottom { color:rgba(255,255,255,.7); }
-.public-site footer .footer-main>div>a:not(.brand):hover,
-.public-site footer .footer-bottom a { color:#ffd9a6; }
-.public-site footer .footer-bottom { border-color:rgba(255,255,255,.18); }
-.public-site footer .brand-mark { background:#c93229; color:#fff; }
-.public-site footer .footer-socials img { filter:brightness(0) invert(1); }
+.public-site footer:not(#rj-footer) .brand-copy strong,
+.public-site footer:not(#rj-footer) .footer-main h4 { color:#fff; }
+.public-site footer:not(#rj-footer) .brand-copy small,
+.public-site footer:not(#rj-footer) .footer-brand p,
+.public-site footer:not(#rj-footer) .footer-main>div>a:not(.brand),
+.public-site footer:not(#rj-footer) .footer-bottom { color:rgba(255,255,255,.7); }
+.public-site footer:not(#rj-footer) .footer-main>div>a:not(.brand):hover,
+.public-site footer:not(#rj-footer) .footer-bottom a { color:#ffd9a6; }
+.public-site footer:not(#rj-footer) .footer-bottom { border-color:rgba(255,255,255,.18); }
+.public-site footer:not(#rj-footer) .brand-mark { background:#c93229; color:#fff; }
+.public-site footer:not(#rj-footer) .footer-socials img { filter:brightness(0) invert(1); }
 
 /* Inner-page hero surfaces only. The homepage uses .reference-home and is unaffected. */
 .public-site :is(.tractor-detail-hero,.equipment-detail-hero) {

@@ -15,14 +15,14 @@
 .reference-home .ref-home-brand-mark { color: var(--auto-red); }
 .reference-home .ref-home-brand-image { width: auto; height: 52px; max-height: 52px; max-width: 220px; object-fit: contain; }
 .reference-home .home-footer .brand,
-.public-site footer .brand,
+.public-site footer:not(#rj-footer) .brand,
 .public-site .footer-brand-link { display: inline-flex; align-items: center; width: auto; max-width: 100%; text-decoration: none; }
 .reference-home .home-footer .brand-mark,
 .reference-home .home-footer .brand-mark:has(img),
 .reference-home .home-footer .footer-logo-mark,
 .public-site .brand-mark:has(img),
-.public-site footer .brand-mark,
-.public-site footer .footer-logo-mark {
+.public-site footer:not(#rj-footer) .brand-mark,
+.public-site footer:not(#rj-footer) .footer-logo-mark {
   background: #ffffff !important;
   padding: 6px 14px !important;
   border-radius: 8px !important;
@@ -41,8 +41,8 @@
 .reference-home .home-footer .brand-mark img,
 .reference-home .home-footer .footer-brand-image,
 .public-site .brand-mark img,
-.public-site footer .brand-mark img,
-.public-site footer .footer-brand-image {
+.public-site footer:not(#rj-footer) .brand-mark img,
+.public-site footer:not(#rj-footer) .footer-brand-image {
   width: auto !important;
   height: 44px !important;
   max-height: 44px !important;
@@ -112,19 +112,19 @@
 .reference-home .home-v2.home-video-library .home-video-card > .home-text-link { color: var(--auto-link); font-size: 14px; min-height: 40px; }
 .reference-home > .home-footer,
 .public-site .reference-home > .home-footer,
-.public-site footer {
+.public-site footer:not(#rj-footer) {
   background: #161b22 !important;
   color: #f0f3f6 !important;
   border-top: 4px solid #c72c35 !important;
 }
 .reference-home > .home-footer::after { display: none !important; }
 .reference-home .home-footer footer,
-.public-site footer {
+.public-site footer:not(#rj-footer) {
   background: transparent !important;
   color: #f0f3f6 !important;
 }
 .reference-home .home-footer .footer-main h4,
-.public-site footer .footer-main h4 {
+.public-site footer:not(#rj-footer) .footer-main h4 {
   color: #ffffff !important;
   font-size: 13px !important;
   font-weight: 750 !important;
@@ -133,48 +133,48 @@
   margin-bottom: 16px !important;
 }
 .reference-home .home-footer .footer-main > div > a:not(.brand),
-.public-site footer .footer-main > div > a:not(.brand) {
+.public-site footer:not(#rj-footer) .footer-main > div > a:not(.brand) {
   color: #a8b3bf !important;
   font-size: 13px !important;
   line-height: 1.6 !important;
   transition: color 0.15s ease !important;
 }
 .reference-home .home-footer .footer-main > div > a:not(.brand):hover,
-.public-site footer .footer-main > div > a:not(.brand):hover {
+.public-site footer:not(#rj-footer) .footer-main > div > a:not(.brand):hover {
   color: #ffffff !important;
   text-decoration: none !important;
 }
 .reference-home .home-footer .footer-brand p,
-.public-site footer .footer-brand p {
+.public-site footer:not(#rj-footer) .footer-brand p {
   color: #b0bac5 !important;
   font-size: 13px !important;
   line-height: 1.7 !important;
   margin-top: 14px !important;
 }
 .reference-home .home-footer .footer-brand > a,
-.public-site footer .footer-brand > a {
+.public-site footer:not(#rj-footer) .footer-brand > a {
   color: #d2d9e0 !important;
   font-size: 13px !important;
 }
 .reference-home .home-footer .footer-brand > a:hover,
-.public-site footer .footer-brand > a:hover {
+.public-site footer:not(#rj-footer) .footer-brand > a:hover {
   color: #ffffff !important;
 }
 .reference-home .home-footer .footer-bottom,
-.public-site footer .footer-bottom {
+.public-site footer:not(#rj-footer) .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
   color: #8c96a3 !important;
 }
 .reference-home .home-footer .footer-bottom a,
-.public-site footer .footer-bottom a {
+.public-site footer:not(#rj-footer) .footer-bottom a {
   color: #c0cad4 !important;
 }
 .reference-home .home-footer .footer-bottom a:hover,
-.public-site footer .footer-bottom a:hover {
+.public-site footer:not(#rj-footer) .footer-bottom a:hover {
   color: #ffffff !important;
 }
 .reference-home .home-footer .footer-socials a,
-.public-site footer .footer-socials a {
+.public-site footer:not(#rj-footer) .footer-socials a {
   background: rgba(255, 255, 255, 0.08) !important;
   border-radius: 50% !important;
   display: inline-flex !important;
@@ -185,12 +185,12 @@
   transition: background 0.2s ease, transform 0.2s ease !important;
 }
 .reference-home .home-footer .footer-socials a:hover,
-.public-site footer .footer-socials a:hover {
+.public-site footer:not(#rj-footer) .footer-socials a:hover {
   background: #c72c35 !important;
   transform: translateY(-2px) !important;
 }
 .reference-home .home-footer .footer-socials img,
-.public-site footer .footer-socials img {
+.public-site footer:not(#rj-footer) .footer-socials img {
   filter: brightness(0) invert(1) !important;
 }
 .reference-home :is(a,button,input,select):focus-visible { outline: 3px solid #007b85; outline-offset: 3px; }

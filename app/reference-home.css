@@ -1409,3 +1409,10 @@ footer .footer-bottom .footer-copyright a.footer-developer-credit:hover { color:
 footer .footer-bottom .footer-copyright a.footer-developer-credit:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 
 .reference-home .ref-home-slide-controls .hero-playback-toggle { width: 36px; height: 36px; border: 1px solid #dce1e8; border-radius: 50%; background: #fff; color: #0b2c52; font-size: 14px; display: grid; place-items: center; padding: 0; }
+
+/* Inner pages wrap the shared header; stick the wrapper to the full page. */
+.public-site > .public-shared-header { position: sticky; top: 0; z-index: 100; }
+.public-shared-header .ref-home-header { position: relative; }
+.reference-home > .ref-home-header { position: sticky; top: 0; z-index: 100; }
+html { scroll-padding-top: 132px; }
+@media (max-width:760px) { html { scroll-padding-top: 84px; } }
