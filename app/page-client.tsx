@@ -15,6 +15,7 @@ import {
   HomeArticles,
   HomeVideos,
   HomePartners,
+  HomeDealers,
 } from '@/components/HomepageSections';
 import { TractorShowcase } from '@/components/TractorShowcase';
 import { useTractorCatalog } from '@/hooks/useTractorCatalog';
@@ -33,13 +34,14 @@ export default function Home() {
   const [partners, setPartners] = useState<Partner[]>([]);
   const { items: tractors, loading: tractorsLoading, error: tractorsError, retry: retryTractors } =
     useTractorCatalog();
+  const { items: dealers } = usePublicRecords('dealers');
   const { items: brandRecords } = usePublicRecords('brands');
   const { items: articles } = usePublicRecords('articles');
   const { items: videoRecords } = usePublicRecords('videos');
   const { items: sectionRecords } = usePublicRecords('homepageSections');
   const { videos: channelVideos } = useChannelVideos();
   const settings = useSiteSettings();
-  const videos = (videoRecords.length ? videoRecords : channelVideos) as unknown as import('@/services/site-data').SiteRecord[];
+  const videos = (settings.videoSource === 'library' ? videoRecords : videoRecords.length ? videoRecords : channelVideos) as unknown as import('@/services/site-data').SiteRecord[];
   const brands = brandRecords.map((row) => ({ ...row, name: String(row.name ?? row.title ?? ''), slug: String(row.slug), logo: String(row.logo ?? '') }));
   const youtube = settings.youtube || 'https://www.youtube.com/@Rjtractortechs';
 
@@ -99,6 +101,7 @@ export default function Home() {
     if (key === 'compare') return <HomeCompare title={title} />;
     if (key === 'articles') return <HomeArticles title={title} articles={articles} />;
     if (key === 'videos') return <HomeVideos title={title} videos={videos} channelUrl={youtube} />;
+    if (key === 'dealerLogos') return <HomeDealers title={title} dealers={dealers} />;
     if (key === 'partners') return <HomePartners title={title} partners={partners} />;
     if (key === 'promotions') return <HomepagePromotions title={title} />;
     if (key === 'introduction') return <HomeIntroduction title={title} />;

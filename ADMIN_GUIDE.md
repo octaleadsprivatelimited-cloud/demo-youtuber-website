@@ -41,3 +41,13 @@ Use **Lead CRM** for enquiry details, status, notes and assignments. **Contact i
 ## Verification performed
 
 TypeScript, production build, 47 unit tests, 27 integration tests and 5 Firestore emulator tests pass. Tests cover hero save/edit/publish/archive/delete, cleared image/copy fields, safe links, homepage ordering, content relationships, media encoding and legacy endpoint lockdown. The emulator tests also execute the real Firebase service paths for module CRUD, draft/published/archived visibility, image upload/replacement/removal and image delivery through the API route, plus inbox and lead updates. Live authenticated browser verification still requires the owner's Google sign-in; no production test content has been created.
+
+## Video editing, tractor videos and dealer logos
+
+Open **Content → YouTube videos** (`/admin/videos`). Expand **Channel videos available to edit**, copy a video to drafts, then edit its title, thumbnail, description and publication status in the library below. Use **Published library only** to control exactly which videos appear, including an empty section after archiving all videos. The fallback option displays the channel feed when the published library is empty. Homepage controls set the video section title, position and visibility.
+
+Each tractor has an optional **Product YouTube video URL or ID** field. Paste a YouTube watch, short or share URL. Leave it empty (or clear it later) to hide the product video entirely.
+
+In **Dealers**, upload a **Dealer logo / homepage image**, set its homepage logo order and publish the dealer. Enable **Our dealers** in homepage controls; each logo links to its dealer page. Uploads must remain below 1 MB.
+
+Promotion destinations accept full HTTP/HTTPS URLs, bare domains (converted to HTTPS), or website paths beginning with `/`. A promotion without a destination does not redirect visitors to a default page.

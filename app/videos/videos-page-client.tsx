@@ -2,40 +2,21 @@
 import { LocalizedElement } from '@/components/LocalizedElement';
 
 
-import { useEffect, useState } from 'react';
+import { usePublicRecords } from '@/hooks/usePublicRecords';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 import { PublicShell } from '@/components/SiteChrome';
 import { SetupNotice } from '@/components/SetupNotice';
 import { FavouriteButton } from '@/components/FavouriteButton';
 import { isFirebaseConfigured } from '@/lib/firebase/client';
-import { listVideos, type Video } from '@/services/media';
+import { type Video } from '@/services/media';
 import { useChannelVideos } from '@/hooks/useChannelVideos';
 
 export default function VideosPage() {
-  const settings = { youtube: 'https://www.youtube.com/@Rjtractortechs' };
+  const settings = useSiteSettings();
   const { videos: channelVideos, loading: channelLoading } = useChannelVideos();
-  const [items, setItems] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (isFirebaseConfigured) {
-      listVideos()
-        .then((records) => {
-          if (records.length) {
-            setItems(records);
-          } else {
-            setItems(channelVideos as unknown as Video[]);
-          }
-        })
-        .catch(() => {
-          setItems(channelVideos as unknown as Video[]);
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setItems(channelVideos as unknown as Video[]);
-      setLoading(channelLoading);
-    }
-  }, [channelVideos, channelLoading]);
+  const {items: library, loading: libraryLoading, error} = usePublicRecords('videos');
+  const items = (library.length || settings.videoSource === 'library' ? library : channelVideos) as unknown as Video[];
+  const loading = libraryLoading || (settings.videoSource !== 'library' && !library.length && channelLoading);
 
   return (
     <PublicShell>

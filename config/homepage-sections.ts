@@ -8,12 +8,13 @@ export const homepageSections = [
   { key: 'videos', title: 'Recent videos on YouTube', visible: true },
   { key: 'promotions', title: 'Featured promotions', visible: true },
   { key: 'introduction', title: 'Research your next tractor', visible: false },
+  { key: 'dealerLogos', title: 'Our dealers', visible: true },
   { key: 'partners', title: 'Our Partners', visible: true },
 ];
 export function resolveHomepageSections(records: { id: string; [key: string]: unknown }[]) {
   const resolved = homepageSections.map((section, index) => {
     const override = records.find(row => row.key === section.key);
-    return { ...section, title: String(override?.title || section.title), order: Number(override?.order ?? ({hero:1,partners:2,videos:3,tractors:4,reviews:5,brands:6,compare:7,articles:8,promotions:9,introduction:10}[section.key] ?? index + 1)), visible: typeof override?.visible === 'boolean' ? override.visible : section.visible };
+    return { ...section, title: String(override?.title || section.title), order: Number(override?.order ?? ({hero:1,partners:2,videos:3,tractors:4,reviews:5,brands:6,compare:7,articles:8,promotions:9,introduction:10,dealerLogos:4.5}[section.key] ?? index + 1)), visible: typeof override?.visible === 'boolean' ? override.visible : section.visible };
   }).filter(section => section.visible).sort((a, b) => a.order - b.order);
   // Retain the established layout until the owner explicitly configures ordering.
   if (records.some(record => Number(record.order) > 0)) return resolved;

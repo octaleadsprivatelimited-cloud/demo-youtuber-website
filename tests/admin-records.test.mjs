@@ -157,3 +157,20 @@ test('partners require a logo before publishing',()=>{
  assert.throws(()=>prepareAdminRecord('partners',{title:'Partner',order:1}),/upload a partner logo/);
  assert.equal(prepareAdminRecord('partners',{title:'Partner',order:1,image:'/logo.png'}).image,'/logo.png');
 });
+
+test('promotion destinations normalize bare domains and reject unsafe links', () => {
+  const {websiteLink}=load('lib/content-links.ts');
+  assert.equal(websiteLink('example.com/offer?ref=tractor'),'https://example.com/offer?ref=tractor');
+  assert.equal(websiteLink('/tractors?brand=mahindra'),'/tractors?brand=mahindra');
+  for(const value of ['', 'javascript:alert(1)', '//evil.example', 'https://user:pass@example.com', '/\\evil.example'])assert.equal(websiteLink(value),'');
+  assert.equal(prepareAdminRecord('banners',{title:'Offer',ctaUrl:'example.com/offer'}).ctaUrl,'https://example.com/offer');
+});
+test('tractor videos are optional, support YouTube URLs, and can be removed', () => {
+  assert.equal(prepareAdminRecord('tractors',{brand:'Test',model:'One'}).youtubeVideoId,'');
+  for(const url of ['https://youtu.be/abcdefghijk?t=2','https://www.youtube.com/watch?v=abcdefghijk','https://youtube.com/shorts/abcdefghijk']) {
+    assert.equal(prepareAdminRecord('tractors',{brand:'Test',model:'One',youtubeId:url}).youtubeVideoId,'abcdefghijk');
+  }
+  assert.equal(prepareAdminRecord('tractors',{youtubeId:'',youtubeVideoId:'abcdefghijk'}).youtubeVideoId,'');
+  assert.throws(()=>prepareAdminRecord('tractors',{youtubeId:'https://example.com/abcdefghijk'}),/valid YouTube/);
+  assert.throws(()=>prepareAdminRecord('videos',{title:'Missing video',youtubeId:''}),/valid YouTube/);
+});

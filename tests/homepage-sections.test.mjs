@@ -274,3 +274,20 @@ test('hero renders CMS copy, safe buttons, image framing and blank-image removal
  assert.ok(!cleared.includes('/saved.png'));assert.ok(!cleared.includes('Saved supporting text'));assert.ok(!cleared.includes('View offer'));
  const unsafe=render(HomepageHero,{...props,slides:[{...slide,ctaUrl:'javascript:alert(1)'}]});assert.ok(!unsafe.includes('javascript:'));
 });
+
+test('dealer logos render uploaded images with dealer detail links',()=>{
+ const {HomeDealers}=testModule.exports;
+ assert.equal(render(HomeDealers,{title:'Dealers',dealers:[]}), '');
+ const html=render(HomeDealers,{title:'Our dealers',dealers:[{id:'one',title:'Dealer one',slug:'dealer-one',logo:'/api/media/dealer-logo'},{id:'two',title:'No image'}]});
+ assert.ok(html.includes('src="/api/media/dealer-logo"'));
+ assert.ok(html.includes('href="/dealers/dealer-one"'));
+ assert.ok(!html.includes('No image'));
+});
+test('tractor product embed is absent without a video and uses only its saved ID',()=>{
+ const {TractorVideo}=loadShowcase('components/TractorVideo.tsx');
+ assert.equal(render(TractorVideo,{tractor:{name:'Test tractor'}}),'');
+ assert.equal(render(TractorVideo,{tractor:{name:'Test tractor',youtubeId:''}}),'');
+ const html=render(TractorVideo,{tractor:{name:'Test tractor',youtubeId:'https://youtu.be/abcdefghijk'}});
+ assert.ok(html.includes('https://www.youtube-nocookie.com/embed/abcdefghijk'));
+ assert.ok(html.includes('https://www.youtube.com/watch?v=abcdefghijk'));
+});

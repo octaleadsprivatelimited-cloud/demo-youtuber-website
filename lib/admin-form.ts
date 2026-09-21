@@ -4,6 +4,7 @@ type Row = { id: string; [key: string]: unknown };
 const aliases: Record<string, string[]> = {
   title: ['name'], model: ['modelName'], horsepower: ['hp'], price: ['minPrice', 'priceMin'],
   maxPrice: ['priceMax'], image: ['coverImage', 'thumbnail'], content: ['body'],
+  ctaUrl: ['destinationUrl','url','link'], destinationUrl: ['ctaUrl','url','link'],
   youtubeId: ['youtubeVideoId'], category: ['categoryName'],
 };
 

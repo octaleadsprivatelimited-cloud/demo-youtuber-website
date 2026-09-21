@@ -98,7 +98,7 @@ export function HomeVideos({ title, videos, channelUrl }: { title: string; video
   if (!videos.length) return <section className="home-v2 home-videos"><LocalizedElement as="div" className="home-container"><Heading eyebrow="WATCH & LEARN" title={title} description="Tractor walkthroughs, practical demonstrations and stories from the field." href="/videos" action="Video library"/>
     <LocalizedElement as="div" className="home-video-empty"><LocalizedElement as="div" className="home-video-empty-image"><LocalizedElement as="img" src="/hero/mahindra-575-di-xp-plus.webp" alt="Red tractor in a field" loading="lazy" width={600} height={400}/></LocalizedElement><LocalizedElement as="div" className="home-video-empty-copy"><LocalizedElement as="img" className="home-youtube-icon" src="/icons/tabler/brand-youtube.svg" alt="" width={46} height={46}/><LocalizedElement as="h3">A closer look at the machines that matter.</LocalizedElement><LocalizedElement as="p">No videos have been added to the library yet. Visit our YouTube channel for tractor reviews and field demonstrations.</LocalizedElement><LocalizedElement as="a" className="home-button" href={channelUrl} target="_blank" rel="noreferrer">Explore the channel <Arrow/></LocalizedElement></LocalizedElement></LocalizedElement>
   </LocalizedElement></section>;
-  return <RecentVideoCarousel videos={videos} channelUrl={channelUrl}/>;
+  return <RecentVideoCarousel title={title} videos={videos} channelUrl={channelUrl}/>;
 }
 
 function videoTime(item: SiteRecord) {
@@ -114,7 +114,7 @@ function videoThumbnail(item: SiteRecord) {
   return /^[\w-]{11}$/.test(id) ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : '';
 }
 
-export function RecentVideoCarousel({ videos, channelUrl }: { videos: SiteRecord[]; channelUrl?: string }) {
+export function RecentVideoCarousel({ title = 'Recent videos on YouTube', videos, channelUrl }: { title?: string; videos: SiteRecord[]; channelUrl?: string }) {
   const recent = [...videos].sort((a, b) => videoTime(b) - videoTime(a)).slice(0, 10);
   const pages = Array.from({ length: Math.ceil(recent.length / 2) }, (_, index) => recent.slice(index * 2, index * 2 + 2));
   const [page, setPage] = useState(0);
@@ -133,6 +133,7 @@ export function RecentVideoCarousel({ videos, channelUrl }: { videos: SiteRecord
   }, [pages.length, reduceMotion]);
   useEffect(() => { if (page >= pages.length) setPage(0); }, [page, pages.length]);
   return <section className="home-v2 home-videos home-video-library home-video-carousel"><LocalizedElement as="div" className="home-container">
+    <Heading eyebrow="WATCH & LEARN" title={title} href="/videos" action="Video library"/>
     <LocalizedElement as="div" className="home-video-carousel-window" aria-roledescription="carousel" aria-label="Recent YouTube videos">
       <LocalizedElement as="div" className="home-video-carousel-track" style={{ transform: `translate3d(-${page * 100}%,0,0)` }}>
         {pages.map((items, pageIndex) => <LocalizedElement as="div" className="home-video-carousel-page" key={pageIndex} aria-hidden={pageIndex !== page} inert={pageIndex !== page ? true : undefined}>
@@ -187,7 +188,7 @@ function PartnerLogoCarousel({ partners }: { partners: Partner[] }) {
     <LocalizedElement as="div" ref={viewport} className="home-loop-window home-partner-window" role="region" aria-label="Partner logos">
       <LocalizedElement as="div" ref={track} className="home-partner-track">
         {Array.from({ length: copies }, (_, copy) => <LocalizedElement as="div" className="home-partner-group" key={copy} ref={copy === 0 ? firstGroup : undefined} aria-hidden={copy > 0 ? true : undefined} inert={copy > 0 ? true : undefined}>
-          {partners.map(partner => <LocalizedElement as="div" className="home-partner-logo" key={partner.id}><Image src={partner.image} alt={copy === 0 ? partner.title : ''} /></LocalizedElement>)}
+          {partners.map(partner => <LocalizedElement as="div" className="home-partner-logo" key={partner.id}>{partner.href ? <a href={partner.href} aria-label={partner.title}><Image src={partner.image} alt={copy === 0 ? partner.title : ''} /></a> : <Image src={partner.image} alt={copy === 0 ? partner.title : ''} />}</LocalizedElement>)}
         </LocalizedElement>)}
       </LocalizedElement>
     </LocalizedElement>
@@ -197,4 +198,13 @@ function PartnerLogoCarousel({ partners }: { partners: Partner[] }) {
 export function HomePartners({ title, partners }: { title: string; partners: Partner[] }) {
   if (!partners.length) return null;
   return <section className="home-v2 home-partners" aria-label={title}><LocalizedElement as="div" className="home-container partner-heading"><LocalizedElement as="h2">{title}</LocalizedElement></LocalizedElement><PartnerLogoCarousel partners={partners} /></section>;
+}
+
+
+export function HomeDealers({title,dealers}: {title: string; dealers: SiteRecord[]}) {
+  const logos = dealers.filter(item => item.logo || item.image || (Array.isArray(item.images) && item.images[0])).map(item => ({
+    id:item.id, title:String(item.name ?? item.title ?? 'Dealer'), image:String(item.logo || item.image || (item.images as string[])[0]),
+    order:Number(item.order)||0, href:item.slug ? '/dealers/'+encodeURIComponent(String(item.slug)) : '/dealers',
+  })).sort((a,b)=>a.order-b.order || a.title.localeCompare(b.title));
+  return <HomePartners title={title} partners={logos}/>;
 }

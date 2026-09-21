@@ -46,7 +46,7 @@ export const tractorBaseFields: AdminField[] = [
   { key: 'popular', label: 'Show in Popular tractors', type: 'boolean' },
   { key: 'upcoming', label: 'Upcoming model (not yet available)', type: 'boolean' },
   { key: 'inDemand', label: 'Show In demand badge', type: 'boolean' },
-  { key: 'image', label: 'Tractor image', type: 'image' }, { key: 'description', label: 'Overview', type: 'textarea' },
+  { key: 'image', label: 'Tractor image', type: 'image' }, { key: 'youtubeId', label: 'Product YouTube video URL or ID (optional)' }, { key: 'description', label: 'Overview', type: 'textarea' },
 ];
 export const tractorAdminFields: AdminField[] = [...tractorBaseFields, ...tractorSpecFields.map(field => ({ ...field, label: field.label + (field.unit ? ' (' + field.unit + ')' : '') }))];
 export const tractorSpecificationSources = [
