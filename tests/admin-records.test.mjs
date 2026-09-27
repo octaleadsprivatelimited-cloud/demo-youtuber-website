@@ -200,3 +200,18 @@ test('EMI calculation handles interest, zero interest and invalid loan inputs', 
  assert.equal(calculateEmi(120000,120000,10,12).emi,0);
  for(const args of [[0,0,10,12],[100,101,10,12],[100,0,-1,12],[100,0,10,0],[100,0,10,1.5],[NaN,0,10,12]]) assert.equal(calculateEmi(...args),null);
 });
+
+
+test('EMI schedule reconciles principal, interest and final balance', () => {
+ const {calculateEmi,emiSchedule}=load('lib/emi.ts');
+ for (const rate of [0,10.5]) {
+  const result=calculateEmi(640000,0,rate,65);
+  const rows=emiSchedule(640000,rate,65);
+  assert.equal(rows.length,6);
+  assert.equal(rows.at(-1).month,65);
+  assert.equal(rows.at(-1).balance,0);
+  assert.ok(Math.abs(rows.reduce((s,r)=>s+r.principal,0)-640000)<0.01);
+  assert.ok(Math.abs(rows.reduce((s,r)=>s+r.interest,0)-result.interest)<0.01);
+ }
+ assert.deepEqual(emiSchedule(-1,10,60),[]);
+});
