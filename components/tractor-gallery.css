@@ -18,3 +18,7 @@
   .public-site .detail-page .spec-highlights span { font-size:9px; letter-spacing:.035em; line-height:1.4; }
   .public-site .detail-page .spec-highlights strong { font-size:13px; margin-top:4px; line-height:1.4; overflow-wrap:anywhere; }
 }
+.tractor-gallery-video { overflow:hidden; background:#fff; border:1px solid #e0e4e7; border-radius:18px; }
+.tractor-gallery-video iframe { display:block; width:100%; aspect-ratio:16/9; border:0; }
+.tractor-gallery-video > a { display:block; padding:12px 16px; font-size:14px; font-weight:700; color:#006878; }
+.tractor-gallery-video-label { display:block; font-size:11px; padding:4px 0; font-weight:700; }

@@ -312,3 +312,21 @@ test('tractor gallery preserves the main photo, filters unsafe and duplicate ima
  assert.ok(!other.includes('tractor-gallery-thumbnails'));
  assert.ok(render(TractorGallery,{name:'Empty'}).includes('Tractor photos have not been added yet.'));
 });
+
+test('tractor gallery optionally starts with video and falls back safely when removed', () => {
+ const {TractorGallery}=loadShowcase('components/TractorGallery.tsx');
+ const props={name:'Tractor',image:'/tractor.png',video:'https://youtu.be/abcdefghijk'};
+ const photoFirst=render(TractorGallery,props);
+ assert.ok(!photoFirst.includes('<iframe'));
+ assert.ok(photoFirst.includes('Watch tractor video'));
+ const videoFirst=render(TractorGallery,{...props,videoFirst:true});
+ assert.ok(videoFirst.includes('https://www.youtube-nocookie.com/embed/abcdefghijk'));
+ assert.ok(videoFirst.includes('View tractor photo 1'));
+ assert.ok(!videoFirst.includes('autoplay=1'));
+ const removed=render(TractorGallery,{...props,video:'',videoFirst:true});
+ assert.ok(!removed.includes('<iframe'));
+ assert.ok(removed.includes('href="/tractor.png"'));
+ assert.ok(!removed.includes('Watch tractor video'));
+ const onlyVideo=render(TractorGallery,{name:'Video only',video:'abcdefghijk'});
+ assert.ok(onlyVideo.includes('<iframe'));
+});

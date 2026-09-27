@@ -55,6 +55,7 @@ export interface Tractor {
   ptoHp?: number;
   image?: string;
   images?: string[];
+  videoFirst?: boolean;
   youtubeVideoId?: string;
   youtubeId?: string;
   gallery?: string[];
