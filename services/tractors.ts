@@ -58,5 +58,5 @@ export async function listBrands(): Promise<Brand[]> { if (!db) {
         if (saved.length) return saved.map(x => ({ ...x, id: x.id, name: String(x.name ?? x.title), slug: String(x.slug), status: 'published' } as Brand));
     }
     const brands = Array.from(new Set(demoTractors.map(t => t.brandName)));
-    return brands.map((name, i) => ({ id: name.toLowerCase().replaceAll(' ', '-'), name, slug: name.toLowerCase().replaceAll(' ', '-'), status: 'published' } as Brand));
+    return brands.map((name) => ({ id: name.toLowerCase().replaceAll(' ', '-'), name, slug: name.toLowerCase().replaceAll(' ', '-'), status: 'published' } as Brand));
 } const snap = await getDocs(query(collection(db, 'brands'), where('status', '==', 'published'), orderBy('name'), limit(50))); return snap.docs.map(d => ({ id: d.id, ...d.data() }) as Brand); }

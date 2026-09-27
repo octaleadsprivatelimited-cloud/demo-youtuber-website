@@ -13,7 +13,6 @@ export function FloatingWhatsApp() {
 
   return <a className="floating-whatsapp" href={`https://wa.me/${number}`} target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp" title="Chat with us on WhatsApp">
     {/* Official, unmodified digital glyph from Meta's WhatsApp Brand Resource Center. */}
-    {/* eslint-disable-next-line @next/next/no-img-element */}
     <img src="/icons/whatsapp.svg" width={34} height={34} alt="" />
   </a>;
 }

@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, documentId, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where, } from 'firebase/firestore';
+import { collection, deleteDoc, doc, documentId, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where, } from 'firebase/firestore';
 import { db, isFirebaseConfigured, isLocalDemo } from '@/lib/firebase/client';
 import { published, readLocal, writeLocal } from '@/lib/local-demo';
 import {normalizeTractor} from './tractors';

@@ -3,16 +3,18 @@ import { LocalizedElement } from '@/components/LocalizedElement';
 
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { submitOwnerReview } from '@/services/phase-three';
 
 export function ReviewForm({ tractorId, tractorName }: { tractorId: string; tractorName: string }) {
   const { user } = useAuth();
+  const router = useRouter();
   const [rating,setRating] = useState(5); const [title,setTitle] = useState(''); const [comment,setComment] = useState('');
   const [message,setMessage] = useState(''); const [busy,setBusy] = useState(false);
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (!user) { window.location.href='/login'; return; }
+    if (!user) { router.push('/login'); return; }
     setBusy(true); setMessage('');
     try {
       await submitOwnerReview({tractorId,tractorName,userId:user.uid,userName:user.displayName ?? 'RJ Tractor Techs member',rating,title,comment});
