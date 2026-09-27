@@ -8,6 +8,7 @@ export function useSiteSettings(): Record<string, string> {
   return {
     logo: '/logo.png',
     websiteName: 'RJ Tractor Techs',
+    whatsapp: '+919951151126',
     ...recordSettings,
   };
 }

@@ -1,7 +1,7 @@
 'use client';
 import { LocalizedElement } from '@/components/LocalizedElement';
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { heroImageSource } from '@/lib/admin-records';
 import type { HeroSlide } from '@/services/hero-slides';
@@ -31,7 +31,6 @@ const powerLinks = [
 
 
 export function HomepageHero({ title, slides, index, onSlide, paused = false, onPause }: { title: string; slides: HeroSlide[]; index: number; onSlide: (index: number) => void; paused?: boolean; onPause?: () => void; brands?: { id: string; name: string }[] }) {
-  const [query, setQuery] = useState('');
   const reduceMotion = useReducedMotion();
   useEffect(() => {
     // Fetch upcoming images ahead of their transition to avoid blank frames.
@@ -46,10 +45,6 @@ export function HomepageHero({ title, slides, index, onSlide, paused = false, on
   const safeLink = (value: string | undefined) => value && /^(https?:\/\/|\/(?!\/))/i.test(value) ? value : '';
   const primaryLink = safeLink(slide?.ctaUrl);
   const secondaryLink = safeLink(slide?.secondaryCtaUrl);
-  function search(event: FormEvent) {
-    event.preventDefault();
-    window.location.assign(homepageSearchUrl(query));
-  }
   return <section className="ref-home-hero hero-fullbleed" aria-labelledby="ref-home-hero-title">
     <LocalizedElement as="div" className="ref-home-hero-scene">
       <LocalizedElement as="div" className="ref-home-hero-media" style={{ backgroundColor: slide?.backgroundColor || '#ffffff' }}>
@@ -74,11 +69,6 @@ export function HomepageHero({ title, slides, index, onSlide, paused = false, on
         <LocalizedElement as="p" className="ref-home-eyebrow">RJ TRACTOR TECHS</LocalizedElement>
         <LocalizedElement as="h1" id="ref-home-hero-title">{heading}</LocalizedElement>
         <LocalizedElement as="p" className="ref-home-hero-description">{description}</LocalizedElement>
-        <form className="ref-home-hero-search" role="search" onSubmit={search}>
-          <LocalizedElement as="img" src="/icons/tabler/search.svg" alt="" width={21} height={21}/>
-          <LocalizedElement as="input" type="search" value={query} onChange={event => setQuery(event.target.value)} aria-label="Search tractor, brand or model" placeholder="Search tractor, brand or model"/>
-          <LocalizedElement as="button" type="submit">Search</LocalizedElement>
-        </form>
         <LocalizedElement as="div" className="ref-home-hero-actions">
           {primaryLink && slide?.ctaLabel ? <LocalizedElement as="a" className="ref-home-link" href={primaryLink}>{slide.ctaLabel}</LocalizedElement> : !slide && <LocalizedElement as="a" className="ref-home-link" href="/tractors">Browse tractors</LocalizedElement>}
           {secondaryLink && slide?.secondaryCtaLabel ? <LocalizedElement as="a" className="ref-home-link" href={secondaryLink}>{slide.secondaryCtaLabel}</LocalizedElement> : !slide && <LocalizedElement as="a" className="ref-home-link" href="/compare">Compare models</LocalizedElement>}

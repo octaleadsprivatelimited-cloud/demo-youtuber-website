@@ -155,12 +155,12 @@ test('video section supports a configured channel when empty and actual saved vi
  assert.ok(live.includes('href="https://www.youtube.com/@ConfiguredChannel"'));
 });
 
-test('new hero uses the saved image, clears removed slides and keeps functional search',()=>{
+test('new hero uses the saved image, clears removed slides and omits the hero search',()=>{
  const {HomepageHero}=loadShowcase('components/HomepageHero.tsx');
  const props={title:'Find the tractor that fits your work.',slides:[{id:'1',image:'/saved-hero.jpg',title:'Saved banner'}],index:0,onSlide:()=>{},brands:[{id:'b',name:'Actual brand'}]};
  const live=render(HomepageHero,props);
  assert.ok(live.includes('src="/saved-hero.jpg"'));
- assert.ok(live.includes('Search tractor, brand or model'));assert.ok(live.includes('Under 40 HP'));
+ assert.ok(!live.includes('ref-home-hero-search'));assert.ok(live.includes('Under 40 HP'));
  const removed=render(HomepageHero,{...props,slides:[]});
  assert.ok(!removed.includes('/saved-hero.jpg'));assert.ok(!removed.includes('src="/hero/tractor-hero-cinematic.png"'));
  assert.ok(removed.includes('Find the tractor that fits your work.'));
