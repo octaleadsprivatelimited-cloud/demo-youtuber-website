@@ -190,3 +190,13 @@ test('dealer edits retain that dealer’s photos without modifying another recor
  assert.deepEqual(second.images,['/second-photo.png']);
  assert.deepEqual(prepareAdminRecord('dealers',{...first,images:['/replacement.png']}).images,['/replacement.png']);
 });
+
+
+test('EMI calculation handles interest, zero interest and invalid loan inputs', () => {
+ const {calculateEmi}=load('lib/emi.ts');
+ const result=calculateEmi(800000,160000,10.5,60);
+ assert.ok(Math.abs(result.emi-13756.10)<0.1);
+ assert.equal(calculateEmi(120000,0,0,12).emi,10000);
+ assert.equal(calculateEmi(120000,120000,10,12).emi,0);
+ for(const args of [[0,0,10,12],[100,101,10,12],[100,0,-1,12],[100,0,10,0],[100,0,10,1.5],[NaN,0,10,12]]) assert.equal(calculateEmi(...args),null);
+});
