@@ -206,5 +206,12 @@ export function HomeDealers({title,dealers}: {title: string; dealers: SiteRecord
     id:item.id, title:String(item.name ?? item.title ?? 'Dealer'), image:String(item.logo || item.image || (item.images as string[])[0]),
     order:Number(item.order)||0, href:item.slug ? '/dealers/'+encodeURIComponent(String(item.slug)) : '/dealers',
   })).sort((a,b)=>a.order-b.order || a.title.localeCompare(b.title));
-  return <HomePartners title={title} partners={logos}/>;
+  if (!logos.length) return null;
+  return <section className="home-v2 home-dealers" aria-label={title}><div className="home-container">
+    <Heading eyebrow="LOCAL SALES & SUPPORT" title={title} description="Connect with a showroom for availability, demonstrations and service." href="/dealers" action="All showrooms"/>
+    <div className="home-dealer-grid">{logos.map(dealer=><a className="home-dealer-card" href={dealer.href} key={dealer.id}>
+      <div className="home-dealer-logo"><Image src={dealer.image} alt={dealer.title}/></div>
+      <div><h3>{dealer.title}</h3><span>View showroom <span aria-hidden="true">↗</span></span></div>
+    </a>)}</div>
+  </div></section>;
 }

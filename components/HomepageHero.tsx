@@ -50,7 +50,7 @@ export function HomepageHero({ title, slides, index, onSlide, paused = false, on
     event.preventDefault();
     window.location.assign(homepageSearchUrl(query));
   }
-  return <section className="ref-home-hero" aria-labelledby="ref-home-hero-title">
+  return <section className="ref-home-hero hero-fullbleed" aria-labelledby="ref-home-hero-title">
     <LocalizedElement as="div" className="ref-home-hero-scene">
       <LocalizedElement as="div" className="ref-home-hero-media" style={{ backgroundColor: slide?.backgroundColor || '#ffffff' }}>
         <AnimatePresence initial={false}>
