@@ -46,3 +46,12 @@ test('admin SEO overrides are returned in server metadata and social tags',async
   assert.equal(result.title,'Owner tractor title');assert.equal(result.openGraph.title,'Owner tractor title');assert.equal(result.twitter.description,'Owner description');assert.equal(result.alternates.canonical,'/tractors');
  }finally{globalThis.fetch=original;}
 });
+
+
+test('product SEO uses saved names instead of numeric brand slugs',()=>{
+ const {productSeoDetails}=load('lib/product-seo.ts');
+ const result=productSeoDetails({id:'one',brandSlug:'3',name:'John Deere 5130M',image:'/api/media/photo'});
+ assert.equal(result.name,'John Deere 5130M');
+ assert.ok(result.description.includes('EMI calculator'));
+ assert.equal(result.image,'/api/media/photo');
+});
