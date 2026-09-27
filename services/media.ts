@@ -67,6 +67,8 @@ export interface Dealer {
     longitude?: number;
     services?: string[];
     images?: string[];
+    image?: string;
+    description?: string;
     logo?: string;
     verified?: boolean;
     status: 'draft' | 'published';

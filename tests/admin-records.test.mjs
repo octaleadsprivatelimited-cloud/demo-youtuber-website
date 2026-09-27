@@ -179,3 +179,14 @@ test('replacing a YouTube video drops its old automatic thumbnail but keeps cust
  assert.equal(prepareAdminRecord('videos',data).thumbnail,'');
  assert.equal(prepareAdminRecord('videos',{...data,thumbnail:'/api/media/custom'}).thumbnail,'/api/media/custom');
 });
+
+
+test('dealer edits retain that dealer’s photos without modifying another record', () => {
+ const first = {title:'First showroom',logo:'/first-logo.png',images:['/first-photo.png'],phone:'12345'};
+ const second = {title:'Second showroom',logo:'/second-logo.png',images:['/second-photo.png']};
+ const edited = prepareAdminRecord('dealers',{...first,phone:'54321'});
+ assert.deepEqual(edited.images,first.images);
+ assert.equal(edited.logo,first.logo);
+ assert.deepEqual(second.images,['/second-photo.png']);
+ assert.deepEqual(prepareAdminRecord('dealers',{...first,images:['/replacement.png']}).images,['/replacement.png']);
+});
