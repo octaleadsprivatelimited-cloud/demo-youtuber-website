@@ -298,3 +298,17 @@ test('homepage video slider respects owner ordering and visibility',()=>{
  assert.ok(html.indexOf('/videos/first')<html.indexOf('/videos/late'));
  assert.ok(html.includes('Owner videos'));
 });
+
+
+test('tractor gallery preserves the main photo, filters unsafe and duplicate images and stays record-specific', () => {
+ const {TractorGallery}=loadShowcase('components/TractorGallery.tsx');
+ const html=render(TractorGallery,{name:'Tractor A',image:'/main-a.png',images:['/main-a.png','/side-a.png','','javascript:alert(1)']});
+ assert.ok(html.includes('href="/main-a.png"'));
+ assert.ok(html.includes('src="/side-a.png"'));
+ assert.equal((html.match(/aria-label="View tractor photo/g)||[]).length,2);
+ assert.ok(!html.includes('javascript:'));
+ const other=render(TractorGallery,{name:'Tractor B',image:'/main-b.png'});
+ assert.ok(!other.includes('/side-a.png'));
+ assert.ok(!other.includes('tractor-gallery-thumbnails'));
+ assert.ok(render(TractorGallery,{name:'Empty'}).includes('Tractor photos have not been added yet.'));
+});

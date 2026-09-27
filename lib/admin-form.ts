@@ -2,6 +2,7 @@ import type { AdminField, AdminSection } from '../config/admin-sections';
 
 type Row = { id: string; [key: string]: unknown };
 const aliases: Record<string, string[]> = {
+  images: ['gallery'],
   title: ['name'], model: ['modelName'], horsepower: ['hp'], price: ['minPrice', 'priceMin'],
   maxPrice: ['priceMax'], image: ['coverImage', 'thumbnail'], content: ['body'],
   ctaUrl: ['destinationUrl','url','link'], destinationUrl: ['ctaUrl','url','link'],

@@ -54,6 +54,7 @@ export interface Tractor {
   liftingCapacityKg?: number;
   ptoHp?: number;
   image?: string;
+  images?: string[];
   youtubeVideoId?: string;
   youtubeId?: string;
   gallery?: string[];

@@ -7,6 +7,7 @@ import { adminSections, type AdminField } from '@/config/admin-sections';
 import type { AdminRecord } from '@/services/admin';
 import { parseTractorSpecificationCsv, tractorSpecificationTemplate } from '@/lib/tractor-specification-csv';
 import { specificationLabel } from '@/lib/tractor-specifications';
+import { AdminImageGalleryField } from './AdminImageGalleryField';
 import { AdminImageField } from './AdminImageField';
 import { adminSelectOptions } from '@/lib/admin-form';
 import '@/app/tractor-specifications.css';
@@ -30,6 +31,7 @@ export function TractorFields({ form, sources, disabled, onChange, onImport, onB
     finally { onBusy(false); }
   }
   function fieldInput(field: AdminField | TractorSpecField) {
+    if (field.type === 'images') return <AdminImageGalleryField key={field.key} label={field.label} value={form[field.key]} folder="tractors" disabled={disabled} onChange={value => onChange(field.key, value)} onBusy={onBusy} onError={onError}/>;
     if (field.type === 'image') return <AdminImageField key={field.key} label={field.label} value={String(form[field.key] ?? '')} folder="tractors" disabled={disabled} onChange={value => onChange(field.key, value)} onBusy={onBusy} onError={onError} />;
     const spec = field as TractorSpecField;
     const base = field as AdminField;
