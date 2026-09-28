@@ -426,12 +426,10 @@
 .reference-home .hero-image-spacer { height:clamp(260px,42vw,580px); }
 .reference-home .hero-fullbleed .ref-home-slide-controls { bottom:18px; }
 
-/* Keep the entire uploaded banner visible on phones, regardless of desktop framing. */
-@media (max-width: 760px) {
-  .reference-home .hero-fullbleed .hero-slide-frame img {
-    object-fit: contain !important;
-    object-position: center !important;
-  }
+/* Show the complete uploaded banner at every viewport size. */
+.reference-home .hero-fullbleed .hero-slide-frame img {
+  object-fit: contain !important;
+  object-position: center !important;
 }
 
 /* The first banner must never wait for a scroll-reveal observer. */
