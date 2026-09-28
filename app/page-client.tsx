@@ -74,10 +74,14 @@ export default function Home() {
     );
     const prepare = () => {
       root.querySelectorAll<HTMLElement>(':scope > section').forEach((section) => {
-        if (!section.classList.contains('home-scroll-reveal')) {
-          section.classList.add('home-scroll-reveal');
-          observer.observe(section);
+        if (section.classList.contains('ref-home-hero')) {
+          section.classList.remove('home-scroll-reveal');
+          section.classList.add('is-revealed');
+          return;
         }
+        section.classList.add('home-scroll-reveal');
+        // React effect cleanup can disconnect an observer while classes remain.
+        if (!section.classList.contains('is-revealed')) observer.observe(section);
         section.querySelectorAll<HTMLElement>('.tractor-card,.home-brand-card,.home-compare-card,.home-article-card,.home-video-card,.cms-home-card')
           .forEach((item, index) => {
             item.classList.add('home-scroll-item');

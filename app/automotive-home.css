@@ -433,3 +433,6 @@
     object-position: center !important;
   }
 }
+
+/* The first banner must never wait for a scroll-reveal observer. */
+.reference-home .ref-home-hero { opacity:1; transform:none; transition:none; will-change:auto; }
