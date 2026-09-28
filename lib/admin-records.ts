@@ -25,6 +25,7 @@ export function prepareAdminRecord(collection: string, input: Record<string, unk
   if (collection === 'partners' && !String(data.image ?? '').trim()) throw new Error('Please upload a partner logo before saving.');
   if (['brands', 'equipment', 'dealers'].includes(collection)) data.name = data.title ?? data.name;
   if (collection === 'dealers' && typeof data.services === 'string') data.services = data.services.split(/\n+/).map(value => value.trim()).filter(Boolean);
+  if (collection === 'equipment') data.brandName = data.brand ?? data.brandName ?? '';
   if (collection === 'tractors') {
     Object.assign(data, prepareTractorSpecifications(data));
     if(data.variant&&!input.slug)data.slug=slugify([data.model,data.variant].filter(Boolean).join(' '));

@@ -423,3 +423,5 @@
  .reference-home .home-dealers .home-container { padding-inline:20px; }
  .reference-home .home-dealer-grid { grid-template-columns:1fr; }
 }
+.reference-home .hero-image-spacer { height:clamp(260px,42vw,580px); }
+.reference-home .hero-fullbleed .ref-home-slide-controls { bottom:18px; }

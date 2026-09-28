@@ -22,15 +22,7 @@ export function homepageSearchUrl(searchTerm: string) {
   return '/tractors?' + query.toString();
 }
 
-const powerLinks = [
-  { label: 'Under 40 HP', href: '/tractors?condition=new&maxHp=39', icon: 'tractor' },
-  { label: '40–50 HP', href: '/tractors?condition=new&minHp=40&maxHp=50', icon: 'tractor' },
-  { label: '50+ HP', href: '/tractors?condition=new&minHp=50', icon: 'tractor' },
-  { label: 'Latest launches', href: '/new-tractors', icon: 'news' },
-];
-
-
-export function HomepageHero({ title, slides, index, onSlide, paused = false, onPause }: { title: string; slides: HeroSlide[]; index: number; onSlide: (index: number) => void; paused?: boolean; onPause?: () => void; brands?: { id: string; name: string }[] }) {
+export function HomepageHero({ slides, index, onSlide, paused = false, onPause }: { title: string; slides: HeroSlide[]; index: number; onSlide: (index: number) => void; paused?: boolean; onPause?: () => void; brands?: { id: string; name: string }[] }) {
   const reduceMotion = useReducedMotion();
   useEffect(() => {
     // Fetch upcoming images ahead of their transition to avoid blank frames.
@@ -40,12 +32,7 @@ export function HomepageHero({ title, slides, index, onSlide, paused = false, on
   const slide = slides[index];
   const source = heroImageSource(slide?.image);
   const displaySource = source && source !== failedSource ? source : '';
-  const heading = slide?.heading || title;
-  const description = slide?.description ?? 'Explore reliable specifications, comparisons and field-tested guidance.';
-  const safeLink = (value: string | undefined) => value && /^(https?:\/\/|\/(?!\/))/i.test(value) ? value : '';
-  const primaryLink = safeLink(slide?.ctaUrl);
-  const secondaryLink = safeLink(slide?.secondaryCtaUrl);
-  return <section className="ref-home-hero hero-fullbleed" aria-labelledby="ref-home-hero-title">
+  return <section className="ref-home-hero hero-fullbleed" aria-label="Featured tractor images">
     <LocalizedElement as="div" className="ref-home-hero-scene">
       <LocalizedElement as="div" className="ref-home-hero-media" style={{ backgroundColor: slide?.backgroundColor || '#ffffff' }}>
         <AnimatePresence initial={false}>
@@ -65,17 +52,9 @@ export function HomepageHero({ title, slides, index, onSlide, paused = false, on
           </motion.div>
         </AnimatePresence>
       </LocalizedElement>
-      <LocalizedElement as="div" className="ref-home-hero-inner"><LocalizedElement as="div" className="ref-home-hero-copy">
-        <LocalizedElement as="p" className="ref-home-eyebrow">RJ TRACTOR TECHS</LocalizedElement>
-        <LocalizedElement as="h1" id="ref-home-hero-title">{heading}</LocalizedElement>
-        <LocalizedElement as="p" className="ref-home-hero-description">{description}</LocalizedElement>
-        <LocalizedElement as="div" className="ref-home-hero-actions">
-          {primaryLink && slide?.ctaLabel ? <LocalizedElement as="a" className="ref-home-link" href={primaryLink}>{slide.ctaLabel}</LocalizedElement> : !slide && <LocalizedElement as="a" className="ref-home-link" href="/tractors">Browse tractors</LocalizedElement>}
-          {secondaryLink && slide?.secondaryCtaLabel ? <LocalizedElement as="a" className="ref-home-link" href={secondaryLink}>{slide.secondaryCtaLabel}</LocalizedElement> : !slide && <LocalizedElement as="a" className="ref-home-link" href="/compare">Compare models</LocalizedElement>}
-        </LocalizedElement>
-      </LocalizedElement></LocalizedElement>
+      <div className="hero-image-spacer" aria-hidden="true"/>
       {slides.length > 1 && <LocalizedElement as="div" className="ref-home-slide-controls" aria-label="Hero slides">{slides.map((item, position) => <LocalizedElement as="button" key={item.id} type="button" aria-label={'Show slide ' + (position + 1)} aria-pressed={position === index} onClick={() => onSlide(position)}/>)}{onPause && <button className="hero-playback-toggle" type="button" onClick={onPause} aria-label={paused ? 'Play slideshow' : 'Pause slideshow'}>{paused ? '▶' : 'Ⅱ'}</button>}</LocalizedElement>}
-      <nav className="ref-home-power-rail" aria-label="Browse tractors by horsepower">{powerLinks.map(item => <LocalizedElement as="a" href={item.href} key={item.label}><LocalizedElement as="img" src={'/icons/tabler/' + item.icon + '.svg'} alt="" width={25} height={25}/><LocalizedElement as="span">{item.label}</LocalizedElement></LocalizedElement>)}</nav>
+
     </LocalizedElement>
   </section>;
 }

@@ -38,6 +38,9 @@ export interface Video {
     };
 }
 export interface Equipment {
+    brandId?: string;
+    brand?: string;
+    brandSlug?: string;
     id: string;
     slug: string;
     name: string;
@@ -102,7 +105,7 @@ async function equipment() { return (await published<Record<string, unknown> & {
 }>('equipment')).map(x => ({ ...x, name: String(x.name ?? x.title), slug: String(x.slug), categoryName: String(x.categoryName ?? x.category ?? 'Equipment'), categorySlug: String(x.categorySlug ?? String(x.category ?? 'equipment').toLowerCase().replaceAll(' ', '-')), brandName: String(x.brandName ?? x.brand ?? ''), price: Number(x.price ?? 0), status: 'published' } as Equipment)); }
 export async function listEquipment(categorySlug?: string) { if (isLocalDemo && !db) {
     const saved=await equipment(); return saved.filter(x => !categorySlug || x.categorySlug === categorySlug); } if (!db)
-    return []; const f = [where('status', '==', 'published'), orderBy('name'), limit(30)]; if (categorySlug)
+    return []; const f = [where('status', '==', 'published'), orderBy('name')]; if (categorySlug)
     f.unshift(where('categorySlug', '==', categorySlug)); return mapped<Equipment>(await getDocs(query(collection(db, 'equipment'), ...f))); }
 export async function getEquipment(category: string, slug: string) { if (isLocalDemo && !db) {
     const saved=await equipment(); return saved.find(x => x.categorySlug === category && x.slug === slug) ?? null; } if (!db)

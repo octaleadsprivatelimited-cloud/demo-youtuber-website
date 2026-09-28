@@ -160,10 +160,10 @@ test('new hero uses the saved image, clears removed slides and omits the hero se
  const props={title:'Find the tractor that fits your work.',slides:[{id:'1',image:'/saved-hero.jpg',title:'Saved banner'}],index:0,onSlide:()=>{},brands:[{id:'b',name:'Actual brand'}]};
  const live=render(HomepageHero,props);
  assert.ok(live.includes('src="/saved-hero.jpg"'));
- assert.ok(!live.includes('ref-home-hero-search'));assert.ok(live.includes('Under 40 HP'));
+ assert.ok(!live.includes('ref-home-hero-search'));assert.ok(!live.includes('Under 40 HP'));
  const removed=render(HomepageHero,{...props,slides:[]});
  assert.ok(!removed.includes('/saved-hero.jpg'));assert.ok(!removed.includes('src="/hero/tractor-hero-cinematic.png"'));
- assert.ok(removed.includes('Find the tractor that fits your work.'));
+ assert.ok(!removed.includes('Find the tractor that fits your work.'));
  const edited=render(HomepageHero,{...props,slides:[{id:'1',image:'/updated-hero.jpg'}]});
  assert.ok(edited.includes('/updated-hero.jpg'));assert.ok(!edited.includes('/saved-hero.jpg'));
 });
@@ -263,13 +263,14 @@ test('partner carousel starts moving on mount when reduced motion is disabled',(
 });
 
 
-test('hero renders CMS copy, safe buttons, image framing and blank-image removal',()=>{
+test('hero displays only saved images and retains image framing',()=>{
  const {HomepageHero}=loadShowcase('components/HomepageHero.tsx');
  const slide={id:'custom',title:'Admin label',heading:'Harvest offer',description:'Saved supporting text',image:'/saved.png',imageAlt:'Tractor in a field',imageFit:'contain',imagePosition:'right',backgroundColor:'#abcdef',ctaLabel:'View offer',ctaUrl:'/tractors?offer=1',secondaryCtaLabel:'Contact owner',secondaryCtaUrl:'/contact'};
  const props={title:'Default heading',slides:[slide],index:0,onSlide:()=>{}};
  const html=render(HomepageHero,props);
- for(const text of ['Harvest offer','Saved supporting text','Tractor in a field','object-fit:contain','object-position:right','href="/tractors?offer=1"','View offer','Contact owner'])assert.ok(html.includes(text),text);
+ for(const text of ['Tractor in a field','object-fit:contain','object-position:right'])assert.ok(html.includes(text),text);
  assert.ok(!html.includes('Default heading'));
+ for(const text of ['Harvest offer','Saved supporting text','View offer','Contact owner']) assert.ok(!html.includes(text));
  const cleared=render(HomepageHero,{...props,slides:[{...slide,image:'',description:'',ctaLabel:'',ctaUrl:'',secondaryCtaLabel:'',secondaryCtaUrl:''}]});
  assert.ok(!cleared.includes('/saved.png'));assert.ok(!cleared.includes('Saved supporting text'));assert.ok(!cleared.includes('View offer'));
  const unsafe=render(HomepageHero,{...props,slides:[{...slide,ctaUrl:'javascript:alert(1)'}]});assert.ok(!unsafe.includes('javascript:'));

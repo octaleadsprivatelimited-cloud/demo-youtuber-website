@@ -5,15 +5,20 @@ import { LocalizedElement } from '@/components/LocalizedElement';
 import { useEffect, useMemo, useState } from 'react';
 import { PublicShell } from '@/components/SiteChrome';
 import { PageIntro, EmptyContent } from '@/components/PublicPageParts';
+import { usePublicRecords } from '@/hooks/usePublicRecords';
+import './equipment-brands.css';
 import { listEquipment, type Equipment } from '@/services/media';
 
 export default function EquipmentPage() {
+  const { items: brands } = usePublicRecords('brands');
+  const [brand, setBrand] = useState('');
   const [items, setItems] = useState<Equipment[]>([]);
   const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    setBrand(new URLSearchParams(window.location.search).get('brand') || '');
     listEquipment()
       .then(setItems)
       .catch((reason) => setError(reason instanceof Error ? reason.message : 'Unable to load equipment.'))
@@ -29,7 +34,9 @@ export default function EquipmentPage() {
       ).entries(),
     );
   }, [items]);
-  const shown = items.filter((item) => !category || String(item.categorySlug) === category);
+  const selectedBrand = brands.find(item => item.id === brand);
+  const matchesBrand = (item: Equipment) => !brand || item.brandId === brand || Boolean(selectedBrand && String(item.brandName || item.brand || '').toLowerCase() === String(selectedBrand.name || selectedBrand.title || '').toLowerCase());
+  const shown = items.filter((item) => (!category || String(item.categorySlug) === category) && matchesBrand(item));
 
   return (
     <PublicShell>
@@ -40,6 +47,7 @@ export default function EquipmentPage() {
           description="Research implements and machinery alongside your tractor. Browse the listed equipment, read the details and prepare your questions about compatibility."
         />
         <section className="equipment-list">
+          <div className="equipment-brand-section"><h2>Farm equipment brands</h2><p>Select a brand to explore its implements and machinery.</p><div className="equipment-brand-logos">{brands.map(item => <a key={item.id} className={brand === item.id ? 'active' : ''} href={'/equipment?brand='+encodeURIComponent(item.id)} aria-current={brand===item.id ? 'page' : undefined}>{Boolean(item.logo || item.image) && <img src={String(item.logo || item.image)} alt=""/>}<span>{String(item.name || item.title)}</span></a>)}</div>{brand && <p>Showing {String(selectedBrand?.name || selectedBrand?.title || 'selected brand')} equipment · <a href="/equipment">View all brands</a></p>}</div>
           <LocalizedElement as="div" className="listing-bar">
             <LocalizedElement as="h2">Equipment directory</LocalizedElement>
             <LocalizedElement as="a" className="text-action" href="/contact">Ask a question →</LocalizedElement>
@@ -65,7 +73,7 @@ export default function EquipmentPage() {
             <LocalizedElement as="div" className="error-state" role="alert">{error}</LocalizedElement>
           ) : !shown.length ? (
             <EmptyContent
-              title="Equipment details are on the way."
+              title={brand ? 'No published equipment for this brand yet.' : 'Equipment details are on the way.'}
               description="Published implements and machinery will appear here. Explore tractor specifications while you prepare your equipment shortlist."
             />
           ) : (

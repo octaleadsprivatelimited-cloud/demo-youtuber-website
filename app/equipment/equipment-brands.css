@@ -1,0 +1,4 @@
+.equipment-brand-section { margin-bottom:28px; }.equipment-brand-section p { font-size:14px; color:#64717a; }
+.equipment-brand-logos { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:14px; margin:18px 0; }
+.equipment-brand-logos a { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:16px; border:1px solid #dce2e6; border-radius:12px; text-decoration:none; font-size:14px; font-weight:700; background:#fff; }
+.equipment-brand-logos a.active { border:2px solid #bb2933; }.equipment-brand-logos img { width:100px; height:64px; object-fit:contain; }
